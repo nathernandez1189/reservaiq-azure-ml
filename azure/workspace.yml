@@ -1,0 +1,10 @@
+$schema: https://azuremlschemas.azureedge.net/latest/workspace.schema.json
+name: ml-reservaiq
+location: northcentralus
+display_name: ReservaIQ
+description: Entrenamiento reproducible de reservas hoteleras.
+tags:
+  project: ReservaIQ
+  purpose: academic
+  budget_usd: "3"
+  lifecycle: temporary

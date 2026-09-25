@@ -11,7 +11,7 @@ Se propone un clúster CPU **Standard_DS2_v2** con mínimo 0, máximo 1 nodo y l
 | Margen | Imprevistos dentro del escenario | 0,354 |
 | **Total presupuestado** | **Escenario de 1 hora CPU** | **1,000** |
 
-Tarifa pública consultada el 25/09/2026 UTC: Linux, East US, consumo bajo demanda, 0,146 USD/h. La respuesta de la API se conserva en `artifacts/azure-price-reference.json`. El total es una estimación, no una factura ni un tope automático. La región, cuota y tarifa efectiva deben verificarse antes de crear cómputo.
+Tarifa pública consultada el 25/09/2026 UTC: Linux, North Central US, consumo bajo demanda, 0,146 USD/h. La respuesta de la API se conserva en `artifacts/azure-price-reference.json`. El total es una estimación, no una factura ni un tope automático. La región, cuota y tarifa efectiva deben verificarse antes de crear cómputo.
 
 La reserva auxiliar de 0,50 USD es un supuesto, no una cotización desglosada de Storage, Key Vault, Container Registry o Application Insights. Mantener esos recursos durante más tiempo puede superar el escenario. El clúster en cero nodos no elimina todos los cargos.
 

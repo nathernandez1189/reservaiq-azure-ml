@@ -9,3 +9,4 @@ tests/
 ejemplos-csv/
 *.zip
 *.log
+azure/evidence-private/

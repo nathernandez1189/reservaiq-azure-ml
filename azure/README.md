@@ -25,9 +25,9 @@ Verifica la cuenta, permisos, región y presupuesto antes de continuar. El regis
 Estos comandos crean recursos potencialmente facturables. Usa un grupo separado del resto de prácticas y revisa su contenido antes de modificarlo:
 
 ```bash
-az group create --name rg-reservaiq --location eastus
-az ml workspace create --name ml-reservaiq --resource-group rg-reservaiq --location eastus
-az ml compute list-usage --location eastus --resource-group rg-reservaiq --workspace-name ml-reservaiq -o table
+az group create --name rg-reservaiq --location northcentralus
+az ml workspace create --name ml-reservaiq --resource-group rg-reservaiq --location northcentralus
+az ml compute list-usage --location northcentralus --resource-group rg-reservaiq --workspace-name ml-reservaiq -o table
 az ml compute create --file azure/compute.yml --resource-group rg-reservaiq --workspace-name ml-reservaiq
 ```
 
