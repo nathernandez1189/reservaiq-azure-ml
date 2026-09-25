@@ -1,5 +1,7 @@
 # ReservaIQ
 
+[![Verificación](https://github.com/nathernandez1189/reservaiq-azure-ml/actions/workflows/verificacion.yml/badge.svg)](https://github.com/nathernandez1189/reservaiq-azure-ml/actions/workflows/verificacion.yml)
+
 **Priorización de reservas hoteleras con aprendizaje automático y Azure Machine Learning.**
 
 Microproyecto 3 · Computación en la Nube · Prof. Oscar Mondragón.
@@ -21,7 +23,17 @@ Los datos provienen de dos hoteles de Portugal en 2015–2017. El cliente colomb
 
 ![Concentración de cancelaciones en el 20 % de mayor índice](docs/figuras/priorizacion.svg)
 
-La gráfica se genera desde las métricas guardadas con `scripts/generar_grafica.py` (dependencia opcional: ReportLab 4.4.4). Es una figura de resultados, no una captura de la aplicación.
+La gráfica se genera desde las métricas guardadas con `scripts/generar_grafica.py` (dependencia opcional: ReportLab 4.4.9).
+
+## Ejecución en Azure verificada
+
+El pipeline **`mango_wire_5f09pdg4m3`** completó preparación, entrenamiento y evaluación en **North Central US**. El modelo `reservaiq`, versión **1**, se registró, descargó y se incorporó a esta aplicación. Sus 7.990 predicciones coinciden exactamente con las del experimento local. La huella del archivo registrado coincide con la del entrenamiento.
+
+[Estados y procedencia](azure/evidence/run.json) · [Comparación de predicciones](azure/evidence/comparison.json) · [Registro de etapas](azure/evidence/console.txt) · [Entorno resuelto](azure/environment-lock.json) · [Cierre de recursos](azure/evidence/closure.json).
+
+El grupo temporal de Azure fue eliminado tras verificar y descargar las salidas. El registro `reservaiq:1` se conserva como evidencia histórica y el archivo está incluido en el repositorio.
+
+La demo se ejecuta localmente con el modelo incluido. No requiere una suscripción de Azure para evaluarla. Reentrenar en la nube crea recursos facturables; el escenario estimado es **US$1** y se documenta en [Costos](docs/COSTOS.md).
 
 ## Ejecutar la aplicación
 
@@ -89,6 +101,16 @@ python -m unittest discover -s tests -v
 ```
 
 El reentrenamiento reemplaza los artefactos de `artifacts/`; conserva una copia de los resultados que quieras comparar. Las versiones se fijan en `requirements.txt`. El flujo equivalente se define en `azure/pipeline.yml`. Las pruebas de GitHub Actions verifican integridad, particiones, métricas, inferencia y contrato del CSV.
+
+Para regenerar la gráfica y el informe técnico a partir de los resultados guardados:
+
+```bash
+python -m pip install -r requirements-docs.txt
+python scripts/generar_grafica.py
+python scripts/generar_informe.py
+```
+
+El informe se guarda en `docs/ReservaIQ-Informe-tecnico.pdf` y `docs/Informe-tecnico.md`. En sistemas sin Arial, el generador usa Helvetica. El PDF de esta entrega fue revisado visualmente en sus ocho páginas.
 
 ## Estructura
 

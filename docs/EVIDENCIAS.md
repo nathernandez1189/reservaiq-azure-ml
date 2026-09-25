@@ -1,6 +1,6 @@
 # Evidencias del microproyecto
 
-Las evidencias enlazan resultados con archivos verificables. Las métricas corresponden a una ejecución local; la configuración de Azure se documenta por separado hasta disponer de un trabajo completado y sus artefactos.
+Las métricas y el modelo entregados corresponden al pipeline de Azure ML `mango_wire_5f09pdg4m3`, con sus tres etapas en estado Completed. La aplicación utiliza la copia descargada del modelo registrado `reservaiq:1`. La verificación local posterior comprueba las 7.990 predicciones guardadas y la identidad del archivo.
 
 | Evidencia | Archivo | Qué demuestra |
 | --- | --- | --- |
@@ -24,10 +24,23 @@ Las pruebas comprueban catorce aspectos del modelo, datos y API. Incluyen el CSV
 
 ## Revisión de interfaz y capturas
 
-En esta revisión no se pudieron obtener capturas reales porque la herramienta de navegador no pudo verificar su política de seguridad. No se sustituyen por imágenes que aparenten una ejecución. Las pruebas del servidor no prueban la navegación visual del cliente.
+La revisión visual y las capturas de las cuatro vistas no están verificadas en esta entrega. Las pruebas del servidor comprueban el contrato y la inferencia; no prueban la navegación visual del cliente. La figura de priorización se genera desde las métricas guardadas y tiene un alcance distinto.
 
 Para completar esa evidencia deben comprobarse las cuatro vistas, la inferencia, la carga del CSV y las descargas en un navegador. Las capturas deben mostrar el estado real, acompañarse de fecha y de una explicación de qué verifican. No deben incluir identificadores de suscripción, credenciales ni información privada.
 
 ## Evidencia de Azure
 
-La aceptación de la ejecución requiere: workspace y región, trabajo Completed con sus tres etapas, entorno resuelto, salidas descargadas, modelo registrado, SHA256 de la copia usada en la aplicación y estado final de los nodos. Un archivo YAML válido no demuestra que el trabajo se haya ejecutado.
+| Registro | Alcance |
+| --- | --- |
+| `azure/evidence/run.json` | Pipeline, tres etapas Completed, modelo registrado y huellas de las diez salidas |
+| `azure/evidence/comparison.json` | Las 7.990 predicciones coinciden entre local y Azure; diferencia máxima 0,0 |
+| `azure/evidence/console.txt` | Extractos literales de preparación, comparación y evaluación |
+| `azure/environment-lock.json` | Imagen base y final por digest, Python 3.12.14 y paquetes observados |
+| `azure/evidence/billing.json` | Consulta de costos sin cargos consolidados al momento de revisión |
+| `azure/evidence/closure.json` | Cierre del grupo temporal después de descargar y verificar las salidas |
+| `artifacts/runtime.json` | Procedencia del modelo cargado por la aplicación |
+
+La versión registrada y el archivo del entrenamiento tienen SHA256 `d1a01086d1fa360d52dd21888a505ad8197b6b18d67784b81bfe0ac304d859dd`. Los CSV de las tres particiones y su manifiesto coinciden byte por byte con los locales. La serialización del modelo es distinta entre entornos, pero las predicciones del modelo elegido son idénticas. La comparación de candidatos es la producida en Azure; la regresión logística presenta una diferencia pequeña respecto de la ejecución local.
+
+Los registros públicos se extraen de respuestas de Azure CLI y de archivos descargados de Blob Storage. Se omiten suscripción, tenant, identidades y URLs privadas. `summary.json` añade la confirmación de procedencia después de la verificación; `run.json` distingue su huella publicada de la huella de la salida original. Los estados Completed son evidencia histórica de la ejecución, incluso después del cierre de infraestructura.
+

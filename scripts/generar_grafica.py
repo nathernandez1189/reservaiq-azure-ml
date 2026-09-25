@@ -1,4 +1,4 @@
-"""Gráfica reproducible desde las métricas; requiere reportlab==4.4.4."""
+"""Gráfica reproducible desde las métricas; requiere reportlab==4.4.9."""
 import json
 from pathlib import Path
 from reportlab.graphics.shapes import Drawing, Rect, String

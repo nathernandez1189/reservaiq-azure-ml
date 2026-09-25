@@ -2,7 +2,7 @@
 
 Tres componentes CLI v2 ejecutan el mismo código del experimento: preparación, entrenamiento y evaluación. `pipeline.yml` define sus dependencias y salidas. El diseño usa un nodo CPU DS2 v2 como máximo y escala a cero; no necesita un endpoint de inferencia permanente.
 
-Esta revisión contiene la configuración y validación local. El estado de una ejecución remota debe comprobarse con el trabajo y sus artefactos. [Costos y supuestos](../docs/COSTOS.md).
+La ejecución `mango_wire_5f09pdg4m3` completó las tres etapas y produjo el modelo registrado `reservaiq:1`. Las salidas verificadas están incluidas en el repositorio; el grupo de infraestructura es temporal. [Evidencias](../docs/EVIDENCIAS.md) · [Costos y supuestos](../docs/COSTOS.md).
 
 ## 1. Requisitos y comprobación de cuenta
 
@@ -31,7 +31,7 @@ az ml compute list-usage --location northcentralus --resource-group rg-reservaiq
 az ml compute create --file azure/compute.yml --resource-group rg-reservaiq --workspace-name ml-reservaiq
 ```
 
-No continúes si falta cuota, la región no está permitida o el costo previsto supera el presupuesto de la práctica. El workspace crea recursos asociados; documenta sus nombres y el digest del entorno resuelto. La imagen base usa una etiqueta mutable y el digest es necesario para identificar exactamente la imagen ejecutada.
+No continúes si falta cuota, la región no está permitida o el costo previsto supera el presupuesto de la práctica. El workspace crea recursos asociados; documenta sus nombres y el digest del entorno resuelto. `environment-lock.json` conserva el digest de la imagen base y de la imagen construida. La primera ejecución resolvió `latest`; para reconstruir con la misma base se puede usar `mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04@sha256:7481fbfbbc1c7d7ab0e9e4633180c809413bd77e108b605d6e4d3a60aa35bf67`. El archivo también registra los paquetes y Python observados.
 
 ### Acceso a datos mediante identidad
 
@@ -85,3 +85,17 @@ az ml compute show --name reservaiq-cpu --resource-group rg-reservaiq --workspac
 Comprueba el recuento de nodos y espera su liberación. Conserva las salidas antes de eliminar recursos. Consulta Cost Management con fecha; los cargos pueden aparecer con retraso. Cero nodos no implica cero cargos de almacenamiento o registro de contenedores.
 
 Fuentes: [componentes CLI v2](https://learn.microsoft.com/en-us/azure/machine-learning/reference-yaml-component-command?view=azureml-api-2), [clústeres](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-create-attach-compute-cluster?view=azureml-api-2), [control de costos](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-optimize-cost?view=azureml-api-2).
+
+## 6. Salidas y eliminación del grupo temporal
+
+Las salidas de los pasos se almacenan en el datastore de Blob Storage, separadas de los registros. `job download --all` puede descargar solo registros para un paso del pipeline. Comprueba explícitamente la presencia de `model.joblib`, `selection.json`, las predicciones, el manifiesto y las particiones. En Blob Storage, ignora marcadores de carpeta de cero bytes al descargar: una carpeta como `trained` no es un archivo de modelo.
+
+Después de verificar las diez salidas, descargar la versión registrada y comparar sus huellas, comprueba que el grupo contiene exclusivamente recursos de esta práctica. El siguiente comando elimina ese grupo completo, incluidas sus copias remotas; debe ejecutarse solo después de conservar los artefactos necesarios:
+
+```bash
+az resource list --resource-group rg-reservaiq -o table
+az group delete --name rg-reservaiq --yes --no-wait
+az group exists --name rg-reservaiq
+```
+
+Un resultado `false` confirma que el grupo ya no existe. Conserva esa comprobación con fecha. El modelo incluido permite seguir ejecutando la aplicación sin mantener el workspace o el registro de contenedores. La facturación se consolida con retraso y se consulta por separado.

@@ -1,0 +1,26 @@
+{
+  "requested_at_utc": "2026-09-25T01:54:03.492988+00:00",
+  "resource_group": "rg-reservaiq",
+  "state": "deleted",
+  "model_and_outputs_downloaded": true,
+  "registered_copy_hash_verified": true,
+  "compute_before_close": {
+    "max": 1,
+    "min": 0,
+    "nodeStates": {
+      "idleNodeCount": 0,
+      "leavingNodeCount": 1,
+      "preemptedNodeCount": 0,
+      "preparingNodeCount": 0,
+      "runningNodeCount": 0,
+      "unusableNodeCount": 0
+    },
+    "nodes": 1,
+    "state": "Succeeded",
+    "target": 0
+  },
+  "note": "Azure CLI group exists devolvió false. Antes del cierre se descargaron y verificaron las diez salidas y la versión registrada. No se conservaron recursos activos de este grupo temporal.",
+  "confirmed_at_utc": "2026-09-25T01:59:30.211911+00:00",
+  "resource_group_exists": false,
+  "remaining_resources": []
+}

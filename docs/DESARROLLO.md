@@ -36,7 +36,7 @@ El criterio es mayor average precision en validación. Resume precisión y detec
 
 `pipeline.py evaluate` abre la prueba reservada, calcula AP, ROC AUC, precisión, detección, F1, Brier y matriz de confusión. Conserva todas las predicciones en `artifacts/test_predictions.csv`. La importancia por permutación se calcula sobre una muestra fija de validación; expresa sensibilidad global, no causalidad individual.
 
-La lista por capacidad ordena los índices y selecciona exactamente K. Es distinta de una alerta por umbral. En el experimento local, el 20 % superior reúne 705 cancelaciones en 1.598 reservas, frente a una frecuencia base de 1.831/7.990. La concentración es 1,93 veces la esperada con selección aleatoria. No se ha probado que una llamada evite una cancelación ni que el hotel recupere ingresos.
+La lista por capacidad ordena los índices y selecciona exactamente K. Es distinta de una alerta por umbral. En la evaluación de Azure ML, el 20 % superior reúne 705 cancelaciones en 1.598 reservas, frente a una frecuencia base de 1.831/7.990. La concentración es 1,93 veces la esperada con selección aleatoria. No se ha probado que una llamada evite una cancelación ni que el hotel recupere ingresos.
 
 ## 6. Aplicación e inferencia
 
@@ -62,3 +62,21 @@ Los commits agrupan cambios reales por responsabilidad: contrato de datos; entre
 - [Distribución CSV y diccionario](https://github.com/rfordatascience/tidytuesday/tree/main/data/2020/2020-02-11).
 - [Componentes de comandos de Azure ML](https://learn.microsoft.com/en-us/azure/machine-learning/reference-yaml-component-command?view=azureml-api-2).
 - [Control de costos de Azure ML](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-optimize-cost?view=azureml-api-2).
+
+## 9. Decisiones de operación en Azure
+
+La suscripción de la práctica limita las regiones disponibles. Se eligió **North Central US**, con cuota CPU verificada y una referencia pública de 0,146 USD por hora para DS2 v2 Linux. El grupo `rg-reservaiq` separa los recursos de esta entrega de otras prácticas.
+
+El primer intento de construcción reveló que el clúster necesitaba una identidad administrada. Además, los permisos de administración de la suscripción no daban acceso al contenido de Blob Storage. Se declaró la identidad en `compute.yml` y se asignó `Storage Blob Data Contributor` al usuario, workspace y clúster, limitado a la cuenta de almacenamiento de esta práctica. El procedimiento se conserva en `azure/README.md`; no utiliza claves compartidas en el código.
+
+El clúster construye el entorno y ejecuta las etapas con máximo un nodo, mínimo cero y 120 segundos de inactividad. Usar el mismo clúster limita la concurrencia y evita depender de un constructor de imágenes separado. La aplicación consume el modelo descargado y no necesita un endpoint permanente.
+
+La entrega distingue cuatro hechos: configuración validada, trabajo completado, modelo realmente cargado y recursos cerrados. Ninguno se infiere únicamente de la existencia de un archivo YAML. Los estados, fechas, huellas y comprobaciones se conservan en las evidencias del proyecto.
+
+## 10. Promoción del modelo y control de integridad
+
+Se descargaron las diez salidas de las tres etapas. Los marcadores de carpeta de Blob Storage son objetos vacíos y se excluyeron de la descarga de archivos. Se registró `reservaiq:1` directamente desde la salida `trained/model.joblib` del pipeline y se descargó esa versión por separado. Ambas copias tienen la misma huella.
+
+Después se recalcularon las 7.990 predicciones con el modelo descargado y sus métricas. Las decisiones y puntuaciones del modelo elegido coinciden con el experimento local, con diferencia máxima 0,0. Se actualizaron los artefactos de la aplicación y su procedencia. Las catorce pruebas incluyen comprobar todas esas predicciones y enlazar trabajo, etapas, versión y SHA256.
+
+La figura del README se genera desde `artifacts/summary.json` mediante `scripts/generar_grafica.py`, con ReportLab 4.4.9. La gráfica, el informe y la interfaz utilizan los resultados guardados del experimento. El estado de revisión visual se documenta aparte en `EVIDENCIAS.md`.

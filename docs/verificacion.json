@@ -1,10 +1,16 @@
 {
-  "checked_at_utc": "2026-09-25T01:01:12.470199+00:00",
-  "tests_passed": 13,
+  "checked_at_utc": "2026-09-25T01:57:34.329240+00:00",
+  "tests_passed": 14,
   "csv_records": 8,
   "csv_columns": 10,
-  "model_sha256": "7ca26e33ee12f96e48f74790b3abedd5db2c3ac7d61f53167d3d7bdfd774c4e0",
+  "model_sha256": "d1a01086d1fa360d52dd21888a505ad8197b6b18d67784b81bfe0ac304d859dd",
   "web_visual_review": "not_verified_browser_security_policy",
-  "azure_job_verified": false,
-  "report_pages_reviewed": 8
+  "azure_job_verified": true,
+  "azure_job_name": "mango_wire_5f09pdg4m3",
+  "cloud_holdout_predictions_checked": 7990,
+  "local_cloud_max_score_difference": 0.0,
+  "registered_model_hash_verified": true,
+  "report_pages_reviewed": 8,
+  "azure_resources_deleted": true,
+  "closure_confirmed_at_utc": "2026-09-25T01:59:30.211911+00:00"
 }

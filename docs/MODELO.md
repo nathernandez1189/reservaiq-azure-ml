@@ -6,6 +6,7 @@
 | Cliente | Hotel Brisa del Valle, ficticio, Cali |
 | Fuente | Dos hoteles portugueses, llegadas 2015–2017 |
 | Objetivo | `is_canceled`, convertido a `target` |
+| Procedencia | Azure ML, pipeline `mango_wire_5f09pdg4m3`, modelo registrado `reservaiq:1` |
 | Modelo seleccionado | HistGradientBoostingClassifier de scikit-learn |
 | Selección | Mayor average precision en validación |
 | Umbral | 0,17 por máximo F1 en validación |

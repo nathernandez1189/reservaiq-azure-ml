@@ -10,3 +10,9 @@ ejemplos-csv/
 *.zip
 *.log
 azure/evidence-private/
+.azure/
+.env
+.runtime/
+scripts/
+requirements-docs.txt
+azure/evidence/

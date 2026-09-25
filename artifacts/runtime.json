@@ -4,11 +4,12 @@
   "job_status": "Completed",
   "workspace": "ml-reservaiq",
   "location": "northcentralus",
-  "compute_state": "Entrenamiento finalizado; cierre en verificación",
+  "compute_state": "Recursos temporales eliminados",
   "model_name": "reservaiq",
   "model_version": "1",
   "model_sha256": "d1a01086d1fa360d52dd21888a505ad8197b6b18d67784b81bfe0ac304d859dd",
   "cost_estimate_usd": 1,
   "cost_note": "Escenario de práctica breve: hasta 1 h de CPU DS2 v2 a US$0,146/h, US$0,50 de auxiliares supuestos y US$0,354 de margen. Facturación todavía no consolidada; no equivale a costo cero.",
-  "evidence": "azure/evidence/run.json"
+  "evidence": "azure/evidence/run.json",
+  "resources_deleted_at_utc": "2026-09-25T01:59:30.211911+00:00"
 }

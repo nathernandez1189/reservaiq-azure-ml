@@ -1,0 +1,25 @@
+{
+  "checked_at_utc": "2026-09-25T01:43:14.924664+00:00",
+  "resource_group": "rg-reservaiq",
+  "period_utc": {
+    "from": "2026-09-24",
+    "to": "2026-09-26"
+  },
+  "columns": [
+    {
+      "name": "PreTaxCost",
+      "type": "Number"
+    },
+    {
+      "name": "UsageDate",
+      "type": "Number"
+    },
+    {
+      "name": "Currency",
+      "type": "String"
+    }
+  ],
+  "rows": [],
+  "status": "not_consolidated",
+  "note": "Una consulta sin filas no demuestra costo cero. Los cargos pueden aparecer con retraso."
+}

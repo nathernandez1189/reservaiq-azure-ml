@@ -1,6 +1,6 @@
 # Costos y control de consumo
 
-Se propone un clúster CPU **Standard_DS2_v2** con mínimo 0, máximo 1 nodo y liberación después de 120 segundos inactivo. Es suficiente para este experimento tabular y reduce la tarifa frente al tamaño DS3 v2 de la primera estimación. La aplicación usa el modelo descargado y no mantiene un endpoint en línea.
+Se utilizó un clúster CPU **Standard_DS2_v2** con mínimo 0, máximo 1 nodo y liberación después de 120 segundos inactivo. El tamaño permite ejecutar este experimento tabular con CPU. La aplicación usa el modelo descargado y no mantiene un endpoint en línea.
 
 ## Escenario mínimo de una ejecución
 
@@ -25,6 +25,14 @@ La reserva auxiliar de 0,50 USD es un supuesto, no una cotización desglosada de
 
 ## Estado de facturación
 
-No hay una ejecución de Azure ML registrada en las evidencias de esta revisión. No se presenta un costo real consolidado. El registro del proveedor y la instalación de la extensión son preparación, no entrenamiento ni consumo de un nodo.
+El pipeline `mango_wire_5f09pdg4m3` y sus tres etapas terminaron en estado Completed. La imagen se construyó en el mismo clúster. Se conservaron diez salidas y se verificó la versión registrada antes de solicitar el cierre del grupo temporal.
+
+El límite operativo autorizado fue **US$3**. El presupuesto de **US$1** de la tabla es un escenario conservador para una práctica breve; no es una factura. La consulta de Cost Management del 25/09/2026 UTC no devolvió filas para `rg-reservaiq`. Esto significa que no había cargos consolidados en esa consulta, no que la ejecución fuera gratuita. El resultado fechado está en `azure/evidence/billing.json`.
+
+El cierre y la comprobación del grupo se conservan en `azure/evidence/closure.json`. Los estados y el modelo son evidencia histórica; para otro entrenamiento se deben recrear los recursos y revisar tarifa, cuota y presupuesto.
 
 Fuentes: [tarifas de Azure ML](https://azure.microsoft.com/en-us/pricing/details/machine-learning/), [API de precios](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices), [gestión de costos](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-optimize-cost?view=azureml-api-2).
+
+## Cierre verificado
+
+El 25/09/2026 UTC se confirmó `az group exists --name rg-reservaiq` → `false`. Se eliminaron el workspace, el clúster y sus recursos asociados después de conservar modelo, resultados y registros. No queda un endpoint ni un clúster de esta práctica en ejecución. Las copias incluidas permiten evaluar la demo sin Azure; la factura puede reflejar cargos anteriores con retraso.
