@@ -41,6 +41,10 @@ class ReservaIQTests(unittest.TestCase):
     def test_model_roundtrip(self):
         for c in self.summary['examples']:
             self.assertAlmostEqual(infer(self.bundle,c['inputs'])['score'],c['score'],places=12)
+    def test_loaded_model_matches_entire_holdout(self):
+        frame=pd.read_csv(ROOT/'artifacts/test_predictions.csv',keep_default_na=False)
+        predicted=self.bundle['model'].predict_proba(frame[FEATURES])[:,1]
+        np.testing.assert_allclose(predicted,frame.score.to_numpy(),rtol=0,atol=1e-12)
     def test_reject_nonfinite_booleans_out_of_scope(self):
         for value in [float('nan'),float('inf'),True,-1,61,1.5,'30']:
             with self.subTest(value=value),self.assertRaises(ValueError):validate_input({**self.example,'lead_time':value})

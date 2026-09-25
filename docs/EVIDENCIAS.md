@@ -20,7 +20,7 @@ Las evidencias enlazan resultados con archivos verificables. Las métricas corre
 python -m unittest discover -s tests -v
 ```
 
-Las pruebas comprueban trece aspectos del modelo, datos y API. Incluyen el CSV entregado y la concordancia entre resultados individuales y por lote. La prueba de procedencia exige trabajo Completed y SHA256 coincidente antes de afirmar un modelo de Azure.
+Las pruebas comprueban catorce aspectos del modelo, datos y API. Incluyen el CSV entregado y la concordancia entre resultados individuales y por lote. La prueba de procedencia exige trabajo Completed y SHA256 coincidente antes de afirmar un modelo de Azure.
 
 ## Revisión de interfaz y capturas
 

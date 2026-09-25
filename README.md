@@ -19,6 +19,10 @@ En 7.990 reservas históricas reservadas para prueba, seleccionar el 20 % de may
 
 Los datos provienen de dos hoteles de Portugal en 2015–2017. El cliente colombiano es ficticio. La aplicación no envía mensajes, modifica reservas ni efectúa cobros.
 
+![Concentración de cancelaciones en el 20 % de mayor índice](docs/figuras/priorizacion.svg)
+
+La gráfica se genera desde las métricas guardadas con `scripts/generar_grafica.py` (dependencia opcional: ReportLab 4.4.4). Es una figura de resultados, no una captura de la aplicación.
+
 ## Ejecutar la aplicación
 
 Requisitos: Python 3.12. Desde la carpeta del repositorio, en macOS o Linux:
