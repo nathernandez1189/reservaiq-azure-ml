@@ -1,9 +1,9 @@
 {
-  "checked_at_utc": "2026-09-25T01:01:58.916483+00:00",
+  "checked_at_utc": "2026-09-25T01:29:17.571457+00:00",
   "results": [
     {
       "file": "compute.yml",
-      "sha256": "73c166a575325fa0f33abfdbe8cd03668735262f774e6a23b19d05cc978c5084",
+      "sha256": "0c8ac87a1212b07cfd3670f87d6c5cf287ca70635ce0f061b6b077a8c7700f18",
       "passed": true,
       "errors": []
     },
@@ -28,6 +28,12 @@
     {
       "file": "train.yml",
       "sha256": "5bee8ec91048fe603da6c2c08a1205a0e1bf7777ff8470e580587ca2c1325673",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "file": "workspace.yml",
+      "sha256": "afdbbbc2b2834b14bfa9cd963cc4f94176f8f29e9162f22e69096b784ef0a422",
       "passed": true,
       "errors": []
     }

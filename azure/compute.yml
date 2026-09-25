@@ -6,4 +6,7 @@ min_instances: 0
 max_instances: 1
 idle_time_before_scale_down: 120
 tier: dedicated
+identity:
+  type: system_assigned
+ssh_public_access_enabled: false
 description: CPU académica de ReservaIQ. Validar cuota, región y presupuesto antes de crear.

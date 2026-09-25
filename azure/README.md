@@ -26,12 +26,29 @@ Estos comandos crean recursos potencialmente facturables. Usa un grupo separado 
 
 ```bash
 az group create --name rg-reservaiq --location northcentralus
-az ml workspace create --name ml-reservaiq --resource-group rg-reservaiq --location northcentralus
+az ml workspace create --file azure/workspace.yml --resource-group rg-reservaiq
 az ml compute list-usage --location northcentralus --resource-group rg-reservaiq --workspace-name ml-reservaiq -o table
 az ml compute create --file azure/compute.yml --resource-group rg-reservaiq --workspace-name ml-reservaiq
 ```
 
 No continúes si falta cuota, la región no está permitida o el costo previsto supera el presupuesto de la práctica. El workspace crea recursos asociados; documenta sus nombres y el digest del entorno resuelto. La imagen base usa una etiqueta mutable y el digest es necesario para identificar exactamente la imagen ejecutada.
+
+### Acceso a datos mediante identidad
+
+El workspace usa `system_datastores_auth_mode: identity` y el clúster declara una identidad administrada. Ser propietario de la suscripción no concede por sí mismo acceso al contenido de Blob Storage. Se necesita `Storage Blob Data Contributor` para cargar entradas y guardar o descargar resultados. Limita las asignaciones a la cuenta de almacenamiento de esta práctica.
+
+```bash
+RESERVAIQ_STORAGE=$(az ml workspace show -g rg-reservaiq -n ml-reservaiq --query storage_account -o tsv)
+RESERVAIQ_USER=$(az ad signed-in-user show --query id -o tsv)
+RESERVAIQ_WORKSPACE=$(az ml workspace show -g rg-reservaiq -n ml-reservaiq --query identity.principal_id -o tsv)
+RESERVAIQ_COMPUTE=$(az ml compute show -g rg-reservaiq -w ml-reservaiq -n reservaiq-cpu --query identity.principal_id -o tsv)
+az role assignment create --assignee-object-id "$RESERVAIQ_USER" --assignee-principal-type User --role "Storage Blob Data Contributor" --scope "$RESERVAIQ_STORAGE"
+az role assignment create --assignee-object-id "$RESERVAIQ_WORKSPACE" --assignee-principal-type ServicePrincipal --role "Storage Blob Data Contributor" --scope "$RESERVAIQ_STORAGE"
+az role assignment create --assignee-object-id "$RESERVAIQ_COMPUTE" --assignee-principal-type ServicePrincipal --role "Storage Blob Data Contributor" --scope "$RESERVAIQ_STORAGE"
+az ml workspace update -g rg-reservaiq -n ml-reservaiq --image-build-compute reservaiq-cpu
+```
+
+Las asignaciones pueden tardar en propagarse. Verifica el acceso antes de reenviar un trabajo y consulta la lista para evitar ejecuciones duplicadas. La construcción del entorno usa el mismo clúster limitado a un nodo. No se publican identidades ni credenciales. [Autenticación entre servicios](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-identity-based-service-authentication?view=azureml-api-2).
 
 ## 3. Trabajo y salidas
 

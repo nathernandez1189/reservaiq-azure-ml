@@ -1,6 +1,7 @@
 $schema: https://azuremlschemas.azureedge.net/latest/workspace.schema.json
 name: ml-reservaiq
 location: northcentralus
+system_datastores_auth_mode: identity
 display_name: ReservaIQ
 description: Entrenamiento reproducible de reservas hoteleras.
 tags:
