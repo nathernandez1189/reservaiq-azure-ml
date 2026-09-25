@@ -1,0 +1,57 @@
+{
+  "checked_at_utc": "2026-09-25T01:52:57.672170+00:00",
+  "provider": "Azure Machine Learning",
+  "workspace": "ml-reservaiq",
+  "location": "northcentralus",
+  "experiment": "reservaiq-hoteles",
+  "job_name": "mango_wire_5f09pdg4m3",
+  "status": "Completed",
+  "created_at_utc": "2026-09-25T01:29:18.242818+00:00",
+  "completed_state_observed_at_utc": "2026-09-25T01:52:57.672170+00:00",
+  "steps": [
+    {
+      "stage": "prepare",
+      "job_name": "49bf4660-d673-4f88-94ca-3b87429eacb2",
+      "status": "Completed",
+      "created_at_utc": "2026-09-25T01:29:24.463944+00:00"
+    },
+    {
+      "stage": "train",
+      "job_name": "1005977f-53e3-4478-8ead-a419195d6495",
+      "status": "Completed",
+      "created_at_utc": "2026-09-25T01:47:12.973127+00:00"
+    },
+    {
+      "stage": "evaluate",
+      "job_name": "1439a815-3338-4a2a-b50f-c0be02274bd1",
+      "status": "Completed",
+      "created_at_utc": "2026-09-25T01:48:12.207574+00:00"
+    }
+  ],
+  "model": {
+    "name": "reservaiq",
+    "version": "1",
+    "type": "custom_model",
+    "registered_at_utc": "2026-09-25T01:50:34.994682+00:00",
+    "source": "azureml://jobs/mango_wire_5f09pdg4m3/outputs/trained/paths/model.joblib",
+    "sha256": "d1a01086d1fa360d52dd21888a505ad8197b6b18d67784b81bfe0ac304d859dd"
+  },
+  "source_commit_at_submission": "72162c4074460713898da6be1d77c5c02076c3b3",
+  "working_tree_had_changes_at_submission": true,
+  "source_hashes": "../environment-lock.json",
+  "sanitization": "Se conservan campos técnicos. Se omiten suscripción, tenant, identidades, rutas privadas, tokens y URLs con credenciales.",
+  "artifact_hashes": {
+    "report/demo-input.csv": "138bcf962a7e143e036b401aa7049ba67af5100e0e84ec8032b1027d0ce527cc",
+    "report/summary.json": "ed1aebf992c640bcd367a04b59c077f0fbbcf7dbf680c8e1e954e2a5ac9ed32e",
+    "report/test_predictions.csv": "2d980bacc48bc90bea6bbe4860133fec8c0636b7eba48c44334ac13f74f874b3",
+    "splits/data_manifest.json": "10f90dd32e2fbb4561f1acded2729a69ebdc6424a145c6942214eb3b1af56be5",
+    "splits/test.csv": "f822d4f6454f9a5402faf083ddd89681db0bab269bf233ae80396872099afc22",
+    "splits/train.csv": "242f8fe99042420ed6dab5ec06e2534e5b08d537e365ca09e78b9e2a1077e95f",
+    "splits/validation.csv": "2b3513baefb4745db826afc1dce3cb9e5e5e4bff26c685633772eb03c5089cb9",
+    "trained/model.joblib": "d1a01086d1fa360d52dd21888a505ad8197b6b18d67784b81bfe0ac304d859dd",
+    "trained/selection.json": "9424beb1a3ebc9a6276ed8b20c9e065ce319bf050b563352723fe684ef3d956e",
+    "trained/validation_predictions.csv": "a926eccfdf5adc1f85cfbd650140248e885c31af17a9feed7b97c70ec8a5c08c"
+  },
+  "artifact_hashes_note": "Las huellas report/* corresponden a las salidas descargadas. La copia publicada de summary.json incorpora la confirmación posterior de origen Azure; sus métricas y predicciones no se modifican.",
+  "published_summary_sha256": "5bb6d05c4a7768aaf515aa702d66645935c07aace0ccb6a99194ed78cee0a5d7"
+}

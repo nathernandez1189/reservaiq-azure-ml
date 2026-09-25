@@ -22,15 +22,15 @@
         "lift": 1.0951285175263223
       },
       "name": "Base de referencia",
-      "training_seconds": 0.02
+      "training_seconds": 0.11
     },
     {
-      "average_precision": 0.40274768634094105,
-      "roc_auc": 0.7134110683707274,
+      "average_precision": 0.4027914299016055,
+      "roc_auc": 0.7133917811939225,
       "precision": 0.5394736842105263,
       "recall": 0.030460624071322436,
       "f1": 0.05766526019690577,
-      "brier": 0.15390928421039954,
+      "brier": 0.15390938882298025,
       "tn": 4780,
       "fp": 35,
       "fn": 1305,
@@ -46,7 +46,7 @@
         "lift": 1.9563821313097352
       },
       "name": "Regresión logística",
-      "training_seconds": 0.13
+      "training_seconds": 1.14
     },
     {
       "average_precision": 0.36773390855869015,
@@ -70,7 +70,7 @@
         "lift": 1.7596302281609382
       },
       "name": "Random Forest",
-      "training_seconds": 1.51
+      "training_seconds": 4.3
     },
     {
       "average_precision": 0.4102856331528469,
@@ -94,7 +94,7 @@
         "lift": 1.8375885294085748
       },
       "name": "Gradient Boosting",
-      "training_seconds": 0.45
+      "training_seconds": 1.26
     }
   ],
   "selected": "Gradient Boosting",

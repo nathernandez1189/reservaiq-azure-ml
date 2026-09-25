@@ -70,6 +70,11 @@ class ReservaIQTests(unittest.TestCase):
         if AZURE_VERIFIED:
             self.assertEqual(PROVENANCE['job_status'],'Completed')
             self.assertEqual(PROVENANCE['model_sha256'],MODEL_SHA256)
+            record=json.loads((ROOT/'azure/evidence/run.json').read_text())
+            self.assertEqual(record['job_name'],PROVENANCE['job_name'])
+            self.assertEqual(record['model']['sha256'],MODEL_SHA256)
+            self.assertEqual({step['stage'] for step in record['steps']},{'prepare','train','evaluate'})
+            self.assertTrue(all(step['status']=='Completed' for step in record['steps']))
 
     def test_upload_csv_matches_contract(self):
         frame=pd.read_csv(ROOT/'ejemplos-csv/reservas-listas.csv',keep_default_na=False)

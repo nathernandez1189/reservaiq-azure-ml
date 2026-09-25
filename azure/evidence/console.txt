@@ -1,0 +1,15 @@
+Extractos literales de stdout de las tres etapas completadas en Azure ML.
+Se omiten las rutas internas y registros de infraestructura.
+
+prepare
+Particiones: {'train': {'n': 21236, 'positives': 3933, 'prevalence': 0.1852043699378414, 'booking_start': '2015-07-01', 'booking_end_exclusive': '2016-07-01', 'outcome_known_before': '2016-09-01'}, 'validation': {'n': 6161, 'positives': 1346, 'prevalence': 0.21847102743061192, 'booking_start': '2016-09-01', 'booking_end_exclusive': '2016-12-01', 'outcome_known_before': '2017-02-01'}, 'test': {'n': 7990, 'positives': 1831, 'prevalence': 0.22916145181476846, 'booking_start': '2017-02-01', 'booking_end_exclusive': '2017-06-01', 'outcome_known_before': '2017-09-01'}}
+
+train
+Base de referencia AP validación 0.2185
+Regresión logística AP validación 0.4028
+Random Forest AP validación 0.3677
+Gradient Boosting AP validación 0.4103
+Selección: Gradient Boosting umbral 0.17000000000000004
+
+evaluate
+Prueba reservada: {"average_precision": 0.4133982400539025, "roc_auc": 0.7307469835629263, "precision": 0.35078909612625536, "recall": 0.801201529219006, "f1": 0.48794279062032264, "brier": 0.15599223287020053, "tn": 3444, "fp": 2715, "fn": 364, "tp": 1467, "threshold": 0.17000000000000004, "n": 7990, "positives": 1831, "top20": {"k": 1598, "hits": 705, "precision": 0.4411764705882353, "recall": 0.3850354997269252, "lift": 1.9251774986346257}, "recall_wilson_95": [0.782298614444394, 0.8188431952900268]}

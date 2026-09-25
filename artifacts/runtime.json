@@ -1,10 +1,14 @@
 {
-  "origin": "local",
-  "job_status": "No ejecutado",
-  "compute_state": "Sin nodo creado",
+  "origin": "azure_ml",
+  "job_name": "mango_wire_5f09pdg4m3",
+  "job_status": "Completed",
+  "workspace": "ml-reservaiq",
+  "location": "northcentralus",
+  "compute_state": "Entrenamiento finalizado; cierre en verificación",
   "model_name": "reservaiq",
-  "model_version": "1.0",
-  "model_sha256": "7ca26e33ee12f96e48f74790b3abedd5db2c3ac7d61f53167d3d7bdfd774c4e0",
+  "model_version": "1",
+  "model_sha256": "d1a01086d1fa360d52dd21888a505ad8197b6b18d67784b81bfe0ac304d859dd",
   "cost_estimate_usd": 1,
-  "cost_note": "Escenario presupuestado: 1 hora CPU DS2 v2 (US$0,146) + US$0,50 auxiliares supuestos + US$0,354 de margen. No es un cargo real."
+  "cost_note": "Escenario de práctica breve: hasta 1 h de CPU DS2 v2 a US$0,146/h, US$0,50 de auxiliares supuestos y US$0,354 de margen. Facturación todavía no consolidada; no equivale a costo cero.",
+  "evidence": "azure/evidence/run.json"
 }
