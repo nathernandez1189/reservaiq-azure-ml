@@ -4,13 +4,18 @@
   "csv_records": 8,
   "csv_columns": 10,
   "model_sha256": "d1a01086d1fa360d52dd21888a505ad8197b6b18d67784b81bfe0ac304d859dd",
-  "web_visual_review": "not_verified_browser_security_policy",
+  "web_visual_review": "reviewed_user_supplied_screenshots",
   "azure_job_verified": true,
   "azure_job_name": "mango_wire_5f09pdg4m3",
   "cloud_holdout_predictions_checked": 7990,
   "local_cloud_max_score_difference": 0.0,
   "registered_model_hash_verified": true,
-  "report_pages_reviewed": 8,
+  "report_pages_reviewed": 12,
   "azure_resources_deleted": true,
-  "closure_confirmed_at_utc": "2026-09-25T01:59:30.211911+00:00"
+  "closure_confirmed_at_utc": "2026-09-25T01:59:30.211911+00:00",
+  "visual_review_manifest": "docs/capturas/manifest.json",
+  "visual_review_count": 4,
+  "visual_review_scope": "Capturas aportadas con indicador de modelo local; evidencia Azure independiente.",
+  "live_browser_e2e_verified": false,
+  "visual_review_checked_at_utc": "2026-09-25T02:13:36.782601+00:00"
 }

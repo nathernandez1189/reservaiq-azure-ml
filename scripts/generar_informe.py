@@ -2,7 +2,7 @@
 from pathlib import Path
 import json,html,re,hashlib,datetime,sys
 from reportlab.pdfgen import canvas
-from reportlab.platypus import SimpleDocTemplate,Paragraph,Spacer,Table,TableStyle,PageBreak,Flowable
+from reportlab.platypus import SimpleDocTemplate,Paragraph,Spacer,Table,TableStyle,PageBreak,Flowable,Image
 from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_LEFT
@@ -75,7 +75,7 @@ p('Hotel Brisa del Valle es un cliente ficticio de Cali. Su equipo de reservas d
 table([['Resultado retrospectivo','Valor'],['Reservas de prueba',num(M['n'])],['Precisión del 20 % prioritario',pct(M['top20']['precision'])],['Cancelaciones capturadas en ese 20 %',pct(M['top20']['recall'])],['Concentración frente a selección aleatoria esperada',f"{M['top20']['lift']:.2f} veces"]],[365,115])
 p('Los datos son reales e históricos, de dos hoteles de Portugal. No pertenecen al cliente ficticio. Estas métricas no prueban ahorros, cancelaciones evitadas ni generalización a Colombia.','small')
 h('Estado de la evidencia')
-p(f"Pipeline de Azure ML completado: {R['job_name']}. Modelo descargado, registrado y verificado en la aplicación; catorce pruebas correctas. Las evidencias conservan estados, huellas y comparación entre ejecuciones. No se incluyen capturas de navegación web." if AZURE else 'Entrenamiento, evaluación, inferencia y catorce pruebas verificados localmente. Componentes de Azure ML configurados; ejecución remota por verificar.','small')
+p(f"Pipeline de Azure ML completado: {R['job_name']}. Modelo descargado, registrado y verificado en la aplicación; catorce pruebas correctas. Las evidencias conservan estados, huellas y comparación entre ejecuciones. El anexo incluye cuatro capturas aportadas por el equipo de una sesión con indicador de modelo local; la ejecución Azure se acredita mediante registros independientes." if AZURE else 'Entrenamiento, evaluación, inferencia y catorce pruebas verificados localmente. Componentes de Azure ML configurados; ejecución remota por verificar.','small')
 
 page();title('1. Requerimientos y alternativas')
 p('La necesidad se traduce en una decisión verificable: qué reservas revisar primero cuando existe una capacidad K. La alerta por umbral es un análisis complementario y no obliga a contactar a todos los registros señalados.')
@@ -129,7 +129,7 @@ p('Abrir http://127.0.0.1:8765. En la vista de reserva, seleccionar ejemplos-csv
 h('Catorce pruebas verificadas')
 p('Integridad del archivo; separación temporal; madurez de etiquetas; exclusión de desenlaces; selección en validación; concordancia de métricas; modelo guardado; rechazo de valores inválidos; categorías; API individual y por lote; solicitudes incorrectas; origen de peticiones; procedencia y CSV. Las comprobaciones están agrupadas en catorce métodos de prueba.')
 code('python -m unittest discover -s tests -v')
-p('GitHub Actions ejecuta estas pruebas para cada cambio. Incluyen comparar las 7.990 predicciones de prueba con el modelo cargado. Las pruebas del servidor no sustituyen la revisión visual; esta entrega no contiene capturas verificadas de navegación.','small')
+p('GitHub Actions ejecuta estas pruebas para cada cambio. Incluyen comparar las 7.990 predicciones de prueba con el modelo cargado. El anexo documenta la revisión de cuatro capturas aportadas. Las pruebas del servidor y las imágenes no certifican por sí solas la navegación y descarga de archivos de extremo a extremo.','small')
 
 page();title('7. Costos, evidencia y conclusiones')
 table([['Concepto','Supuesto','USD'],['CPU DS2 v2','1 hora × 0,146','0,146'],['Servicios auxiliares','Reserva supuesta de práctica breve','0,500'],['Margen','Imprevistos del escenario','0,354'],['Total presupuestado','Una ejecución acotada','1,000']],[145,255,80])
@@ -142,6 +142,25 @@ p('El experimento demuestra una priorización histórica con capacidad limitada 
 h('Fuentes')
 for label,url in [('1. Antonio, Almeida y Nunes: datos hoteleros','https://doi.org/10.1016/j.dib.2018.11.126'),('2. TidyTuesday: CSV y diccionario','https://github.com/rfordatascience/tidytuesday/tree/main/data/2020/2020-02-11'),('3. Microsoft: componentes de Azure ML','https://learn.microsoft.com/en-us/azure/machine-learning/reference-yaml-component-command?view=azureml-api-2'),('4. Microsoft: API de precios','https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices'),('5. Microsoft: control de costos','https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-optimize-cost?view=azureml-api-2')]:
  p(f'<link href="{html.escape(url,quote=True)}" color="#087e80">{label}</link>','small')
+
+
+# Se incrustan los PNG originales completos: el estado visible nunca se retoca.
+captures=json.loads((OUT/'capturas/manifest.json').read_text())
+for item in captures['images']:
+ page();title(item['pdf_title'])
+ p('Captura aportada por el equipo · '+item['captured_at_from_filename']+' (según el nombre del archivo).','small')
+ p('La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.','small')
+ image_path=OUT/'capturas'/item['file']
+ if hashlib.sha256(image_path.read_bytes()).hexdigest()!=item['sha256']:
+  raise ValueError('La captura no coincide con su manifiesto: '+item['file'])
+ story.append(Image(str(image_path),width=480,height=480*item['height']/item['width']))
+ story.append(Spacer(1,8))
+ md.append('!['+item['title']+'](capturas/'+item['file']+')\n')
+ p('<b>Qué se observa.</b> '+html.escape(item['observed']),'small')
+ p('<b>Por qué importa.</b> '+html.escape(item['explanation']),'small')
+ p('<b>Alcance.</b> '+html.escape(item['scope']),'small')
+ url='https://github.com/nathernandez1189/reservaiq-azure-ml/blob/main/docs/capturas/'+item['file']
+ p('<link href="'+url+'" color="#087e80">Abrir la captura original a resolución completa</link> · docs/CAPTURAS.md amplía la explicación.','small')
 
 def footer(c,doc):
  c.saveState();w,height=doc.pagesize;c.setFont('ArialBold',9);c.setFillColor(teal);c.drawString(56,height-33,'RESERVAIQ')

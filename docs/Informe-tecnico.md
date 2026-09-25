@@ -26,7 +26,7 @@ Los datos son reales e históricos, de dos hoteles de Portugal. No pertenecen al
 
 ## Estado de la evidencia
 
-Pipeline de Azure ML completado: mango_wire_5f09pdg4m3. Modelo descargado, registrado y verificado en la aplicación; catorce pruebas correctas. Las evidencias conservan estados, huellas y comparación entre ejecuciones. No se incluyen capturas de navegación web.
+Pipeline de Azure ML completado: mango_wire_5f09pdg4m3. Modelo descargado, registrado y verificado en la aplicación; catorce pruebas correctas. Las evidencias conservan estados, huellas y comparación entre ejecuciones. El anexo incluye cuatro capturas aportadas por el equipo de una sesión con indicador de modelo local; la ejecución Azure se acredita mediante registros independientes.
 
 
 ---
@@ -202,7 +202,7 @@ Integridad del archivo; separación temporal; madurez de etiquetas; exclusión d
 python -m unittest discover -s tests -v
 ```
 
-GitHub Actions ejecuta estas pruebas para cada cambio. Incluyen comparar las 7.990 predicciones de prueba con el modelo cargado. Las pruebas del servidor no sustituyen la revisión visual; esta entrega no contiene capturas verificadas de navegación.
+GitHub Actions ejecuta estas pruebas para cada cambio. Incluyen comparar las 7.990 predicciones de prueba con el modelo cargado. El anexo documenta la revisión de cuatro capturas aportadas. Las pruebas del servidor y las imágenes no certifican por sí solas la navegación y descarga de archivos de extremo a extremo.
 
 
 ---
@@ -239,3 +239,79 @@ El experimento demuestra una priorización histórica con capacidad limitada y e
 [4. Microsoft: API de precios](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices)
 
 [5. Microsoft: control de costos](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-optimize-cost?view=azureml-api-2)
+
+
+---
+
+# A1. Centro de decisiones
+
+Captura aportada por el equipo · 2026-09-24 21:09:25 (según el nombre del archivo).
+
+La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
+
+![Centro de decisiones](capturas/01-centro-decisiones.png)
+
+**Qué se observa.** El tablero muestra 1,93 veces de concentración, 44,1 % de precisión y 38,5 % de cancelaciones capturadas al revisar el 20 % prioritario. El control de capacidad selecciona 30 reservas de una cohorte ilustrativa de 150; se muestran las primeras ocho filas.
+
+**Por qué importa.** La decisión de negocio consiste en asignar una capacidad limitada de revisión. Las métricas superiores corresponden a las 7.990 reservas de prueba; la tabla utiliza una cohorte ilustrativa y no representa reservas actuales del hotel ficticio.
+
+**Alcance.** Se ven la lista ordenada, el selector de capacidad y los controles de exportación y consulta de resultados. Una imagen estática no verifica su interacción ni el archivo exportado.
+
+[Abrir la captura original a resolución completa](https://github.com/nathernandez1189/reservaiq-azure-ml/blob/main/docs/capturas/01-centro-decisiones.png) · docs/CAPTURAS.md amplía la explicación.
+
+
+---
+
+# A2. Reserva individual y lote
+
+Captura aportada por el equipo · 2026-09-24 21:09:30 (según el nombre del archivo).
+
+La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
+
+![Reserva individual y análisis por lote](capturas/02-reserva-y-lote.png)
+
+**Qué se observa.** El formulario contiene diez variables y muestra un escenario editado con índice 4,5 sobre 100: seguimiento habitual frente al umbral de 17. En el lote aparece reservas-ejemplo.csv y el mensaje de ocho reservas analizadas, ninguna sobre el umbral y resultado descargado.
+
+**Por qué importa.** La inferencia individual y por lote usa el mismo contrato de entrada. Editar una reserva genera un escenario sin desenlace conocido. El índice no es una probabilidad calibrada y no justifica cancelar o cobrar una reserva.
+
+**Alcance.** La captura acredita el resultado visible de la sesión, no el contenido del archivo descargado. El CSV listo para cargar de esta entrega se llama reservas-listas.csv y se encuentra en ejemplos-csv/.
+
+[Abrir la captura original a resolución completa](https://github.com/nathernandez1189/reservaiq-azure-ml/blob/main/docs/capturas/02-reserva-y-lote.png) · docs/CAPTURAS.md amplía la explicación.
+
+
+---
+
+# A3. Evidencia del modelo
+
+Captura aportada por el equipo · 2026-09-24 21:09:35 (según el nombre del archivo).
+
+La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
+
+![Evaluación y evidencia del modelo](capturas/03-evidencia-modelo.png)
+
+**Qué se observa.** Se muestran 21.236 registros de entrenamiento, 6.161 de validación y 7.990 de prueba. La matriz contiene 1.467 aciertos de cancelación, 364 cancelaciones omitidas, 2.715 falsas alertas y 3.444 reservas sin cancelación ni alerta. ROC AUC: 0,731; average precision: 0,413.
+
+**Por qué importa.** La comparación de candidatos se realiza en validación y la prueba se reserva para evaluar el modelo elegido. La pantalla permite distinguir la alerta por umbral de la lista por capacidad y expone los errores que acompañan al resultado.
+
+**Alcance.** Los valores principales concuerdan con los artefactos entregados. La importancia por permutación es global, no una explicación causal individual. La etiqueta visible identifica la sesión como local.
+
+[Abrir la captura original a resolución completa](https://github.com/nathernandez1189/reservaiq-azure-ml/blob/main/docs/capturas/03-evidencia-modelo.png) · docs/CAPTURAS.md amplía la explicación.
+
+
+---
+
+# A4. Diseño y ejecución
+
+Captura aportada por el equipo · 2026-09-24 21:09:41 (según el nombre del archivo).
+
+La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
+
+![Arquitectura, equipo y estado mostrado](capturas/04-diseno-azure.png)
+
+**Qué se observa.** La vista presenta datos versionados, componentes CLI v2, artefactos del trabajo y aplicación con revisión humana. Muestra a Juan Ospina Tenorio, Natalia Hernández Piedrahita y Miguel Ángel Diuza como equipo. En esta sesión aparecen modelo LOCAL, trabajo Sin ejecución, cómputo No creado y costo Por verificar.
+
+**Por qué importa.** El diseño conecta preparación, comparación y evaluación con la descarga del modelo y la aplicación local. Los estados de esta captura no acreditan la ejecución en Azure ni corresponden al estado documentado en los registros de la entrega.
+
+**Alcance.** La ejecución Completed, el registro reservaiq:1 y el cierre de recursos se acreditan por separado en azure/evidence/. El escenario de costo es US$1 estimado; la factura no estaba consolidada en la consulta guardada. No se ha determinado la causa de la diferencia con la pantalla.
+
+[Abrir la captura original a resolución completa](https://github.com/nathernandez1189/reservaiq-azure-ml/blob/main/docs/capturas/04-diseno-azure.png) · docs/CAPTURAS.md amplía la explicación.

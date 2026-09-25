@@ -76,7 +76,9 @@ El archivo ya contiene las diez columnas exactas, separadas por comas. El [dicci
 
 ## Informe técnico
 
-[Leer el informe técnico en PDF](docs/ReservaIQ-Informe-tecnico.pdf). Incluye requerimientos, alternativas, diseño, implementación, resultados, costos y fuentes.
+[Leer el informe técnico en PDF](docs/ReservaIQ-Informe-tecnico.pdf). Incluye requerimientos, alternativas, diseño, implementación, resultados, costos, fuentes y un anexo con las cuatro capturas comentadas.
+
+[Ver las capturas de las cuatro vistas](docs/CAPTURAS.md). Las imágenes aportadas muestran una sesión con indicador de modelo local; la ejecución de Azure se acredita mediante los registros enlazados arriba.
 
 ## Diseño y reproducibilidad
 
@@ -110,7 +112,7 @@ python scripts/generar_grafica.py
 python scripts/generar_informe.py
 ```
 
-El informe se guarda en `docs/ReservaIQ-Informe-tecnico.pdf` y `docs/Informe-tecnico.md`. En sistemas sin Arial, el generador usa Helvetica. El PDF de esta entrega fue revisado visualmente en sus ocho páginas.
+El informe se guarda en `docs/ReservaIQ-Informe-tecnico.pdf` y `docs/Informe-tecnico.md`. En sistemas sin Arial, el generador usa Helvetica. El PDF de esta entrega fue revisado visualmente en sus doce páginas.
 
 ## Estructura
 

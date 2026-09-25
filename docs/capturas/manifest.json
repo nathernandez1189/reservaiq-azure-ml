@@ -1,0 +1,60 @@
+{
+  "source": "Cuatro capturas aportadas por el equipo en la conversación del proyecto.",
+  "integrity": "Archivos originales copiados sin recorte, retoque ni sustitución de estados.",
+  "capture_date_source": "Fecha y hora tomadas del nombre original; no son una certificación del reloj ni de la procedencia del modelo.",
+  "scope": "Revisión de imágenes aportadas, no prueba automatizada de navegación. Las cuatro capturas muestran una etiqueta de modelo local. La ejecución Azure se acredita mediante registros independientes.",
+  "images": [
+    {
+      "file": "01-centro-decisiones.png",
+      "title": "Centro de decisiones",
+      "pdf_title": "A1. Centro de decisiones",
+      "observed": "El tablero muestra 1,93 veces de concentración, 44,1 % de precisión y 38,5 % de cancelaciones capturadas al revisar el 20 % prioritario. El control de capacidad selecciona 30 reservas de una cohorte ilustrativa de 150; se muestran las primeras ocho filas.",
+      "explanation": "La decisión de negocio consiste en asignar una capacidad limitada de revisión. Las métricas superiores corresponden a las 7.990 reservas de prueba; la tabla utiliza una cohorte ilustrativa y no representa reservas actuales del hotel ficticio.",
+      "scope": "Se ven la lista ordenada, el selector de capacidad y los controles de exportación y consulta de resultados. Una imagen estática no verifica su interacción ni el archivo exportado.",
+      "source_filename": "Captura de pantalla 2026-09-24 a la(s) 9.09.25 p.m..png",
+      "sha256": "a76aa0142332ec1f4d0616b8fc13afa081c72df89e676e6dc50b27cb813d16f5",
+      "width": 2940,
+      "height": 1912,
+      "captured_at_from_filename": "2026-09-24 21:09:25"
+    },
+    {
+      "file": "02-reserva-y-lote.png",
+      "title": "Reserva individual y análisis por lote",
+      "pdf_title": "A2. Reserva individual y lote",
+      "observed": "El formulario contiene diez variables y muestra un escenario editado con índice 4,5 sobre 100: seguimiento habitual frente al umbral de 17. En el lote aparece reservas-ejemplo.csv y el mensaje de ocho reservas analizadas, ninguna sobre el umbral y resultado descargado.",
+      "explanation": "La inferencia individual y por lote usa el mismo contrato de entrada. Editar una reserva genera un escenario sin desenlace conocido. El índice no es una probabilidad calibrada y no justifica cancelar o cobrar una reserva.",
+      "scope": "La captura acredita el resultado visible de la sesión, no el contenido del archivo descargado. El CSV listo para cargar de esta entrega se llama reservas-listas.csv y se encuentra en ejemplos-csv/.",
+      "source_filename": "Captura de pantalla 2026-09-24 a la(s) 9.09.30 p.m..png",
+      "sha256": "1c87f661f14ffc86296a7812725daaf470d63e9e325b3ff4538a2c91c3523eef",
+      "width": 2940,
+      "height": 1902,
+      "captured_at_from_filename": "2026-09-24 21:09:30"
+    },
+    {
+      "file": "03-evidencia-modelo.png",
+      "title": "Evaluación y evidencia del modelo",
+      "pdf_title": "A3. Evidencia del modelo",
+      "observed": "Se muestran 21.236 registros de entrenamiento, 6.161 de validación y 7.990 de prueba. La matriz contiene 1.467 aciertos de cancelación, 364 cancelaciones omitidas, 2.715 falsas alertas y 3.444 reservas sin cancelación ni alerta. ROC AUC: 0,731; average precision: 0,413.",
+      "explanation": "La comparación de candidatos se realiza en validación y la prueba se reserva para evaluar el modelo elegido. La pantalla permite distinguir la alerta por umbral de la lista por capacidad y expone los errores que acompañan al resultado.",
+      "scope": "Los valores principales concuerdan con los artefactos entregados. La importancia por permutación es global, no una explicación causal individual. La etiqueta visible identifica la sesión como local.",
+      "source_filename": "Captura de pantalla 2026-09-24 a la(s) 9.09.35 p.m..png",
+      "sha256": "b0f227e94d5cfe950a965e933ce154ddda9e85ec2b2d9e418e342a64149d5849",
+      "width": 2940,
+      "height": 1912,
+      "captured_at_from_filename": "2026-09-24 21:09:35"
+    },
+    {
+      "file": "04-diseno-azure.png",
+      "title": "Arquitectura, equipo y estado mostrado",
+      "pdf_title": "A4. Diseño y ejecución",
+      "observed": "La vista presenta datos versionados, componentes CLI v2, artefactos del trabajo y aplicación con revisión humana. Muestra a Juan Ospina Tenorio, Natalia Hernández Piedrahita y Miguel Ángel Diuza como equipo. En esta sesión aparecen modelo LOCAL, trabajo Sin ejecución, cómputo No creado y costo Por verificar.",
+      "explanation": "El diseño conecta preparación, comparación y evaluación con la descarga del modelo y la aplicación local. Los estados de esta captura no acreditan la ejecución en Azure ni corresponden al estado documentado en los registros de la entrega.",
+      "scope": "La ejecución Completed, el registro reservaiq:1 y el cierre de recursos se acreditan por separado en azure/evidence/. El escenario de costo es US$1 estimado; la factura no estaba consolidada en la consulta guardada. No se ha determinado la causa de la diferencia con la pantalla.",
+      "source_filename": "Captura de pantalla 2026-09-24 a la(s) 9.09.41 p.m..png",
+      "sha256": "8500a213027fc27ce106ca27cf86c3761c3d53be1c69569f2c35d1f93a4757a0",
+      "width": 2940,
+      "height": 1912,
+      "captured_at_from_filename": "2026-09-24 21:09:41"
+    }
+  ]
+}

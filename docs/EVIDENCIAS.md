@@ -24,9 +24,11 @@ Las pruebas comprueban catorce aspectos del modelo, datos y API. Incluyen el CSV
 
 ## Revisión de interfaz y capturas
 
-La revisión visual y las capturas de las cuatro vistas no están verificadas en esta entrega. Las pruebas del servidor comprueban el contrato y la inferencia; no prueban la navegación visual del cliente. La figura de priorización se genera desde las métricas guardadas y tiene un alcance distinto.
+Se revisaron las cuatro capturas aportadas por el equipo: [galería comentada](CAPTURAS.md). Los originales y sus huellas se conservan en `docs/capturas/`. El anexo del informe reproduce cada imagen y explica la decisión, los resultados visibles y los límites de la evidencia.
 
-Para completar esa evidencia deben comprobarse las cuatro vistas, la inferencia, la carga del CSV y las descargas en un navegador. Las capturas deben mostrar el estado real, acompañarse de fecha y de una explicación de qué verifican. No deben incluir identificadores de suscripción, credenciales ni información privada.
+Todas muestran una etiqueta de modelo local. La vista de Azure muestra “Sin ejecución”, “No creado” y “Por verificar”; esos rótulos describen la sesión capturada, no el estado acreditado por los registros de Azure incluidos abajo. No se ha determinado la causa de esa diferencia. Las imágenes no se retocan para cambiar estados.
+
+La captura de lotes muestra el mensaje de ocho reservas procesadas y resultado descargado. No se verificó el contenido de esa descarga a partir de la imagen. Las pruebas del servidor comprueban el contrato y la inferencia; no certifican la navegación del cliente de extremo a extremo. La revisión de imágenes aportadas y la comprobación automática tienen alcances distintos.
 
 ## Evidencia de Azure
 
