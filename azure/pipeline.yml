@@ -1,0 +1,43 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+display_name: ReservaIQ entrenamiento y evaluación
+experiment_name: reservaiq-hoteles
+description: Reservas hoteleras históricas; clasificación y priorización de revisión.
+settings:
+  default_compute: azureml:reservaiq-cpu
+inputs:
+  raw:
+    type: uri_file
+    path: ../data/hotels.csv
+outputs:
+  trained:
+    type: uri_folder
+  report:
+    type: uri_folder
+jobs:
+  prepare:
+    type: command
+    component: ./prepare.yml
+    inputs:
+      raw: ${{parent.inputs.raw}}
+    limits:
+      timeout: 900
+  train:
+    type: command
+    component: ./train.yml
+    inputs:
+      splits: ${{parent.jobs.prepare.outputs.splits}}
+    outputs:
+      trained: ${{parent.outputs.trained}}
+    limits:
+      timeout: 1800
+  evaluate:
+    type: command
+    component: ./evaluate.yml
+    inputs:
+      splits: ${{parent.jobs.prepare.outputs.splits}}
+      trained: ${{parent.jobs.train.outputs.trained}}
+    outputs:
+      report: ${{parent.outputs.report}}
+    limits:
+      timeout: 900

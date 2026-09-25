@@ -1,0 +1,10 @@
+{
+  "origin": "local",
+  "job_status": "No ejecutado",
+  "compute_state": "Sin nodo creado",
+  "model_name": "reservaiq",
+  "model_version": "1.0",
+  "model_sha256": "7ca26e33ee12f96e48f74790b3abedd5db2c3ac7d61f53167d3d7bdfd774c4e0",
+  "cost_estimate_usd": 1,
+  "cost_note": "Escenario presupuestado: 1 hora CPU DS2 v2 (US$0,146) + US$0,50 auxiliares supuestos + US$0,354 de margen. No es un cargo real."
+}

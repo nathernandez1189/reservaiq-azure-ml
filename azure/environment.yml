@@ -1,0 +1,11 @@
+name: reservaiq-cpu
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - numpy==1.26.4
+      - pandas==2.2.3
+      - scikit-learn==1.3.2
+      - joblib==1.6.0

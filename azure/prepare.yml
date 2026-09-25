@@ -1,0 +1,17 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: reservaiq_prepare
+version: '1'
+display_name: Validar datos y separar por fechas
+type: command
+code: ../
+environment:
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04:latest
+  conda_file: environment.yml
+inputs:
+  raw:
+    type: uri_file
+outputs:
+  splits:
+    type: uri_folder
+command: >-
+  env OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 LOKY_MAX_CPU_COUNT=2 python pipeline.py prepare --data ${{inputs.raw}} --splits ${{outputs.splits}}

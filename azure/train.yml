@@ -1,0 +1,17 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: reservaiq_train
+version: '1'
+display_name: Comparar modelos y fijar umbral
+type: command
+code: ../
+environment:
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04:latest
+  conda_file: environment.yml
+inputs:
+  splits:
+    type: uri_folder
+outputs:
+  trained:
+    type: uri_folder
+command: >-
+  env OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 LOKY_MAX_CPU_COUNT=2 python pipeline.py train --splits ${{inputs.splits}} --trained ${{outputs.trained}}

@@ -5764,7 +5764,6 @@
     "Evaluación retrospectiva: no hay versiones de cada variable al momento de reservar.",
     "Índice del clasificador no calibrado; no equivale a certeza.",
     "No se demuestra que una llamada evite una cancelación.",
-    "No se cancela, cobra, discrimina ni modifica ninguna reserva.",
-    "Azure preparado, sin ejecutar ni gastar."
+    "No se cancela, cobra, discrimina ni modifica ninguna reserva."
   ]
 }

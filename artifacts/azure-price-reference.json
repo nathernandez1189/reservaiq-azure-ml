@@ -1,0 +1,29 @@
+{
+  "queried_at_utc": "2026-09-25T00:57:26.137607+00:00",
+  "source": "https://prices.azure.com/api/retail/prices?currencyCode=USD&%24filter=serviceName+eq+%27Virtual+Machines%27+and+armRegionName+eq+%27eastus%27+and+armSkuName+eq+%27Standard_DS2_v2%27+and+priceType+eq+%27Consumption%27",
+  "items": [
+    {
+      "currencyCode": "USD",
+      "tierMinimumUnits": 0.0,
+      "retailPrice": 0.146,
+      "unitPrice": 0.146,
+      "armRegionName": "eastus",
+      "location": "US East",
+      "effectiveStartDate": "2025-05-01T00:00:00Z",
+      "meterId": "14fc9a21-4919-4cb1-b495-5666966556bc",
+      "meterName": "DS2 v2",
+      "productId": "DZH318Z0BQ4C",
+      "skuId": "DZH318Z0BQ4C/01C2",
+      "productName": "Virtual Machines DSv2 Series",
+      "skuName": "DS2 v2",
+      "serviceName": "Virtual Machines",
+      "serviceId": "DZH313Z7MMC8",
+      "serviceFamily": "Compute",
+      "unitOfMeasure": "1 Hour",
+      "type": "Consumption",
+      "isPrimaryMeterRegion": false,
+      "armSkuName": "Standard_DS2_v2"
+    }
+  ],
+  "note": "Tarifa de VM de referencia. No incluye todos los recursos asociados a Azure ML."
+}
