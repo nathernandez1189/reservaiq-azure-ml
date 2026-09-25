@@ -1,0 +1,87 @@
+{
+  "source": "https://doi.org/10.1016/j.dib.2018.11.126",
+  "download": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-02-11/hotels.csv",
+  "license": "CC BY 4.0",
+  "synthetic": false,
+  "raw_rows": 119390,
+  "scope_rows_before_dedup": 55053,
+  "exact_duplicates_removed": 7603,
+  "scope_rows_after_dedup": 47450,
+  "used_rows": 35387,
+  "scope_rows_outside_splits_or_maturity": 12063,
+  "features": [
+    "lead_time",
+    "arrival_month",
+    "stays_in_weekend_nights",
+    "stays_in_week_nights",
+    "hotel",
+    "meal",
+    "market_segment",
+    "distribution_channel",
+    "reserved_room_type",
+    "customer_type"
+  ],
+  "excluded": [
+    "is_canceled",
+    "arrival_date_year",
+    "arrival_date_month",
+    "arrival_date_week_number",
+    "arrival_date_day_of_month",
+    "adults",
+    "children",
+    "babies",
+    "country",
+    "is_repeated_guest",
+    "previous_cancellations",
+    "previous_bookings_not_canceled",
+    "assigned_room_type",
+    "booking_changes",
+    "deposit_type",
+    "agent",
+    "company",
+    "days_in_waiting_list",
+    "adr",
+    "required_car_parking_spaces",
+    "total_of_special_requests",
+    "reservation_status",
+    "reservation_status_date",
+    "arrival",
+    "booking",
+    "resolved"
+  ],
+  "sha256": "7c2ae42a7353905ea136e5c2287f17c92c5435826598bfbb8491c6f0c7b1fc06",
+  "splits": {
+    "train": {
+      "n": 21236,
+      "positives": 3933,
+      "prevalence": 0.1852043699378414,
+      "booking_start": "2015-07-01",
+      "booking_end_exclusive": "2016-07-01",
+      "outcome_known_before": "2016-09-01"
+    },
+    "validation": {
+      "n": 6161,
+      "positives": 1346,
+      "prevalence": 0.21847102743061192,
+      "booking_start": "2016-09-01",
+      "booking_end_exclusive": "2016-12-01",
+      "outcome_known_before": "2017-02-01"
+    },
+    "test": {
+      "n": 7990,
+      "positives": 1831,
+      "prevalence": 0.22916145181476846,
+      "booking_start": "2017-02-01",
+      "booking_end_exclusive": "2017-06-01",
+      "outcome_known_before": "2017-09-01"
+    }
+  },
+  "scope": "Lead time 0–60 days; total stay 1–30 nights; known categorical values. Two hotels in Portugal.",
+  "split_method": "Derived booking date with gaps between train/validation/test; outcomes must be resolved before next evaluation period. Retrospective data are not a versioned snapshot of booking-time fields.",
+  "limitations": [
+    "Arrival-limited historical sample from two hotels; not a representative market sample.",
+    "Derived booking date assumes recorded lead_time and arrival date reflect initial booking.",
+    "Exact-row duplicates removed; indistinguishable legitimate bookings may also be removed.",
+    "No guest identifier: recurrent-guest or group dependence cannot be fully excluded."
+  ]
+}
