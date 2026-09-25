@@ -1,0 +1,10 @@
+{
+  "checked_at_utc": "2026-09-25T01:01:12.470199+00:00",
+  "tests_passed": 13,
+  "csv_records": 8,
+  "csv_columns": 10,
+  "model_sha256": "7ca26e33ee12f96e48f74790b3abedd5db2c3ac7d61f53167d3d7bdfd774c4e0",
+  "web_visual_review": "not_verified_browser_security_policy",
+  "azure_job_verified": false,
+  "report_pages_reviewed": 8
+}

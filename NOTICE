@@ -1,0 +1,14 @@
+ReservaIQ — Microproyecto 3 de Computación en la Nube.
+Juan Ospina Tenorio, Natalia Hernández Piedrahita y Miguel Ángel Diuza.
+
+Datos originales: Nuno Antonio, Ana de Almeida y Luis Nunes (2019),
+Hotel booking demand datasets. https://doi.org/10.1016/j.dib.2018.11.126
+Licencia del dataset: Creative Commons Attribution 4.0 International.
+https://creativecommons.org/licenses/by/4.0/
+
+Distribución CSV: TidyTuesday, 2020-02-11.
+https://github.com/rfordatascience/tidytuesday/tree/main/data/2020/2020-02-11
+
+Las particiones derivadas aplican filtros, deduplicación y variables transformadas.
+Las predicciones, métricas y modelo son resultados derivados del experimento.
+No se sugiere respaldo de los autores de los datos a este proyecto.
