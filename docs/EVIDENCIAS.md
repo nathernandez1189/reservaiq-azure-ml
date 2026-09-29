@@ -54,3 +54,11 @@ Se contrastó el diagrama con las dependencias de `azure/pipeline.yml` y con las
 La figura del informe, las variantes SVG del repositorio y el diagrama de Canva proceden de una misma definición. Se revisaron las doce páginas del PDF y el encuadre de la diapositiva 5. Las catorce pruebas del proyecto pasaron; también se verificó que `/arquitectura.svg` responde HTTP 200 con el tipo SVG y el contenido esperado. Esta comprobación del servidor no equivale a una prueba completa de navegación en el navegador.
 
 Las capturas históricas del anexo se conservan sin modificaciones. El modelo, las particiones y las métricas del experimento no cambiaron en esta revisión.
+
+## Comprobación de navegación del 29/09/2026
+
+La apertura de la aplicación en el navegador detectó que la edición del diagrama había retirado el inicio de la sección `project` y su elemento `architecture-status`. La inicialización se detenía al intentar actualizar ese elemento. Se restauraron la sección de Diseño y Azure y los controles de evaluación, manteniendo el SVG en su vista correspondiente.
+
+Se reforzó la prueba existente de procedencia para exigir las cuatro vistas independientes y los elementos de estado de Azure dentro de `project`. Las 14 pruebas volvieron a pasar. También se comprobaron en el navegador las cuatro vistas, el caso 12301 (índice 39,8), su edición a siete días de anticipación (13,6), los casos de falsa alerta y omisión, y el lote entregado de ocho filas (cero por encima del umbral). Con K igual a 30, la cohorte ilustrativa muestra 12 cancelaciones históricas.
+
+El navegador mostró el mensaje de descarga del lote; esta revisión no compara los bytes de esa descarga del navegador. Las pruebas de API verifican el contenido de las respuestas. El alcance de la revisión manual son estos recorridos observados, no todos los dispositivos o condiciones de red. No se cambiaron los datos, el modelo ni las métricas.

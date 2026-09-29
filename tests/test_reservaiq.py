@@ -1,4 +1,4 @@
-import unittest,json,hashlib,io
+import unittest,json,hashlib,io,re
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
@@ -66,6 +66,17 @@ class ReservaIQTests(unittest.TestCase):
     def test_cross_origin_rejected(self):
         self.assertEqual(self.request('/api/predict',self.example,'https://example.invalid')[0],403)
     def test_cloud_status_is_explicit(self):
+        # The provenance renderer needs these elements and a separate project view.
+        # A missing section previously stopped all four screens from loading.
+        html=(ROOT/'web/index.html').read_text()
+        sections=re.findall(r'<section\b[^>]*id="([^"]+)"[^>]*>(.*?)</section>',html,re.S)
+        views=dict(sections)
+        self.assertEqual(set(views),{'overview','lab','model','project'})
+        self.assertIn('Controles para una evaluación honesta',views['model'])
+        self.assertIn('src="/arquitectura.svg"',views['project'])
+        for element in ['architecture-status','execution-status','execution-detail','execution-cost','cost-detail']:
+            self.assertEqual(html.count(f'id="{element}"'),1)
+            self.assertIn(f'id="{element}"',views['project'])
         self.assertEqual(public_summary()['azure_verified'],AZURE_VERIFIED)
         if AZURE_VERIFIED:
             self.assertEqual(PROVENANCE['job_status'],'Completed')
