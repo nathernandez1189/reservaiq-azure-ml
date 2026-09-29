@@ -10,6 +10,12 @@ Microproyecto 3 · Computación en la Nube · Prof. Oscar Mondragón.
 
 Hotel Brisa del Valle, cliente ficticio de Cali, necesita distribuir una capacidad limitada de revisión entre reservas. ReservaIQ compara modelos, estima un índice asociado a cancelación y permite seleccionar las K reservas que revisará el personal.
 
+## Material de la entrega
+
+[Informe técnico en PDF](docs/ReservaIQ-Informe-tecnico.pdf) · [Presentación ampliada en Canva](https://www.canva.com/d/20i32hmvo0gpTiA) · [Contenido de las 12 diapositivas](docs/PRESENTACION.md) · [Correspondencia con la rúbrica](docs/ENTREGA.md).
+
+La presentación cubre requerimientos, alternativas, datos, diseño, evaluación, ejecución Azure, costos y demo, con una duración objetivo de 15 minutos. El enlace de Canva solicita iniciar sesión; la copia del contenido puede consultarse directamente en este repositorio. [Qué contiene cada material y cómo se relacionan el repositorio y el ZIP](docs/ENTREGA.md#repositorio-zip-y-formato-de-entrega).
+
 ## Resultado medido
 
 En 7.990 reservas históricas reservadas para prueba, seleccionar el 20 % de mayor índice reúne **705 cancelaciones entre 1.598 reservas**: precisión 44,1 %, detección 38,5 % y concentración **1,93 veces** la esperada con selección aleatoria. El resultado es retrospectivo y no demuestra cancelaciones evitadas ni dinero recuperado.
