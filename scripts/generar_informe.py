@@ -8,6 +8,8 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_LEFT
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.graphics import renderPDF
+from diagrama_arquitectura import architecture, WIDTH, HEIGHT
 
 ROOT=Path(__file__).resolve().parents[1];PROJ=ROOT;OUT=ROOT/'docs';OUT.mkdir(parents=True,exist_ok=True)
 S=json.loads((PROJ/'artifacts/summary.json').read_text());M=S['test'];D=S['data'];V=S['selection']
@@ -50,20 +52,12 @@ def code(t):
  p(html.escape(t).replace('\n','<br/>'),'code');md[-1]='```bash\n'+t+'\n```\n'
 
 class Architecture(Flowable):
- def __init__(self):Flowable.__init__(self);self.width=480;self.height=200
+ def __init__(self):
+  Flowable.__init__(self);self.width=480;self.height=HEIGHT*480/WIDTH
  def draw(self):
-  c=self.canv
-  def box(x,y,w,label,sub):
-   c.setFillColor(pale);c.setStrokeColor(C('#aac3c7'));c.roundRect(x,y,w,58,5,fill=1,stroke=1)
-   c.setFillColor(ink);c.setFont('ArialBold',10);c.drawString(x+12,y+36,label)
-   c.setFont('Arial',8);c.setFillColor(muted);c.drawString(x+12,y+18,sub)
-  box(0,133,140,'Datos','CSV + huella SHA256');box(170,133,140,'Preparación','Alcance + fechas + controles');box(340,133,140,'Entrenamiento','Comparación + selección')
-  box(340,26,140,'Evaluación','Métricas + modelo + salidas');box(170,26,140,'Registro y descarga','Procedencia del trabajo');box(0,26,140,'Aplicación local','Lista + simulador + lotes')
-  c.setStrokeColor(teal);c.setFillColor(teal);c.setLineWidth(1.2)
-  for x in [140,310]:c.line(x,162,x+30,162);c.line(x+30,162,x+25,166);c.line(x+30,162,x+25,158)
-  c.line(410,133,410,84);c.line(410,84,406,90);c.line(410,84,414,90)
-  for x in [340,170]:c.line(x,54,x-30,54);c.line(x-30,54,x-25,58);c.line(x-30,54,x-25,50)
-  c.setFont('Arial',8);c.setFillColor(muted);c.drawString(0,3,'Pipeline ejecutado en Azure ML; modelo descargado y usado por la aplicación.' if AZURE else 'Diseño propuesto para Azure ML; ejecución local verificada.')
+  diagram=architecture();diagram.scale(480/WIDTH,480/WIDTH)
+  renderPDF.draw(diagram,self.canv,0,0)
+
 
 title('ReservaIQ')
 p('Priorización de reservas hoteleras con aprendizaje automático','subtitle')
@@ -107,8 +101,10 @@ p('Se fijan versiones de Python y librerías. selection.json documenta candidato
 
 page();title('4. Arquitectura y flujo')
 story.append(Architecture());story.append(Spacer(1,8))
+md.append('![Flujo de datos y artefactos, con Azure y entorno local separados](figuras/arquitectura.svg)\n')
 table([['Componente','Responsabilidad'],['Workspace y Blob','Organizar trabajos, conservar entradas y artefactos.'],['Clúster CPU DS2 v2','Ejecutar con mínimo 0, máximo 1 nodo e inactividad de 120 s.'],['Preparación','Aplicar alcance, deduplicación, fechas y particiones.'],['Entrenamiento','Comparar candidatos y fijar modelo y umbral.'],['Evaluación','Calcular métricas sobre prueba y exportar evidencia.'],['Registro y descarga','Versionar el modelo y comprobar su huella.'],['Aplicación local','Inferencia individual, lotes y lista por capacidad.']],[155,325])
-p('Los componentes personalizados CLI v2 reutilizan pipeline.py. La entrada raw y las salidas splits, trained y report definen sus relaciones. [3]')
+p('Preparación entrega entrenamiento y validación al componente de entrenamiento, y prueba al de evaluación. Entrenamiento produce el modelo; evaluación recibe ese modelo y produce métricas y predicciones. Las flechas representan datos y artefactos. [3]','small')
+p('Registro y descarga son pasos posteriores al trabajo Completed, no componentes adicionales del pipeline. El registro pertenece a Azure; la aplicación usa los archivos descargados en el entorno local.','small')
 p('El modelo descargado evita mantener un endpoint de inferencia. artifacts/runtime.json vincula la aplicación con trabajo, estado Completed, versión y SHA256. La etiqueta de origen Azure exige coincidencia con el archivo cargado. El estado histórico del trabajo y el cierre de recursos se documentan por separado.','small')
 
 page();title('5. Resultados y decisión')

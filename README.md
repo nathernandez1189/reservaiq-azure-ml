@@ -90,16 +90,9 @@ El archivo ya contiene las diez columnas exactas, separadas por comas. El [dicci
 
 [Cómo y por qué se construyó](docs/DESARROLLO.md) · [Arquitectura y componentes](docs/ARQUITECTURA.md) · [Datos y límites del modelo](docs/MODELO.md) · [Azure ML](azure/README.md) · [Evidencias](docs/EVIDENCIAS.md) · [Costos](docs/COSTOS.md).
 
-```mermaid
-flowchart LR
-  D[Datos públicos] --> P[Preparación temporal]
-  P --> T[Comparación en validación]
-  T --> E[Evaluación reservada]
-  T --> R[Modelo versionado]
-  R --> A[Aplicación local]
-  E --> A
-  A --> H[Revisión humana por capacidad]
-```
+![Arquitectura y flujo de datos entre Azure y la aplicación local](docs/figuras/arquitectura.svg)
+
+La evaluación recibe datos de prueba y el modelo entrenado; genera métricas y predicciones. El registro del modelo pertenece a Azure y se realiza después del trabajo. La descarga y verificación conectan ese resultado con la aplicación local. [Detalle de cada transferencia y componente](docs/ARQUITECTURA.md).
 
 Para reproducir el experimento completo y comprobar el proyecto:
 
@@ -115,6 +108,7 @@ Para regenerar la gráfica y el informe técnico a partir de los resultados guar
 ```bash
 python -m pip install -r requirements-docs.txt
 python scripts/generar_grafica.py
+python scripts/diagrama_arquitectura.py
 python scripts/generar_informe.py
 ```
 

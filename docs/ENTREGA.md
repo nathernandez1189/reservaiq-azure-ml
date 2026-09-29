@@ -37,7 +37,7 @@ El material cubre los temas solicitados. El criterio de presentación también r
 
 ## Repositorio, ZIP y formato de entrega
 
-Las instrucciones facilitadas enumeran el contenido del trabajo y la presentación de 15 minutos. **No especifican expresamente que deba entregarse un ZIP, un PDF o un enlace de GitHub como único formato.** Los campos de la actividad en el campus pueden establecer condiciones adicionales.
+Las instrucciones facilitadas enumeran el contenido del trabajo y la presentación de 15 minutos. **No especifican expresamente que deba entregarse un ZIP, un PDF o un enlace de GitHub como único formato.** Los campos de la actividad en el campus pueden establecer condiciones adicionales. El informe se conserva como soporte organizado del análisis y el diseño; no se presenta como un archivo independiente obligatorio en las instrucciones facilitadas.
 
 El repositorio centraliza el informe, la referencia a Canva, la copia consultable de las diapositivas, el código, el modelo, los CSV y las evidencias. El ZIP para el profesor es una copia de los archivos versionados en la misma revisión. No incorpora entregables técnicos exclusivos.
 

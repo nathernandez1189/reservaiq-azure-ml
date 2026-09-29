@@ -46,3 +46,11 @@ La versión registrada y el archivo del entrenamiento tienen SHA256 `d1a01086d1f
 
 Los registros públicos se extraen de respuestas de Azure CLI y de archivos descargados de Blob Storage. Se omiten suscripción, tenant, identidades y URLs privadas. `summary.json` añade la confirmación de procedencia después de la verificación; `run.json` distingue su huella publicada de la huella de la salida original. Los estados Completed son evidencia histórica de la ejecución, incluso después del cierre de infraestructura.
 
+
+## Revisión de arquitectura del 29/09/2026
+
+Se contrastó el diagrama con las dependencias de `azure/pipeline.yml` y con las lecturas y salidas de `pipeline.py`. La figura muestra prueba y modelo como entradas separadas de evaluación; métricas y predicciones como sus salidas; registro dentro de Azure; y descarga a la aplicación local. Registro y descarga se distinguen de los tres componentes del pipeline.
+
+La figura del informe, las variantes SVG del repositorio y el diagrama de Canva proceden de una misma definición. Se revisaron las doce páginas del PDF y el encuadre de la diapositiva 5. Las catorce pruebas del proyecto pasaron; también se verificó que `/arquitectura.svg` responde HTTP 200 con el tipo SVG y el contenido esperado. Esta comprobación del servidor no equivale a una prueba completa de navegación en el navegador.
+
+Las capturas históricas del anexo se conservan sin modificaciones. El modelo, las particiones y las métricas del experimento no cambiaron en esta revisión.

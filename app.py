@@ -29,6 +29,8 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(200,(ROOT/'web/index.html').read_bytes(),'text/html; charset=utf-8')
         if route in ['/style.css','/app.js']:
             return self.respond(200,(ROOT/'web'/route[1:]).read_bytes(),'text/css; charset=utf-8' if route.endswith('css') else 'text/javascript; charset=utf-8')
+        if route=='/arquitectura.svg':
+            return self.respond(200,(ROOT/'docs/figuras/arquitectura-canva.svg').read_bytes(),'image/svg+xml; charset=utf-8')
         if route=='/api/summary':return self.respond(200,public_summary())
         if route=='/api/health':return self.respond(200,{'status':'ok','model':BUNDLE['name'],'azure_verified':AZURE_VERIFIED,'model_sha256':MODEL_SHA256})
         if route=='/api/sample.csv':

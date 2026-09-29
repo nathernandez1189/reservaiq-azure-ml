@@ -125,6 +125,8 @@ Se fijan versiones de Python y librerías. selection.json documenta candidatos, 
 
 # 4. Arquitectura y flujo
 
+![Flujo de datos y artefactos, con Azure y entorno local separados](figuras/arquitectura.svg)
+
 | Componente | Responsabilidad |
 | --- | --- |
 | Workspace y Blob | Organizar trabajos, conservar entradas y artefactos. |
@@ -135,7 +137,9 @@ Se fijan versiones de Python y librerías. selection.json documenta candidatos, 
 | Registro y descarga | Versionar el modelo y comprobar su huella. |
 | Aplicación local | Inferencia individual, lotes y lista por capacidad. |
 
-Los componentes personalizados CLI v2 reutilizan pipeline.py. La entrada raw y las salidas splits, trained y report definen sus relaciones. [3]
+Preparación entrega entrenamiento y validación al componente de entrenamiento, y prueba al de evaluación. Entrenamiento produce el modelo; evaluación recibe ese modelo y produce métricas y predicciones. Las flechas representan datos y artefactos. [3]
+
+Registro y descarga son pasos posteriores al trabajo Completed, no componentes adicionales del pipeline. El registro pertenece a Azure; la aplicación usa los archivos descargados en el entorno local.
 
 El modelo descargado evita mantener un endpoint de inferencia. artifacts/runtime.json vincula la aplicación con trabajo, estado Completed, versión y SHA256. La etiqueta de origen Azure exige coincidencia con el archivo cargado. El estado histórico del trabajo y el cierre de recursos se documentan por separado.
 

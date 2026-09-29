@@ -46,18 +46,13 @@ Fuente: Antonio, Almeida y Nunes (2019), distribución TidyTuesday, CC BY 4.0. [
 
 ## 5. Arquitectura de la solución
 
-```mermaid
-flowchart LR
-  D["CSV / Blob: datos y salidas"] --> P["Preparación: limpieza y fechas"]
-  P --> T["Entrenamiento: comparar y elegir"]
-  T --> E["Evaluación: métricas de prueba"]
-  T --> R["Modelo registrado: reservaiq:1"]
-  R --> A["Aplicación local: descarga e inferencia"]
-  E --> A
-  A --> H["Revisión humana"]
-```
+![Arquitectura: tres etapas del pipeline, registro en Azure y aplicación local](figuras/arquitectura.svg)
 
-Azure ML coordina tres componentes CLI v2. Blob conserva entradas y salidas; el cómputo ejecuta preparación, comparación y evaluación. Registramos el modelo elegido, descargamos su archivo y verificamos su integridad. La aplicación local consume ese modelo y sus métricas, sin mantener un endpoint de inferencia.
+Azure ML coordina tres componentes CLI v2: preparación, entrenamiento y evaluación. Preparación proporciona entrenamiento y validación al entrenador, y prueba reservada al evaluador. El entrenador produce el modelo elegido; evaluación recibe ese modelo y produce métricas y predicciones.
+
+El registro del modelo sigue perteneciendo a Azure y es un paso posterior al trabajo Completed. Descargamos el modelo y los resultados, comprobamos SHA-256 y usamos esos archivos en la aplicación local. No se mantiene un endpoint de inferencia. La lista por capacidad y los resultados apoyan la revisión humana.
+
+Las flechas describen datos y artefactos; el registro y la descarga no son componentes adicionales del pipeline. La carpeta de particiones incluye también validación para calcular importancia de variables durante la evaluación, sin volver a ajustar el modelo.
 
 ## 6. Evaluación por tiempo
 
