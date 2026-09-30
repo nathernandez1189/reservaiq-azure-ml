@@ -1,7 +1,7 @@
 import unittest,json,hashlib,io,re
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import Mock
+from unittest.mock import Mock,patch
 import numpy as np,pandas as pd,joblib
 from core import FEATURES,validate_input,infer
 from pipeline import metrics
@@ -11,7 +11,7 @@ ROOT=Path(__file__).resolve().parents[1]
 class ReservaIQTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.summary=json.loads((ROOT/'artifacts/summary.json').read_text())
+        cls.summary=json.loads((ROOT/'artifacts/summary.json').read_text(encoding='utf-8'))
         cls.bundle=joblib.load(ROOT/'artifacts/trained/model.joblib')
         cls.example=cls.summary['examples'][0]['inputs']
     def test_source_integrity(self):
@@ -59,6 +59,24 @@ class ReservaIQTests(unittest.TestCase):
     def test_api_single_and_batch(self):
         a=self.request('/api/predict',self.example);b=self.request('/api/batch',[self.example,self.example]);self.assertEqual(a[0],200);self.assertEqual(b[0],200)
         self.assertEqual(b[1]['count'],2);self.assertEqual(a[1]['score'],b[1]['results'][0]['score'])
+    def test_summary_preserves_unicode_with_windows_encoding(self):
+        # Reproduce a Windows CP1252 locale even on macOS/Linux. Previously the
+        # GET handler raised UnicodeDecodeError instead of returning the summary.
+        original_open=Path.open
+        def windows_open(path,mode='r',buffering=-1,encoding=None,errors=None,newline=None):
+            if 'b' not in mode and encoding in (None,'locale'):
+                encoding='cp1252'
+            return original_open(path,mode,buffering,encoding,errors,newline)
+        handler=Handler.__new__(Handler);handler.path='/api/summary';handler.respond=Mock()
+        with patch.object(Path,'open',windows_open):
+            handler.do_GET()
+        status,result=handler.respond.call_args.args
+        self.assertEqual(status,200)
+        expected=json.loads((ROOT/'artifacts/summary.json').read_bytes().decode('utf-8'))
+        self.assertEqual({k:result[k] for k in expected},expected)
+        self.assertIn('Índice del clasificador',json.dumps(result,ensure_ascii=False))
+        expected_provenance=json.loads((ROOT/'artifacts/runtime.json').read_bytes().decode('utf-8'))
+        self.assertEqual(result['deployment']['cost_note'],expected_provenance['cost_note'])
     def test_api_rejects_bad_payloads(self):
         self.assertEqual(self.request('/api/predict',{})[0],400)
         self.assertEqual(self.request('/api/batch',[])[0],400)
@@ -68,7 +86,7 @@ class ReservaIQTests(unittest.TestCase):
     def test_cloud_status_is_explicit(self):
         # The provenance renderer needs these elements and a separate project view.
         # A missing section previously stopped all four screens from loading.
-        html=(ROOT/'web/index.html').read_text()
+        html=(ROOT/'web/index.html').read_text(encoding='utf-8')
         sections=re.findall(r'<section\b[^>]*id="([^"]+)"[^>]*>(.*?)</section>',html,re.S)
         views=dict(sections)
         self.assertEqual(set(views),{'overview','lab','model','project'})
@@ -81,7 +99,7 @@ class ReservaIQTests(unittest.TestCase):
         if AZURE_VERIFIED:
             self.assertEqual(PROVENANCE['job_status'],'Completed')
             self.assertEqual(PROVENANCE['model_sha256'],MODEL_SHA256)
-            record=json.loads((ROOT/'azure/evidence/run.json').read_text())
+            record=json.loads((ROOT/'azure/evidence/run.json').read_text(encoding='utf-8'))
             self.assertEqual(record['job_name'],PROVENANCE['job_name'])
             self.assertEqual(record['model']['sha256'],MODEL_SHA256)
             self.assertEqual({step['stage'] for step in record['steps']},{'prepare','train','evaluate'})

@@ -56,12 +56,13 @@ En Windows PowerShell:
 
 ```powershell
 py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python app.py --port 8765
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe app.py --port 8765
 ```
 
 Abre **http://127.0.0.1:8765**. La instalación necesita Internet una vez; después la aplicación usa el modelo incluido. Para detener el servidor, pulsa Ctrl+C. Si el puerto está ocupado, identifica primero el proceso o utiliza `--port 8766`. No abras `web/index.html` directamente: la interfaz necesita la API.
+
+Si una copia anterior en Windows muestra `Failed to fetch` y la terminal registra `UnicodeDecodeError: 'charmap'`, detén el servidor con Ctrl+C, ejecuta `git pull --ff-only` y vuelve a iniciarlo. Esta versión lee los resultados explícitamente como UTF-8. Mientras actualizas, también puedes iniciar con `.\.venv\Scripts\python.exe -X utf8 app.py --port 8765`. Después recarga el navegador con Ctrl+F5. Si Git informa cambios locales en conflicto, consérvalos y revisa el mensaje antes de actualizar.
 
 Carga únicamente el modelo incluido o artefactos propios de confianza. `joblib` no debe utilizarse para cargar modelos recibidos de fuentes desconocidas. El servidor está limitado a localhost y no es un servicio público de producción.
 

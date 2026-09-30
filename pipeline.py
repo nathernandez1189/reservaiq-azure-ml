@@ -80,7 +80,7 @@ def train(data,out):
 
 def evaluate(data,trained,out):
     data,trained,out=Path(data),Path(trained),Path(out);out.mkdir(parents=True,exist_ok=True)
-    bundle=joblib.load(trained/'model.joblib');selection=json.loads((trained/'selection.json').read_text());manifest=json.loads((data/'data_manifest.json').read_text())
+    bundle=joblib.load(trained/'model.joblib');selection=json.loads((trained/'selection.json').read_text(encoding='utf-8'));manifest=json.loads((data/'data_manifest.json').read_text(encoding='utf-8'))
     te=pd.read_csv(data/'test.csv',keep_default_na=False);va=pd.read_csv(data/'validation.csv',keep_default_na=False)
     y=te.target.to_numpy();p=bundle['model'].predict_proba(te[FEATURES])[:,1];m=metrics(y,p,bundle['threshold'])
     n=m['positives'];r=m['recall'];z=1.96;den=1+z*z/n;center=(r+z*z/(2*n))/den;half=z*np.sqrt(r*(1-r)/n+z*z/(4*n*n))/den;m['recall_wilson_95']=[float(center-half),float(center+half)]

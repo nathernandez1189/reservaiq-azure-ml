@@ -12,8 +12,8 @@ from reportlab.graphics import renderPDF
 from diagrama_arquitectura import architecture, WIDTH, HEIGHT
 
 ROOT=Path(__file__).resolve().parents[1];PROJ=ROOT;OUT=ROOT/'docs';OUT.mkdir(parents=True,exist_ok=True)
-S=json.loads((PROJ/'artifacts/summary.json').read_text());M=S['test'];D=S['data'];V=S['selection']
-R=json.loads((PROJ/'artifacts/runtime.json').read_text());AZURE=R.get('origin')=='azure_ml' and R.get('job_status')=='Completed' and R.get('model_sha256')==hashlib.sha256((PROJ/'artifacts/trained/model.joblib').read_bytes()).hexdigest()
+S=json.loads((PROJ/'artifacts/summary.json').read_text(encoding='utf-8'));M=S['test'];D=S['data'];V=S['selection']
+R=json.loads((PROJ/'artifacts/runtime.json').read_text(encoding='utf-8'));AZURE=R.get('origin')=='azure_ml' and R.get('job_status')=='Completed' and R.get('model_sha256')==hashlib.sha256((PROJ/'artifacts/trained/model.joblib').read_bytes()).hexdigest()
 if Path('/System/Library/Fonts/Supplemental/Arial.ttf').exists():
  pdfmetrics.registerFont(TTFont('Arial','/System/Library/Fonts/Supplemental/Arial.ttf'))
  pdfmetrics.registerFont(TTFont('ArialBold','/System/Library/Fonts/Supplemental/Arial Bold.ttf'))
@@ -141,7 +141,7 @@ for label,url in [('1. Antonio, Almeida y Nunes: datos hoteleros','https://doi.o
 
 
 # Se incrustan los PNG originales completos: el estado visible nunca se retoca.
-captures=json.loads((OUT/'capturas/manifest.json').read_text())
+captures=json.loads((OUT/'capturas/manifest.json').read_text(encoding='utf-8'))
 for item in captures['images']:
  page();title(item['pdf_title'])
  p('Captura aportada por el equipo · '+item['captured_at_from_filename']+' (según el nombre del archivo).','small')
@@ -163,5 +163,5 @@ def footer(c,doc):
  c.setFont('Arial',8);c.setFillColor(muted);c.drawRightString(w-56,height-33,'INFORME TÉCNICO  /  UAO');c.setStrokeColor(C('#d9e2e5'));c.line(56,42,w-56,42);c.drawString(56,27,'Microproyecto 3 · Computación en la Nube');c.drawRightString(w-56,27,str(doc.page));c.restoreState()
 pdf=OUT/'ReservaIQ-Informe-tecnico.pdf'
 SimpleDocTemplate(str(pdf),pagesize=(595.28,841.89),leftMargin=56,rightMargin=56,topMargin=60,bottomMargin=59,title='ReservaIQ Informe técnico',author='Juan Ospina Tenorio; Natalia Hernández Piedrahita; Miguel Ángel Diuza').build(story,onFirstPage=footer,onLaterPages=footer)
-(PROJ/'docs/Informe-tecnico.md').write_text('\n'.join(md))
+(PROJ/'docs/Informe-tecnico.md').write_text('\n'.join(md),encoding='utf-8')
 print(pdf)

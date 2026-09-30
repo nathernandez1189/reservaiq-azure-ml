@@ -7,7 +7,7 @@ from reportlab.graphics import renderSVG
 from reportlab.lib.colors import HexColor
 
 ROOT = Path(__file__).resolve().parents[1]
-m = json.loads((ROOT / 'artifacts/summary.json').read_text())['test']
+m = json.loads((ROOT / 'artifacts/summary.json').read_text(encoding='utf-8'))['test']
 d = Drawing(960, 450)
 navy, text, muted, aqua = map(HexColor, ['#10202b', '#edf6f8', '#a8bac6', '#51d3bf'])
 d.add(Rect(0, 0, 960, 450, fillColor=navy, strokeColor=navy))

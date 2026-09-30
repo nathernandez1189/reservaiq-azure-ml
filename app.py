@@ -9,11 +9,11 @@ ROOT=Path(__file__).resolve().parent
 BUNDLE=joblib.load(ROOT/'artifacts/trained/model.joblib')
 MODEL_SHA256=hashlib.sha256((ROOT/'artifacts/trained/model.joblib').read_bytes()).hexdigest()
 PROVENANCE_PATH=ROOT/'artifacts/runtime.json'
-PROVENANCE=json.loads(PROVENANCE_PATH.read_text()) if PROVENANCE_PATH.exists() else {'origin':'local','job_status':'not_run'}
+PROVENANCE=json.loads(PROVENANCE_PATH.read_text(encoding='utf-8')) if PROVENANCE_PATH.exists() else {'origin':'local','job_status':'not_run'}
 AZURE_VERIFIED=(PROVENANCE.get('origin')=='azure_ml' and PROVENANCE.get('job_status')=='Completed' and PROVENANCE.get('model_sha256')==MODEL_SHA256)
 
 def public_summary():
-    summary=json.loads((ROOT/'artifacts/summary.json').read_text())
+    summary=json.loads((ROOT/'artifacts/summary.json').read_text(encoding='utf-8'))
     summary['azure_verified']=AZURE_VERIFIED
     summary['deployment']={**PROVENANCE,'model_sha256':MODEL_SHA256,'verified':AZURE_VERIFIED}
     return summary

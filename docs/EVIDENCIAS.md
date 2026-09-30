@@ -20,7 +20,7 @@ Las métricas y el modelo entregados corresponden al pipeline de Azure ML `mango
 python -m unittest discover -s tests -v
 ```
 
-Las pruebas comprueban catorce aspectos del modelo, datos y API. Incluyen el CSV entregado y la concordancia entre resultados individuales y por lote. La prueba de procedencia exige trabajo Completed y SHA256 coincidente antes de afirmar un modelo de Azure.
+Las pruebas comprueban quince aspectos del modelo, datos y API. Incluyen el CSV entregado, la concordancia entre resultados individuales y por lote y la lectura de resultados con una configuración regional de Windows. La prueba de procedencia exige trabajo Completed y SHA256 coincidente antes de afirmar un modelo de Azure.
 
 ## Revisión de interfaz y capturas
 
@@ -62,3 +62,13 @@ La apertura de la aplicación en el navegador detectó que la edición del diagr
 Se reforzó la prueba existente de procedencia para exigir las cuatro vistas independientes y los elementos de estado de Azure dentro de `project`. Las 14 pruebas volvieron a pasar. También se comprobaron en el navegador las cuatro vistas, el caso 12301 (índice 39,8), su edición a siete días de anticipación (13,6), los casos de falsa alerta y omisión, y el lote entregado de ocho filas (cero por encima del umbral). Con K igual a 30, la cohorte ilustrativa muestra 12 cancelaciones históricas.
 
 El navegador mostró el mensaje de descarga del lote; esta revisión no compara los bytes de esa descarga del navegador. Las pruebas de API verifican el contenido de las respuestas. El alcance de la revisión manual son estos recorridos observados, no todos los dispositivos o condiciones de red. No se cambiaron los datos, el modelo ni las métricas.
+
+## Compatibilidad con Windows del 30/09/2026
+
+La apertura en Windows mostró `Failed to fetch` mientras el servidor registraba `UnicodeDecodeError: 'charmap'`. La lectura de `summary.json` dependía de la configuración regional. Al interpretar como CP1252 los bytes UTF-8 de la palabra «Índice», la petición a `/api/summary` terminaba sin respuesta.
+
+Se añadió una prueba que reproduce ese fallo en el controlador GET con CP1252 como codificación predeterminada. Falló antes de la corrección y pasó después de fijar UTF-8 en las lecturas de resultados y procedencia. Las otras lecturas de texto del pipeline, las pruebas y los generadores también usan UTF-8 explícito. El conjunto local terminó con 15 pruebas correctas. Los datos, el modelo y las métricas permanecen iguales.
+
+Git conserva los CSV sin conversión de finales de línea para mantener sus huellas al clonar en Windows. GitHub Actions ejecuta las comprobaciones en Ubuntu y Windows con el modo UTF-8 implícito desactivado; el estado de cada ejecución se consulta en la acción del commit correspondiente. La comprobación automática no sustituye la confirmación de apertura en el computador del compañero.
+
+Si aparece `ModuleNotFoundError: No module named 'joblib'`, deben instalarse todas las dependencias de `requirements.txt` con el mismo intérprete que inicia la aplicación. El README utiliza directamente el Python de `.venv` en PowerShell para evitar mezclarlo con otra instalación. El modo `-X utf8` es una alternativa temporal documentada por [Python para Windows](https://docs.python.org/3.12/using/windows.html#utf-8-mode).
