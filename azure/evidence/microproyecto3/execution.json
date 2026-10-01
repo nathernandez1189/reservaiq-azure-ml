@@ -1,0 +1,69 @@
+{
+  "checked_at_utc": "2026-10-01T02:55:57.933681+00:00",
+  "execution": "re-ejecucion",
+  "original_job_unchanged": "mango_wire_5f09pdg4m3",
+  "resource_group": "MICROPROYECTO3",
+  "workspace": "ml-microproyecto3",
+  "region": "northcentralus",
+  "job": {
+    "name": "microproyecto3-reejecucion-20261001",
+    "status": "Completed",
+    "stages": [
+      {
+        "stage": "prepare",
+        "status": "Completed"
+      },
+      {
+        "stage": "train",
+        "status": "Completed"
+      },
+      {
+        "stage": "evaluate",
+        "status": "Completed"
+      }
+    ]
+  },
+  "model": {
+    "name": "reservaiq",
+    "version": "1",
+    "sha256": "d1a01086d1fa360d52dd21888a505ad8197b6b18d67784b81bfe0ac304d859dd",
+    "same_model_sha256_as_original": true,
+    "same_7990_test_predictions_as_original": true,
+    "same_test_metrics_as_original": true,
+    "comparison_note": "Los tiempos de entrenamiento medidos difieren; métricas y resultados seleccionados coinciden."
+  },
+  "compute": {
+    "name": "microproyecto3-cpu",
+    "size": "Standard_DS2_v2",
+    "current_nodes": 0,
+    "target_nodes": 0,
+    "min_nodes": 0,
+    "max_nodes": 1,
+    "idle_seconds": 120,
+    "verified_at_utc": "2026-10-01T02:49:52.810013+00:00"
+  },
+  "retention_through_local_date": "2026-10-05",
+  "timezone": "America/Bogota",
+  "cost": {
+    "budget_usd": 3,
+    "estimate_usd": 2,
+    "actual_current_status": "No hay filas de costo aún; no equivale a costo cero.",
+    "cost_columns": [
+      {
+        "name": "PreTaxCost",
+        "type": "Number"
+      },
+      {
+        "name": "ServiceName",
+        "type": "String"
+      },
+      {
+        "name": "Currency",
+        "type": "String"
+      }
+    ],
+    "cost_rows": [],
+    "estimate_assumptions": "CPU a US$0.146/h; ACR Basic a US$0.1666/día × hasta 6 días; margen para almacenamiento, operaciones y recursos asociados. App Service LinuxFree."
+  },
+  "evidence_type": "Consultas CLI/API verificadas; este archivo no es una captura de Azure ML Studio."
+}

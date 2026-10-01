@@ -1,5 +1,13 @@
 # ReservaIQ
 
+## Despliegue adicional en Azure: MICROPROYECTO3
+
+**[Abrir la demo web](https://reservaiq-microproyecto3-20261001.azurewebsites.net/)** · No requiere instalar Python.
+
+La re-ejecución del 30 de septiembre de 2026 en Colombia (1 de octubre UTC) terminó con las tres etapas **Completed** y registró `reservaiq:1`. La evidencia original de `artifacts/` permanece intacta. Consulta [cómo entrar a Azure, usar la demo web y revisar costos](docs/AZURE-WEB.md), el [diagrama del despliegue](docs/figuras/arquitectura-azure-web.svg) y la [verificación de esta ejecución](azure/evidence/microproyecto3/execution.json).
+
+La demo web es compartida y solo admite datos ficticios. Conservación solicitada hasta el 5 de octubre de 2026; límite de gasto US$3. El modo local que se describe a continuación sigue disponible.
+
 [![Verificación](https://github.com/nathernandez1189/reservaiq-azure-ml/actions/workflows/verificacion.yml/badge.svg)](https://github.com/nathernandez1189/reservaiq-azure-ml/actions/workflows/verificacion.yml)
 
 **Priorización de reservas hoteleras con aprendizaje automático y Azure Machine Learning.**
@@ -31,17 +39,17 @@ Los datos provienen de dos hoteles de Portugal en 2015–2017. El cliente colomb
 
 La gráfica se genera desde las métricas guardadas con `scripts/generar_grafica.py` (dependencia opcional: ReportLab 4.4.9).
 
-## Ejecución en Azure verificada
+## Ejecución original en Azure: 25 de septiembre
 
 El pipeline **`mango_wire_5f09pdg4m3`** completó preparación, entrenamiento y evaluación en **North Central US**. El modelo `reservaiq`, versión **1**, se registró, descargó y se incorporó a esta aplicación. Sus 7.990 predicciones coinciden exactamente con las del experimento local. La huella del archivo registrado coincide con la del entrenamiento.
 
 [Estados y procedencia](azure/evidence/run.json) · [Comparación de predicciones](azure/evidence/comparison.json) · [Registro de etapas](azure/evidence/console.txt) · [Entorno resuelto](azure/environment-lock.json) · [Cierre de recursos](azure/evidence/closure.json).
 
-El grupo temporal de Azure fue eliminado tras verificar y descargar las salidas. El registro `reservaiq:1` se conserva como evidencia histórica y el archivo está incluido en el repositorio.
+El grupo original `rg-reservaiq` fue eliminado tras verificar y descargar las salidas; es independiente del nuevo grupo `MICROPROYECTO3`. El registro `reservaiq:1` se conserva como evidencia histórica y el archivo está incluido en el repositorio.
 
 La demo se ejecuta localmente con el modelo incluido. No requiere una suscripción de Azure para evaluarla. Reentrenar en la nube crea recursos facturables; el escenario estimado es **US$1** y se documenta en [Costos](docs/COSTOS.md).
 
-## Ejecutar la aplicación
+## Ejecutar la aplicación local
 
 Requisito: **Python 3.12**. Si ya clonaste el repositorio, detén el servidor y actualiza con `git pull --ff-only`.
 
@@ -65,7 +73,7 @@ Si una copia anterior en Windows muestra `Failed to fetch` y la terminal registr
 
 Carga únicamente el modelo incluido o artefactos propios de confianza. `joblib` no debe utilizarse para cargar modelos recibidos de fuentes desconocidas. El servidor está limitado a localhost y no es un servicio público de producción.
 
-## Primer uso: analizar, guardar y recuperar
+## Primer uso local: analizar, guardar y recuperar
 
 1. **Fechas:** entra en Nueva reserva, revisa la fecha de creación visible y elige llegada y salida en el mismo calendario. Las noches y la anticipación se calculan automáticamente. Puedes mostrar u ocultar el calendario sin perder las fechas.
 2. **Detalles:** revisa las seis opciones explicadas y añade una referencia si quieres.

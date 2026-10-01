@@ -1,0 +1,44 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+name: microproyecto3-reejecucion-20261001
+display_name: MICROPROYECTO3 · Re-ejecución 2026-10-01 UTC
+experiment_name: microproyecto3-reejecucion
+description: Re-ejecución del 01/10/2026 UTC (30/09 en Colombia). Conserva por separado la ejecución original mango_wire_5f09pdg4m3; nuevas evidencias, sin reemplazar artefactos de la demo.
+settings:
+  default_compute: azureml:microproyecto3-cpu
+inputs:
+  raw:
+    type: uri_file
+    path: azureml:reservaiq-hotels:1
+outputs:
+  trained:
+    type: uri_folder
+  report:
+    type: uri_folder
+jobs:
+  prepare:
+    type: command
+    component: azureml:reservaiq_prepare:1
+    inputs:
+      raw: ${{parent.inputs.raw}}
+    limits:
+      timeout: 900
+  train:
+    type: command
+    component: azureml:reservaiq_train:1
+    inputs:
+      splits: ${{parent.jobs.prepare.outputs.splits}}
+    outputs:
+      trained: ${{parent.outputs.trained}}
+    limits:
+      timeout: 1800
+  evaluate:
+    type: command
+    component: azureml:reservaiq_evaluate:1
+    inputs:
+      splits: ${{parent.jobs.prepare.outputs.splits}}
+      trained: ${{parent.jobs.train.outputs.trained}}
+    outputs:
+      report: ${{parent.outputs.report}}
+    limits:
+      timeout: 900

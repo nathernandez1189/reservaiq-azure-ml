@@ -1,0 +1,148 @@
+{
+  "verified_at_utc": "2026-10-01T03:06:22.590757+00:00",
+  "public_url": "https://reservaiq-microproyecto3-20261001.azurewebsites.net",
+  "health": {
+    "status": "ok",
+    "model": "Gradient Boosting",
+    "azure_verified": true,
+    "model_sha256": "d1a01086d1fa360d52dd21888a505ad8197b6b18d67784b81bfe0ac304d859dd",
+    "storage": "azure_blob"
+  },
+  "checks": [
+    {
+      "path": "/api/health",
+      "status": 200
+    },
+    {
+      "path": "/api/summary",
+      "status": 200
+    },
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/arquitectura.svg",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations",
+      "status": 200
+    },
+    {
+      "path": "/api/predict",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations",
+      "status": 200
+    },
+    {
+      "path": "/api/predict",
+      "status": 400
+    },
+    {
+      "path": "/api/predict",
+      "status": 403
+    },
+    {
+      "path": "/api/reservations/batch",
+      "status": 400
+    },
+    {
+      "path": "/api/reservations",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 409
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/update",
+      "status": 200
+    },
+    {
+      "path": "/api/sample.csv",
+      "status": 200
+    },
+    {
+      "path": "/api/batch",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/batch",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/batch",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations/status",
+      "status": 200
+    },
+    {
+      "path": "/api/reservations",
+      "status": 200
+    }
+  ],
+  "new_fictional_records": 9,
+  "restart_persistence": "passed",
+  "restart_verified_at_utc": "2026-10-01T03:08:10.399839+00:00",
+  "checks_count": 31,
+  "local_tests": {
+    "python": 41,
+    "javascript": 26,
+    "total": 67,
+    "passed": true
+  },
+  "browser_visual_check": "No disponible por restricción del control de navegador; comprobación DOM y API realizada."
+}

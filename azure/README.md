@@ -1,5 +1,8 @@
 # Pipeline de Azure Machine Learning
 
+> **Nueva ejecución conservada en MICROPROYECTO3:** consulta [acceso al portal, demo web, arquitectura y costos](../docs/AZURE-WEB.md). Sus tres etapas están Completed y el modelo está registrado. Disponibilidad solicitada hasta el 5 de octubre de 2026; máximo US$3. Las instrucciones de abajo describen el flujo reproducible original, no el estado de cierre del nuevo grupo.
+
+
 Tres componentes CLI v2 ejecutan el mismo código del experimento: preparación, entrenamiento y evaluación. `pipeline.yml` define sus dependencias y salidas. El diseño usa un nodo CPU DS2 v2 como máximo y escala a cero; no necesita un endpoint de inferencia permanente.
 
 La ejecución `mango_wire_5f09pdg4m3` completó las tres etapas y produjo el modelo registrado `reservaiq:1`. Las salidas verificadas están incluidas en el repositorio; el grupo de infraestructura es temporal. [Evidencias](../docs/EVIDENCIAS.md) · [Costos y supuestos](../docs/COSTOS.md).

@@ -1,0 +1,19 @@
+{
+  "origin": "azure_ml",
+  "job_status": "Completed",
+  "job_name": "microproyecto3-reejecucion-20261001",
+  "workspace": "ml-microproyecto3",
+  "resource_group": "MICROPROYECTO3",
+  "region": "northcentralus",
+  "model_name": "reservaiq",
+  "model_version": "1",
+  "model_sha256": "d1a01086d1fa360d52dd21888a505ad8197b6b18d67784b81bfe0ac304d859dd",
+  "compute_state": "0 nodos (2026-10-01 02:46 UTC)",
+  "verification_at_utc": "2026-10-01T02:50:14.072341+00:00",
+  "cost_estimate_usd": 2.0,
+  "cost_note": "Estimación orientativa de la nueva ejecución y conservación hasta el 5 de octubre: ≈ US$2, con límite autorizado de US$3. App Service F1 es gratuito; almacenamiento, registro de contenedores y recursos asociados pueden generar cargos. El costo real se consulta en Cost Management con retraso.",
+  "retention_through": "2026-10-05 America/Bogota",
+  "application_hosting": "Azure App Service F1",
+  "reservation_storage": "Private Azure Blob snapshot, ETag protected",
+  "note": "Re-ejecución nueva; no sustituye ni representa la ejecución original mango_wire_5f09pdg4m3."
+}
