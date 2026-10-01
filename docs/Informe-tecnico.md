@@ -215,7 +215,7 @@ py -3.12 iniciar.py  # Windows
 python3.12 iniciar.py  # macOS / Linux
 ```
 
-Ejecutar únicamente la línea del sistema utilizado. El lanzador prepara el entorno y las dependencias. Abrir http://127.0.0.1:8765 y mantener la terminal abierta. En Nueva reserva, elegir llegada y salida en el calendario, completar Detalles y pasar a Revisar y guardar. Las noches y la anticipación se calculan automáticamente. Mis reservas permite recuperar el registro.
+Ejecutar únicamente la línea del sistema utilizado. El lanzador prepara el entorno y las dependencias. Abrir http://127.0.0.1:8765 y mantener la terminal abierta. En Nueva reserva, revisar o seleccionar la fecha de creación y elegir llegada y salida en el calendario, completar Detalles y pasar a Revisar y guardar. Las noches y la anticipación se calculan automáticamente. Mis reservas permite recuperar el registro.
 
 El CSV se selecciona en Nueva reserva, se analiza y muestra una vista previa. Guardar lote conserva todas las filas; Descargar resultados genera el JSON. La guía y las pruebas paso a paso están en docs/GUIA-DE-USO.md y docs/PRUEBAS-GUIADAS.md.
 
@@ -225,6 +225,8 @@ El CSV se selecciona en Nueva reserva, se analiza y muestra una vista previa. Gu
 # 6.1. Calendario y guardado
 
 ## Tres pasos con resumen de estancia
+
+La fecha de creación es visible y editable. El selector permite alternar entre creación, llegada y salida. Ocultar calendario reduce el espacio ocupado sin borrar las fechas; se puede volver a mostrar. Las seis opciones de Detalles completan las diez variables del modelo.
 
 Fechas, Detalles y Revisar y guardar separan las decisiones. El calendario calcula cuatro variables del modelo: anticipación, mes de llegada y noches entre semana/de fin de semana. La salida no cuenta como noche. El servidor valida la misma regla: 0 a 60 días de anticipación y 1 a 30 noches. Los ejemplos históricos sin fechas completas conservan sus variables originales.
 
@@ -236,9 +238,14 @@ Solo analizar no modifica la base. Guardar cambios mantiene el identificador y e
 
 ## Comprobar el recorrido
 
+Guardadas incluye todos los estados. Pendientes, Revisadas y Archivadas filtran al pulsar cada tarjeta y limpian la búsqueda. La capacidad K selecciona hasta K pendientes ordenadas por índice; es independiente del umbral de 17/100. Revisada registra una acción humana, no el desenlace de cancelación. Archivar retira de la lista activa y Restaurar permite recuperarla.
+
 Con creación 01/10/2026, llegada 02/10 y salida 05/10 se obtienen 3 noches: 1 entre semana y 2 de fin de semana; anticipación de 1 día. Analizar y guardar conserva el registro con código RI-. Mis reservas permite recuperarlo, editarlo y organizarlo. Sus tarjetas Guardadas, Pendientes, Revisadas y Archivadas filtran los registros al pulsarlas. La guía incluye además el caso histórico 12301, el CSV y errores esperados.
 
-## Comprobaciones automáticas y límites
+
+---
+
+# 6.2. Pruebas y límites de la demo
 
 Las pruebas Python cubren integridad del dataset y modelo, separación temporal, métricas, las 7.990 predicciones, UTF-8 en Windows, API y persistencia real. Incluyen reiniciar el servidor, reintentos concurrentes sin duplicación, conflictos de edición y transacciones de lote. También se prueban fechas, cambio de año, año bisiesto y migración de la base. JavaScript verifica calendario, tarjetas de estado y recorrido guiado con una API simulada.
 
@@ -248,7 +255,7 @@ npm ci
 npm test
 ```
 
-GitHub Actions verificó 41 pruebas Python y 26 JavaScript en Windows y Ubuntu. Además se realizaron 31 comprobaciones HTTPS y nueve registros conservaron sus datos después de reiniciar App Service. La evidencia fechada registra el resultado de cada suite. Las capturas del anexo documentan la interfaz anterior de cuatro vistas: no acreditan visualmente el guardado nuevo. La navegación de la nueva versión en un navegador real queda pendiente de comprobación cuando el control de acceso permita abrirlo.
+GitHub Actions verificó 41 pruebas Python y 26 JavaScript en Windows y Ubuntu. Además se realizaron 31 comprobaciones HTTPS y nueve registros conservaron sus datos después de reiniciar App Service. La evidencia fechada registra el resultado de cada suite. El anexo E1-E15 incorpora las capturas originales de la versión web aportadas por el equipo el 30 de septiembre: calendario, reservas guardadas, pruebas guiadas, resultados y arquitectura. Las imágenes históricas A1-A4 se conservan como antecedentes. Una guía visible no prueba que sus pasos se ejecutaron; los resultados de API, reinicio y pruebas automáticas tienen registros independientes.
 
 Las reservas nuevas no tienen una etiqueta real de cancelación conocida. No alimentan el entrenamiento ni alteran las métricas. Todos los usuarios de la web comparten registros ficticios. En modo local cada computador conserva una base independiente; para trasladarla se cierra la aplicación y se copia .runtime. La exportación JSON permite consultar los datos, pero esta versión no incluye importación de esas copias.
 
@@ -293,84 +300,257 @@ El experimento demuestra una priorización histórica con capacidad limitada y e
 
 ---
 
-# Evidencia de la versión web actual
+# E1. Inicio y propósito
 
-Revisión de 15 imágenes aportadas por el equipo: 30 de septiembre de 2026, 23:38-23:40 en Colombia. Los PNG originales no están disponibles en las rutas proporcionadas: se documenta lo observado, sin reconstruir imágenes.
+Versión web en Azure · 2026-09-30 23:38:35 (Colombia, según el nombre del archivo).
 
-## 1. Inicio y propósito
+![Inicio y propósito](capturas/web-01.png)
 
-La portada presenta la priorización de reservas, el acceso para elegir fechas y tres pasos de uso. Identifica una demo web compartida con reservas ficticias.
+**Qué se observa.** La portada presenta la priorización de reservas, el acceso para elegir fechas y tres pasos de uso. Identifica una demo web compartida con reservas ficticias.
 
-## 2. Recorrido inicial
+**Relación con la solución.** Introduce la necesidad del hotel y el recorrido principal.
 
-Se ven las tarjetas elegir estancia, revisar y guardar, y probar y comprender; también el acceso al ejemplo guiado.
+**Alcance de la evidencia.** La etiqueta de Azure ML se complementa con los registros del trabajo; la captura no prueba por sí sola la infraestructura.
 
-## 3. Creación y fechas de la reserva
-
-El formulario muestra creación, llegada y salida, el estado Sin guardar, los tres pasos y el control Ocultar calendario.
-
-## 4. Calendario y carga CSV
-
-Se ve el calendario, la indicación de elegir fechas, el botón para continuar y los apartados de CSV hasta 500 registros y casos históricos.
-
-## 5. Reservas guardadas y organización
-
-Mis reservas muestra 9 guardadas, 1 pendiente, 0 revisadas y 8 archivadas. La reserva ficticia activa tiene índice 5,7 y acciones Abrir, Marcar revisada y Archivar.
-
-## 6. Prueba guiada del calendario
-
-Se explica el caso creación 01/10/2026, llegada 02/10 y salida 05/10: tres noches, una entre semana y dos de fin de semana, con un día de anticipación.
-
-## 7. Caso histórico, guardado y edición
-
-La guía presenta el registro 12301, índice esperado 39,8 y comparación al cambiar de 28 a 7 días de anticipación, con índice esperado 13,6.
-
-## 8. Estados, lote y conexión
-
-La guía explica revisar, archivar, restaurar, analizar y guardar un CSV, además de probar entradas inválidas. Se ve Comprobar conexión.
-
-Las guías visibles no prueban su ejecución. US$2 sigue siendo una estimación. El estado de cero nodos tiene su fecha de corte; las reservas nuevas no alteran las métricas históricas.
-
-Consultar docs/EVIDENCIA-WEB-ACTUAL.md y azure/evidence/microproyecto3/web-current-check.json para el alcance y la consulta HTTP actual de solo lectura. Las imágenes siguientes son antecedentes históricos y una captura real del pipeline.
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
 
 
 ---
 
-# Evidencia de la versión web actual
+# E2. Recorrido inicial
 
-Revisión de 15 imágenes aportadas por el equipo: 30 de septiembre de 2026, 23:38-23:40 en Colombia. Los PNG originales no están disponibles en las rutas proporcionadas: se documenta lo observado, sin reconstruir imágenes.
+Versión web en Azure · 2026-09-30 23:38:41 (Colombia, según el nombre del archivo).
 
-## 9. Evaluación en prueba reservada
+![Recorrido inicial](capturas/web-02.png)
 
-Se ven 21.236 registros de entrenamiento, 6.161 de validación y 7.990 de prueba. Matriz: TP 1.467, FN 364, FP 2.715 y TN 3.444; ROC AUC 0,731 y AP 0,413.
+**Qué se observa.** Se ven las tarjetas elegir estancia, revisar y guardar, y probar y comprender; también el acceso al ejemplo guiado.
 
-## 10. Comparación y límites del modelo
+**Relación con la solución.** Facilita el primer uso y el descubrimiento de las funciones.
 
-La tabla de validación compara base, regresión logística, Random Forest y Gradient Boosting. Se ven importancias por permutación y controles contra fuga de información.
+**Alcance de la evidencia.** Documenta la interfaz, no una medición de usabilidad con usuarios.
 
-## 11. Problema y decisión de negocio
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
 
-La vista describe al Hotel Brisa del Valle, cliente ficticio, y la decisión de revisar K reservas con entrada, resultado y acción humana.
 
-## 12. Correspondencia con la rúbrica
+---
 
-Se muestran los cuatro criterios: análisis 20 %, diseño 25 %, implementación 30 % y presentación 25 %, con enlaces a documentos, pruebas y Canva.
+# E3. Creación y fechas de la reserva
 
-## 13. Alternativas de solución
+Versión web en Azure · 2026-09-30 23:38:50 (Colombia, según el nombre del archivo).
 
-La tabla compara reglas manuales, clasificación con revisión humana y AutoML; debajo comienza el diagrama de arquitectura.
+![Creación y fechas de la reserva](capturas/web-03.png)
 
-## 14. Arquitectura completa de la demo web
+**Qué se observa.** El formulario muestra creación, llegada y salida, el estado Sin guardar, los tres pasos y el control Ocultar calendario.
 
-El diagrama conecta datos, prepare, train, evaluate, registro del modelo, App Service F1, navegador y Blob privado con SQLite. La prueba reservada y el modelo llegan por separado a evaluación.
+**Relación con la solución.** Expone la fecha de creación y permite comprender cómo se deriva la anticipación.
 
-## 15. Flujo, procedencia y costo estimado
+**Alcance de la evidencia.** Llegada y salida aún están vacías; esta imagen no documenta una reserva guardada.
 
-Se ve el flujo en cinco pasos, trabajo Completed, modelo Azure ML y cero nodos al corte explícito 2026-10-01 02:46 UTC. El costo mostrado es aproximadamente US$2.
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
 
-Las guías visibles no prueban su ejecución. US$2 sigue siendo una estimación. El estado de cero nodos tiene su fecha de corte; las reservas nuevas no alteran las métricas históricas.
 
-Consultar docs/EVIDENCIA-WEB-ACTUAL.md y azure/evidence/microproyecto3/web-current-check.json para el alcance y la consulta HTTP actual de solo lectura. Las imágenes siguientes son antecedentes históricos y una captura real del pipeline.
+---
+
+# E4. Calendario y carga CSV
+
+Versión web en Azure · 2026-09-30 23:38:57 (Colombia, según el nombre del archivo).
+
+![Calendario y carga CSV](capturas/web-04.png)
+
+**Qué se observa.** Se ve el calendario, la indicación de elegir fechas, el botón para continuar y los apartados de CSV hasta 500 registros y casos históricos.
+
+**Relación con la solución.** Distingue el recorrido individual de la importación por lote.
+
+**Alcance de la evidencia.** Los apartados están cerrados; no muestra una importación ejecutada ni la validación de 500 filas.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
+
+
+---
+
+# E5. Reservas guardadas y organización
+
+Versión web en Azure · 2026-09-30 23:39:04 (Colombia, según el nombre del archivo).
+
+![Reservas guardadas y organización](capturas/web-05.png)
+
+**Qué se observa.** Mis reservas muestra 9 guardadas, 1 pendiente, 0 revisadas y 8 archivadas. La reserva ficticia activa tiene índice 5,7 y acciones Abrir, Marcar revisada y Archivar.
+
+**Relación con la solución.** Hace visible el registro guardado, los filtros y la prioridad según capacidad.
+
+**Alcance de la evidencia.** Los conteos pertenecen a esta sesión. Una captura aislada no acredita permanencia después de reiniciar; esa prueba tiene su registro HTTPS independiente.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
+
+
+---
+
+# E6. Prueba guiada del calendario
+
+Versión web en Azure · 2026-09-30 23:39:15 (Colombia, según el nombre del archivo).
+
+![Prueba guiada del calendario](capturas/web-06.png)
+
+**Qué se observa.** Se explica el caso creación 01/10/2026, llegada 02/10 y salida 05/10: tres noches, una entre semana y dos de fin de semana, con un día de anticipación.
+
+**Relación con la solución.** Ofrece pasos y resultados esperados que un evaluador puede reproducir.
+
+**Alcance de la evidencia.** Es una guía visible, no el resultado de ejecutar el caso. La variante web requiere conexión a Azure; la alternativa local permite practicar sin recursos de cómputo Azure.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
+
+
+---
+
+# E7. Caso histórico, guardado y edición
+
+Versión web en Azure · 2026-09-30 23:39:24 (Colombia, según el nombre del archivo).
+
+![Caso histórico, guardado y edición](capturas/web-07.png)
+
+**Qué se observa.** La guía presenta el registro 12301, índice esperado 39,8 y comparación al cambiar de 28 a 7 días de anticipación, con índice esperado 13,6.
+
+**Relación con la solución.** Relaciona el análisis con guardar, recuperar y actualizar sin duplicar el registro.
+
+**Alcance de la evidencia.** Los valores son resultados esperados de la guía; la captura no muestra la ejecución de esas cuatro acciones.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
+
+
+---
+
+# E8. Estados, lote y conexión
+
+Versión web en Azure · 2026-09-30 23:39:31 (Colombia, según el nombre del archivo).
+
+![Estados, lote y conexión](capturas/web-08.png)
+
+**Qué se observa.** La guía explica revisar, archivar, restaurar, analizar y guardar un CSV, además de probar entradas inválidas. Se ve Comprobar conexión.
+
+**Relación con la solución.** Permite revisar el ciclo de uso y los controles de entrada.
+
+**Alcance de la evidencia.** No muestra el resultado del botón ni una respuesta de rechazo; consultar las pruebas registradas para esas comprobaciones.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
+
+
+---
+
+# E9. Evaluación en prueba reservada
+
+Versión web en Azure · 2026-09-30 23:39:39 (Colombia, según el nombre del archivo).
+
+![Evaluación en prueba reservada](capturas/web-09.png)
+
+**Qué se observa.** Se ven 21.236 registros de entrenamiento, 6.161 de validación y 7.990 de prueba. Matriz: TP 1.467, FN 364, FP 2.715 y TN 3.444; ROC AUC 0,731 y AP 0,413.
+
+**Relación con la solución.** Permite revisar resultados y errores sin confundir alerta por umbral con prioridad por capacidad.
+
+**Alcance de la evidencia.** Son métricas históricas; las reservas nuevas no las modifican. El índice no es una probabilidad calibrada.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
+
+
+---
+
+# E10. Comparación y límites del modelo
+
+Versión web en Azure · 2026-09-30 23:39:46 (Colombia, según el nombre del archivo).
+
+![Comparación y límites del modelo](capturas/web-10.png)
+
+**Qué se observa.** La tabla de validación compara base, regresión logística, Random Forest y Gradient Boosting. Se ven importancias por permutación y controles contra fuga de información.
+
+**Relación con la solución.** Explica la selección por AP y las variables relevantes, junto con las restricciones del experimento.
+
+**Alcance de la evidencia.** La importancia es global y no causal. Los datos históricos de Portugal requieren validación antes de uso real en Colombia.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
+
+
+---
+
+# E11. Problema y decisión de negocio
+
+Versión web en Azure · 2026-09-30 23:40:04 (Colombia, según el nombre del archivo).
+
+![Problema y decisión de negocio](capturas/web-11.png)
+
+**Qué se observa.** La vista describe al Hotel Brisa del Valle, cliente ficticio, y la decisión de revisar K reservas con entrada, resultado y acción humana.
+
+**Relación con la solución.** Vincula la solución técnica con una necesidad y una capacidad limitada.
+
+**Alcance de la evidencia.** La demo no confirma habitaciones ni demuestra cancelaciones evitadas.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
+
+
+---
+
+# E12. Correspondencia con la rúbrica
+
+Versión web en Azure · 2026-09-30 23:40:16 (Colombia, según el nombre del archivo).
+
+![Correspondencia con la rúbrica](capturas/web-12.png)
+
+**Qué se observa.** Se muestran los cuatro criterios: análisis 20 %, diseño 25 %, implementación 30 % y presentación 25 %, con enlaces a documentos, pruebas y Canva.
+
+**Relación con la solución.** Facilita localizar la evidencia de cada requisito del microproyecto.
+
+**Alcance de la evidencia.** La correspondencia no asigna una nota ni certifica haber realizado una exposición de 15 minutos.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
+
+
+---
+
+# E13. Alternativas de solución
+
+Versión web en Azure · 2026-09-30 23:40:26 (Colombia, según el nombre del archivo).
+
+![Alternativas de solución](capturas/web-13.png)
+
+**Qué se observa.** La tabla compara reglas manuales, clasificación con revisión humana y AutoML; debajo comienza el diagrama de arquitectura.
+
+**Relación con la solución.** Documenta ventajas, límites y la selección del clasificador.
+
+**Alcance de la evidencia.** La comparación de AutoML es conceptual; los candidatos efectivamente entrenados están en la tabla de validación.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
+
+
+---
+
+# E14. Arquitectura completa de la demo web
+
+Versión web en Azure · 2026-09-30 23:40:32 (Colombia, según el nombre del archivo).
+
+![Arquitectura completa de la demo web](capturas/web-14.png)
+
+**Qué se observa.** El diagrama conecta datos, prepare, train, evaluate, registro del modelo, App Service F1, navegador y Blob privado con SQLite. La prueba reservada y el modelo llegan por separado a evaluación.
+
+**Relación con la solución.** Distingue entrenamiento, evaluación, publicación e inferencia; representa el guardado compartido y la variante local independiente.
+
+**Alcance de la evidencia.** Es un diagrama explicativo de la implementación. El registro y la publicación son pasos posteriores al pipeline; guardar no reentrena.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
+
+
+---
+
+# E15. Flujo, procedencia y costo estimado
+
+Versión web en Azure · 2026-09-30 23:40:43 (Colombia, según el nombre del archivo).
+
+![Flujo, procedencia y costo estimado](capturas/web-15.png)
+
+**Qué se observa.** Se ve el flujo en cinco pasos, trabajo Completed, modelo Azure ML y cero nodos al corte explícito 2026-10-01 02:46 UTC. El costo mostrado es aproximadamente US$2.
+
+**Relación con la solución.** Relaciona los componentes con el uso web y expone fecha de comprobación y alcance económico.
+
+**Alcance de la evidencia.** US$2 es una estimación, no un costo facturado. Cero nodos corresponde al corte indicado, no a una consulta en vivo. Consultar COSTOS.md para cargos fechados.
+
+Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.
 
 
 ---
@@ -444,7 +624,7 @@ Captura de la interfaz anterior de cuatro vistas, sin guardado local. La sesión
 
 **Por qué importa.** El diseño conecta preparación, comparación y evaluación con la descarga del modelo y la aplicación local. Los estados de esta captura no acreditan la ejecución en Azure ni corresponden al estado documentado en los registros de la entrega.
 
-**Alcance.** La ejecución Completed, el registro reservaiq:1 y el cierre de recursos se acreditan por separado en azure/evidence/. El escenario de costo es US$1 estimado; la factura no estaba consolidada en la consulta guardada. No se ha determinado la causa de la diferencia con la pantalla.
+**Alcance.** Esta captura es un antecedente del 24 de septiembre. No representa la arquitectura web ni el estado actual de MICROPROYECTO3. El trabajo Completed y el registro del modelo se acreditan por separado. Los costos fechados y la nueva estimación se presentan en la sección 7.
 
 [Abrir la captura original a resolución completa](https://github.com/nathernandez1189/reservaiq-azure-ml/blob/main/docs/capturas/04-diseno-azure.png) · docs/CAPTURAS.md amplía la explicación.
 

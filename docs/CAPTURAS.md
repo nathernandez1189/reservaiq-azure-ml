@@ -2,7 +2,7 @@
 
 ## Evidencia de la versión web actual
 
-La revisión principal corresponde a las **15 capturas de la versión web** aportadas por el equipo el 30 de septiembre, 23:38–23:40 en Colombia. [Consultar observaciones, alcance y correspondencia con la rúbrica](EVIDENCIA-WEB-ACTUAL.md). El inventario ya está actualizado; los 15 PNG están pendientes de incorporación porque los originales no se encuentran en las rutas proporcionadas. Las imágenes incrustadas más abajo corresponden al pipeline real y a la interfaz local histórica, no al estado visual actual.
+La revisión principal corresponde a las **15 capturas de la versión web** aportadas por el equipo el 30 de septiembre, 23:38–23:40 en Colombia. [Consultar observaciones, alcance y correspondencia con la rúbrica](EVIDENCIA-WEB-ACTUAL.md). Los 15 PNG originales ya están incorporados, con sus dimensiones y SHA256 verificados, y se incluyen en el informe PDF. Las imágenes incrustadas más abajo corresponden al pipeline real y a la interfaz local histórica, no al estado visual actual.
 
 ## Captura real de Azure ML
 

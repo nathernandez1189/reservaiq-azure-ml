@@ -4,13 +4,15 @@ Sitio revisado: [ReservaIQ en Azure App Service](https://reservaiq-microproyecto
 
 ## Procedencia y alcance
 
-El equipo aportó 15 capturas de las seis vistas de la aplicación, fechadas por sus nombres el **30 de septiembre de 2026, 23:38–23:40 en Colombia** (1 de octubre UTC). Esta revisión describe lo visible en esas imágenes. Los PNG adjuntos no están disponibles en las rutas locales proporcionadas: **este documento contiene el inventario y las observaciones; todavía no incorpora los 15 archivos gráficos**. No se recrearon capturas.
+El equipo aportó 15 capturas de las seis vistas de la aplicación, fechadas por sus nombres el **30 de septiembre de 2026, 23:38–23:40 en Colombia** (1 de octubre UTC). Esta revisión describe lo visible en esas imágenes. Los 15 PNG originales están incorporados en `docs/capturas/web-01.png` a `web-15.png`, completos y sin alterar. Se verificaron dimensiones y SHA256 en `web-inventory.json`. El informe PDF los incluye con explicación individual.
 
 La comprobación HTTP actual se registra por separado en [web-current-check.json](../azure/evidence/microproyecto3/web-current-check.json). La captura real del pipeline y las cuatro capturas locales históricas siguen disponibles en [CAPTURAS.md](CAPTURAS.md).
 
 ## 01. Inicio y propósito
 
 **Fecha indicada:** 2026-09-30 23:38:35.
+
+![Inicio y propósito](capturas/web-01.png)
 
 **Qué se observa.** La portada presenta la priorización de reservas, el acceso para elegir fechas y tres pasos de uso. Identifica una demo web compartida con reservas ficticias.
 
@@ -22,6 +24,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 
 **Fecha indicada:** 2026-09-30 23:38:41.
 
+![Recorrido inicial](capturas/web-02.png)
+
 **Qué se observa.** Se ven las tarjetas elegir estancia, revisar y guardar, y probar y comprender; también el acceso al ejemplo guiado.
 
 **Por qué importa.** Facilita el primer uso y el descubrimiento de las funciones.
@@ -31,6 +35,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 ## 03. Creación y fechas de la reserva
 
 **Fecha indicada:** 2026-09-30 23:38:50.
+
+![Creación y fechas de la reserva](capturas/web-03.png)
 
 **Qué se observa.** El formulario muestra creación, llegada y salida, el estado Sin guardar, los tres pasos y el control Ocultar calendario.
 
@@ -42,6 +48,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 
 **Fecha indicada:** 2026-09-30 23:38:57.
 
+![Calendario y carga CSV](capturas/web-04.png)
+
 **Qué se observa.** Se ve el calendario, la indicación de elegir fechas, el botón para continuar y los apartados de CSV hasta 500 registros y casos históricos.
 
 **Por qué importa.** Distingue el recorrido individual de la importación por lote.
@@ -51,6 +59,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 ## 05. Reservas guardadas y organización
 
 **Fecha indicada:** 2026-09-30 23:39:04.
+
+![Reservas guardadas y organización](capturas/web-05.png)
 
 **Qué se observa.** Mis reservas muestra 9 guardadas, 1 pendiente, 0 revisadas y 8 archivadas. La reserva ficticia activa tiene índice 5,7 y acciones Abrir, Marcar revisada y Archivar.
 
@@ -62,6 +72,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 
 **Fecha indicada:** 2026-09-30 23:39:15.
 
+![Prueba guiada del calendario](capturas/web-06.png)
+
 **Qué se observa.** Se explica el caso creación 01/10/2026, llegada 02/10 y salida 05/10: tres noches, una entre semana y dos de fin de semana, con un día de anticipación.
 
 **Por qué importa.** Ofrece pasos y resultados esperados que un evaluador puede reproducir.
@@ -71,6 +83,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 ## 07. Caso histórico, guardado y edición
 
 **Fecha indicada:** 2026-09-30 23:39:24.
+
+![Caso histórico, guardado y edición](capturas/web-07.png)
 
 **Qué se observa.** La guía presenta el registro 12301, índice esperado 39,8 y comparación al cambiar de 28 a 7 días de anticipación, con índice esperado 13,6.
 
@@ -82,6 +96,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 
 **Fecha indicada:** 2026-09-30 23:39:31.
 
+![Estados, lote y conexión](capturas/web-08.png)
+
 **Qué se observa.** La guía explica revisar, archivar, restaurar, analizar y guardar un CSV, además de probar entradas inválidas. Se ve Comprobar conexión.
 
 **Por qué importa.** Permite revisar el ciclo de uso y los controles de entrada.
@@ -91,6 +107,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 ## 09. Evaluación en prueba reservada
 
 **Fecha indicada:** 2026-09-30 23:39:39.
+
+![Evaluación en prueba reservada](capturas/web-09.png)
 
 **Qué se observa.** Se ven 21.236 registros de entrenamiento, 6.161 de validación y 7.990 de prueba. Matriz: TP 1.467, FN 364, FP 2.715 y TN 3.444; ROC AUC 0,731 y AP 0,413.
 
@@ -102,6 +120,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 
 **Fecha indicada:** 2026-09-30 23:39:46.
 
+![Comparación y límites del modelo](capturas/web-10.png)
+
 **Qué se observa.** La tabla de validación compara base, regresión logística, Random Forest y Gradient Boosting. Se ven importancias por permutación y controles contra fuga de información.
 
 **Por qué importa.** Explica la selección por AP y las variables relevantes, junto con las restricciones del experimento.
@@ -111,6 +131,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 ## 11. Problema y decisión de negocio
 
 **Fecha indicada:** 2026-09-30 23:40:04.
+
+![Problema y decisión de negocio](capturas/web-11.png)
 
 **Qué se observa.** La vista describe al Hotel Brisa del Valle, cliente ficticio, y la decisión de revisar K reservas con entrada, resultado y acción humana.
 
@@ -122,6 +144,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 
 **Fecha indicada:** 2026-09-30 23:40:16.
 
+![Correspondencia con la rúbrica](capturas/web-12.png)
+
 **Qué se observa.** Se muestran los cuatro criterios: análisis 20 %, diseño 25 %, implementación 30 % y presentación 25 %, con enlaces a documentos, pruebas y Canva.
 
 **Por qué importa.** Facilita localizar la evidencia de cada requisito del microproyecto.
@@ -131,6 +155,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 ## 13. Alternativas de solución
 
 **Fecha indicada:** 2026-09-30 23:40:26.
+
+![Alternativas de solución](capturas/web-13.png)
 
 **Qué se observa.** La tabla compara reglas manuales, clasificación con revisión humana y AutoML; debajo comienza el diagrama de arquitectura.
 
@@ -142,6 +168,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 
 **Fecha indicada:** 2026-09-30 23:40:32.
 
+![Arquitectura completa de la demo web](capturas/web-14.png)
+
 **Qué se observa.** El diagrama conecta datos, prepare, train, evaluate, registro del modelo, App Service F1, navegador y Blob privado con SQLite. La prueba reservada y el modelo llegan por separado a evaluación.
 
 **Por qué importa.** Distingue entrenamiento, evaluación, publicación e inferencia; representa el guardado compartido y la variante local independiente.
@@ -151,6 +179,8 @@ La comprobación HTTP actual se registra por separado en [web-current-check.json
 ## 15. Flujo, procedencia y costo estimado
 
 **Fecha indicada:** 2026-09-30 23:40:43.
+
+![Flujo, procedencia y costo estimado](capturas/web-15.png)
 
 **Qué se observa.** Se ve el flujo en cinco pasos, trabajo Completed, modelo Azure ML y cero nodos al corte explícito 2026-10-01 02:46 UTC. El costo mostrado es aproximadamente US$2.
 

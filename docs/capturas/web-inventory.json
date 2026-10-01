@@ -1,6 +1,6 @@
 {
   "source": "15 imágenes adjuntas por el equipo en la conversación, revisadas visualmente",
-  "scope": "Inventario descriptivo de las capturas; no incluye sus archivos PNG. Las rutas del Escritorio proporcionadas ya no contienen los originales. No se reconstruyeron imágenes ni se atribuyeron huellas a archivos ausentes.",
+  "scope": "Quince PNG originales incorporados el 1 de octubre de 2026 desde los archivos aportados por el equipo. Copias completas sin alteración; SHA256 y dimensiones verificadas.",
   "images": [
     {
       "number": 1,
@@ -9,7 +9,12 @@
       "observed": "La portada presenta la priorización de reservas, el acceso para elegir fechas y tres pasos de uso. Identifica una demo web compartida con reservas ficticias.",
       "explanation": "Introduce la necesidad del hotel y el recorrido principal.",
       "scope": "La etiqueta de Azure ML se complementa con los registros del trabajo; la captura no prueba por sí sola la infraestructura.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1912,
+      "file": "web-01.png",
+      "sha256": "099bc5f895f00b685c24aac4756f85bd70510b865af04ed52a325c00183eff6f",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.38.35 p.m..png"
     },
     {
       "number": 2,
@@ -18,7 +23,12 @@
       "observed": "Se ven las tarjetas elegir estancia, revisar y guardar, y probar y comprender; también el acceso al ejemplo guiado.",
       "explanation": "Facilita el primer uso y el descubrimiento de las funciones.",
       "scope": "Documenta la interfaz, no una medición de usabilidad con usuarios.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1912,
+      "file": "web-02.png",
+      "sha256": "1103a15c17d89633ea6f81b440e4d528f611ce5f7e6950d0e1a2bd63432f6c84",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.38.41 p.m..png"
     },
     {
       "number": 3,
@@ -27,7 +37,12 @@
       "observed": "El formulario muestra creación, llegada y salida, el estado Sin guardar, los tres pasos y el control Ocultar calendario.",
       "explanation": "Expone la fecha de creación y permite comprender cómo se deriva la anticipación.",
       "scope": "Llegada y salida aún están vacías; esta imagen no documenta una reserva guardada.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1910,
+      "file": "web-03.png",
+      "sha256": "7d500bea1c68cc4a633d5ac72e6b3fdaca85c206ffdb7a028cf3e86857076350",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.38.50 p.m..png"
     },
     {
       "number": 4,
@@ -36,7 +51,12 @@
       "observed": "Se ve el calendario, la indicación de elegir fechas, el botón para continuar y los apartados de CSV hasta 500 registros y casos históricos.",
       "explanation": "Distingue el recorrido individual de la importación por lote.",
       "scope": "Los apartados están cerrados; no muestra una importación ejecutada ni la validación de 500 filas.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2932,
+      "height": 1906,
+      "file": "web-04.png",
+      "sha256": "876b57090a08105cf770a29600da780072e407a34de0afabc880e2f983745ecc",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.38.57 p.m..png"
     },
     {
       "number": 5,
@@ -45,7 +65,12 @@
       "observed": "Mis reservas muestra 9 guardadas, 1 pendiente, 0 revisadas y 8 archivadas. La reserva ficticia activa tiene índice 5,7 y acciones Abrir, Marcar revisada y Archivar.",
       "explanation": "Hace visible el registro guardado, los filtros y la prioridad según capacidad.",
       "scope": "Los conteos pertenecen a esta sesión. Una captura aislada no acredita permanencia después de reiniciar; esa prueba tiene su registro HTTPS independiente.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2938,
+      "height": 1912,
+      "file": "web-05.png",
+      "sha256": "294332aa9089579b915d4033cb25149341dd56f543969a1abf7f8725a3d0960f",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.39.04 p.m..png"
     },
     {
       "number": 6,
@@ -54,7 +79,12 @@
       "observed": "Se explica el caso creación 01/10/2026, llegada 02/10 y salida 05/10: tres noches, una entre semana y dos de fin de semana, con un día de anticipación.",
       "explanation": "Ofrece pasos y resultados esperados que un evaluador puede reproducir.",
       "scope": "Es una guía visible, no el resultado de ejecutar el caso. La variante web requiere conexión a Azure; la alternativa local permite practicar sin recursos de cómputo Azure.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1912,
+      "file": "web-06.png",
+      "sha256": "3d2381474ec103aa90e02fe02c7dbdb451699c4e42042a753f627ba8fcb7d972",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.39.15 p.m..png"
     },
     {
       "number": 7,
@@ -63,7 +93,12 @@
       "observed": "La guía presenta el registro 12301, índice esperado 39,8 y comparación al cambiar de 28 a 7 días de anticipación, con índice esperado 13,6.",
       "explanation": "Relaciona el análisis con guardar, recuperar y actualizar sin duplicar el registro.",
       "scope": "Los valores son resultados esperados de la guía; la captura no muestra la ejecución de esas cuatro acciones.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2938,
+      "height": 1912,
+      "file": "web-07.png",
+      "sha256": "71178fade93f9e2fb31b9d9a5659251356c3631000af5dadf4af9262f5d7be13",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.39.24 p.m..png"
     },
     {
       "number": 8,
@@ -72,7 +107,12 @@
       "observed": "La guía explica revisar, archivar, restaurar, analizar y guardar un CSV, además de probar entradas inválidas. Se ve Comprobar conexión.",
       "explanation": "Permite revisar el ciclo de uso y los controles de entrada.",
       "scope": "No muestra el resultado del botón ni una respuesta de rechazo; consultar las pruebas registradas para esas comprobaciones.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1912,
+      "file": "web-08.png",
+      "sha256": "f0cf364c260b23ea32a2af245e2f4798f0d5fe8164a7e246e07856af1b2da401",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.39.31 p.m..png"
     },
     {
       "number": 9,
@@ -81,7 +121,12 @@
       "observed": "Se ven 21.236 registros de entrenamiento, 6.161 de validación y 7.990 de prueba. Matriz: TP 1.467, FN 364, FP 2.715 y TN 3.444; ROC AUC 0,731 y AP 0,413.",
       "explanation": "Permite revisar resultados y errores sin confundir alerta por umbral con prioridad por capacidad.",
       "scope": "Son métricas históricas; las reservas nuevas no las modifican. El índice no es una probabilidad calibrada.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1912,
+      "file": "web-09.png",
+      "sha256": "963bcbbcf0167d5b34c185a3d3b8a6f0623872aa93137da206aab230eaee9fa5",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.39.39 p.m..png"
     },
     {
       "number": 10,
@@ -90,7 +135,12 @@
       "observed": "La tabla de validación compara base, regresión logística, Random Forest y Gradient Boosting. Se ven importancias por permutación y controles contra fuga de información.",
       "explanation": "Explica la selección por AP y las variables relevantes, junto con las restricciones del experimento.",
       "scope": "La importancia es global y no causal. Los datos históricos de Portugal requieren validación antes de uso real en Colombia.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1912,
+      "file": "web-10.png",
+      "sha256": "804a8eb0bdd1cf498f05e0923c17ed6528e9288becc21727d778b5d3fda8cd09",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.39.46 p.m..png"
     },
     {
       "number": 11,
@@ -99,7 +149,12 @@
       "observed": "La vista describe al Hotel Brisa del Valle, cliente ficticio, y la decisión de revisar K reservas con entrada, resultado y acción humana.",
       "explanation": "Vincula la solución técnica con una necesidad y una capacidad limitada.",
       "scope": "La demo no confirma habitaciones ni demuestra cancelaciones evitadas.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1912,
+      "file": "web-11.png",
+      "sha256": "ebc54ee8d0b18d8eb007fd9e14ecc9a360f77312bc662ad0d438e51e7bfd1691",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.40.04 p.m..png"
     },
     {
       "number": 12,
@@ -108,7 +163,12 @@
       "observed": "Se muestran los cuatro criterios: análisis 20 %, diseño 25 %, implementación 30 % y presentación 25 %, con enlaces a documentos, pruebas y Canva.",
       "explanation": "Facilita localizar la evidencia de cada requisito del microproyecto.",
       "scope": "La correspondencia no asigna una nota ni certifica haber realizado una exposición de 15 minutos.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1912,
+      "file": "web-12.png",
+      "sha256": "a2f3a682f5bc19368e2bd9412632be16fe43432c52fbd789d9d5c6412514e67f",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.40.16 p.m..png"
     },
     {
       "number": 13,
@@ -117,7 +177,12 @@
       "observed": "La tabla compara reglas manuales, clasificación con revisión humana y AutoML; debajo comienza el diagrama de arquitectura.",
       "explanation": "Documenta ventajas, límites y la selección del clasificador.",
       "scope": "La comparación de AutoML es conceptual; los candidatos efectivamente entrenados están en la tabla de validación.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1912,
+      "file": "web-13.png",
+      "sha256": "26e54e337bf91a3b5370f7a518647421865d90448a97fd8123c18957430a9796",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.40.26 p.m..png"
     },
     {
       "number": 14,
@@ -126,7 +191,12 @@
       "observed": "El diagrama conecta datos, prepare, train, evaluate, registro del modelo, App Service F1, navegador y Blob privado con SQLite. La prueba reservada y el modelo llegan por separado a evaluación.",
       "explanation": "Distingue entrenamiento, evaluación, publicación e inferencia; representa el guardado compartido y la variante local independiente.",
       "scope": "Es un diagrama explicativo de la implementación. El registro y la publicación son pasos posteriores al pipeline; guardar no reentrena.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1912,
+      "file": "web-14.png",
+      "sha256": "cc34eafc231192d713898fd3e1167de0ea925f6054f5abaede471c1114a47bf0",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.40.32 p.m..png"
     },
     {
       "number": 15,
@@ -135,7 +205,12 @@
       "observed": "Se ve el flujo en cinco pasos, trabajo Completed, modelo Azure ML y cero nodos al corte explícito 2026-10-01 02:46 UTC. El costo mostrado es aproximadamente US$2.",
       "explanation": "Relaciona los componentes con el uso web y expone fecha de comprobación y alcance económico.",
       "scope": "US$2 es una estimación, no un costo facturado. Cero nodos corresponde al corte indicado, no a una consulta en vivo. Consultar COSTOS.md para cargos fechados.",
-      "image_in_repository": false
+      "image_in_repository": true,
+      "width": 2940,
+      "height": 1912,
+      "file": "web-15.png",
+      "sha256": "390b09371332298faee5e56325d1e92d259521427fa1a25b7a70f1d7b7cc04bc",
+      "original_filename": "Captura de pantalla 2026-09-30 a la(s) 11.40.43 p.m..png"
     }
   ]
 }

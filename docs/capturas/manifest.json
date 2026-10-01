@@ -49,7 +49,7 @@
       "pdf_title": "A4. Diseño y ejecución",
       "observed": "La vista presenta datos versionados, componentes CLI v2, artefactos del trabajo y aplicación con revisión humana. Muestra a Juan Ospina Tenorio, Natalia Hernández Piedrahita y Miguel Ángel Diuza como equipo. En esta sesión aparecen modelo LOCAL, trabajo Sin ejecución, cómputo No creado y costo Por verificar.",
       "explanation": "El diseño conecta preparación, comparación y evaluación con la descarga del modelo y la aplicación local. Los estados de esta captura no acreditan la ejecución en Azure ni corresponden al estado documentado en los registros de la entrega.",
-      "scope": "La ejecución Completed, el registro reservaiq:1 y el cierre de recursos se acreditan por separado en azure/evidence/. El escenario de costo es US$1 estimado; la factura no estaba consolidada en la consulta guardada. No se ha determinado la causa de la diferencia con la pantalla.",
+      "scope": "Esta captura es un antecedente del 24 de septiembre. No representa la arquitectura web ni el estado actual de MICROPROYECTO3. El trabajo Completed y el registro del modelo se acreditan por separado. Los costos fechados y la nueva estimación se presentan en la sección 7.",
       "source_filename": "Captura de pantalla 2026-09-24 a la(s) 9.09.41 p.m..png",
       "sha256": "8500a213027fc27ce106ca27cf86c3761c3d53be1c69569f2c35d1f93a4757a0",
       "width": 2940,

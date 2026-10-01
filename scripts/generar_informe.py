@@ -151,21 +151,23 @@ table([['Ruta','Comportamiento'],['GET /api/summary','Métricas, ejemplos y proc
 h('Abrir la demo o iniciar la variante local')
 p('La demo se abre en https://reservaiq-microproyecto3-20261001.azurewebsites.net/ sin instalar Python. El nivel F1 puede dormirse y tardar en responder al inicio. Si se utiliza la alternativa local, ejecutar solo la línea del sistema correspondiente:','small')
 code('py -3.12 iniciar.py  # Windows\npython3.12 iniciar.py  # macOS / Linux')
-p('Ejecutar únicamente la línea del sistema utilizado. El lanzador prepara el entorno y las dependencias. Abrir http://127.0.0.1:8765 y mantener la terminal abierta. En Nueva reserva, elegir llegada y salida en el calendario, completar Detalles y pasar a Revisar y guardar. Las noches y la anticipación se calculan automáticamente. Mis reservas permite recuperar el registro.','small')
+p('Ejecutar únicamente la línea del sistema utilizado. El lanzador prepara el entorno y las dependencias. Abrir http://127.0.0.1:8765 y mantener la terminal abierta. En Nueva reserva, revisar o seleccionar la fecha de creación y elegir llegada y salida en el calendario, completar Detalles y pasar a Revisar y guardar. Las noches y la anticipación se calculan automáticamente. Mis reservas permite recuperar el registro.','small')
 p('El CSV se selecciona en Nueva reserva, se analiza y muestra una vista previa. Guardar lote conserva todas las filas; Descargar resultados genera el JSON. La guía y las pruebas paso a paso están en docs/GUIA-DE-USO.md y docs/PRUEBAS-GUIADAS.md.','small')
 
 page();title('6.1. Calendario y guardado')
 h('Tres pasos con resumen de estancia')
+p('La fecha de creación es visible y editable. El selector permite alternar entre creación, llegada y salida. Ocultar calendario reduce el espacio ocupado sin borrar las fechas; se puede volver a mostrar. Las seis opciones de Detalles completan las diez variables del modelo.','small')
 p('Fechas, Detalles y Revisar y guardar separan las decisiones. El calendario calcula cuatro variables del modelo: anticipación, mes de llegada y noches entre semana/de fin de semana. La salida no cuenta como noche. El servidor valida la misma regla: 0 a 60 días de anticipación y 1 a 30 noches. Los ejemplos históricos sin fechas completas conservan sus variables originales.','small')
 h('Qué se guarda y por qué')
 p('Cada reserva conserva referencia, diez variables, resultado, huella del modelo, fechas de creación/llegada/salida y estado de revisión. En Azure, Blob privado guarda la instantánea SQLite y un ETag controla concurrencia. En la variante local, .runtime/reservaiq.sqlite3 conserva una base independiente que no se publica en GitHub.')
 p('Solo analizar no modifica la base. Guardar cambios mantiene el identificador y exige la revisión vigente para evitar sobrescrituras entre ventanas. Los reintentos de una misma creación devuelven el mismo registro. Un fallo en un lote revierte todas sus escrituras. Archivar es reversible.')
 h('Comprobar el recorrido')
+p('Guardadas incluye todos los estados. Pendientes, Revisadas y Archivadas filtran al pulsar cada tarjeta y limpian la búsqueda. La capacidad K selecciona hasta K pendientes ordenadas por índice; es independiente del umbral de 17/100. Revisada registra una acción humana, no el desenlace de cancelación. Archivar retira de la lista activa y Restaurar permite recuperarla.','small')
 p('Con creación 01/10/2026, llegada 02/10 y salida 05/10 se obtienen 3 noches: 1 entre semana y 2 de fin de semana; anticipación de 1 día. Analizar y guardar conserva el registro con código RI-. Mis reservas permite recuperarlo, editarlo y organizarlo. Sus tarjetas Guardadas, Pendientes, Revisadas y Archivadas filtran los registros al pulsarlas. La guía incluye además el caso histórico 12301, el CSV y errores esperados.','small')
-h('Comprobaciones automáticas y límites')
+page();title('6.2. Pruebas y límites de la demo')
 p('Las pruebas Python cubren integridad del dataset y modelo, separación temporal, métricas, las 7.990 predicciones, UTF-8 en Windows, API y persistencia real. Incluyen reiniciar el servidor, reintentos concurrentes sin duplicación, conflictos de edición y transacciones de lote. También se prueban fechas, cambio de año, año bisiesto y migración de la base. JavaScript verifica calendario, tarjetas de estado y recorrido guiado con una API simulada.')
 code('python -m unittest discover -s tests -v\nnpm ci\nnpm test')
-p('GitHub Actions verificó 41 pruebas Python y 26 JavaScript en Windows y Ubuntu. Además se realizaron 31 comprobaciones HTTPS y nueve registros conservaron sus datos después de reiniciar App Service. La evidencia fechada registra el resultado de cada suite. Las capturas del anexo documentan la interfaz anterior de cuatro vistas: no acreditan visualmente el guardado nuevo. La navegación de la nueva versión en un navegador real queda pendiente de comprobación cuando el control de acceso permita abrirlo.','small')
+p('GitHub Actions verificó 41 pruebas Python y 26 JavaScript en Windows y Ubuntu. Además se realizaron 31 comprobaciones HTTPS y nueve registros conservaron sus datos después de reiniciar App Service. La evidencia fechada registra el resultado de cada suite. El anexo E1-E15 incorpora las capturas originales de la versión web aportadas por el equipo el 30 de septiembre: calendario, reservas guardadas, pruebas guiadas, resultados y arquitectura. Las imágenes históricas A1-A4 se conservan como antecedentes. Una guía visible no prueba que sus pasos se ejecutaron; los resultados de API, reinicio y pruebas automáticas tienen registros independientes.','small')
 p('Las reservas nuevas no tienen una etiqueta real de cancelación conocida. No alimentan el entrenamiento ni alteran las métricas. Todos los usuarios de la web comparten registros ficticios. En modo local cada computador conserva una base independiente; para trasladarla se cierra la aplicación y se copia .runtime. La exportación JSON permite consultar los datos, pero esta versión no incluye importación de esas copias.','small')
 
 page();title('7. Costos, evidencia y conclusiones')
@@ -182,16 +184,21 @@ for label,url in [('1. Antonio, Almeida y Nunes: datos hoteleros','https://doi.o
  p(f'<link href="{html.escape(url,quote=True)}" color="#087e80">{label}</link>','small')
 
 
-# La revisión actual se documenta sin recrear capturas ausentes.
+# Anexo principal: capturas originales de la versión web.
 visual_review=json.loads((OUT/'capturas/web-inventory.json').read_text(encoding='utf-8'))
-for start in (0,8):
- page();title('Evidencia de la versión web actual')
- p('Revisión de 15 imágenes aportadas por el equipo: 30 de septiembre de 2026, 23:38-23:40 en Colombia. Los PNG originales no están disponibles en las rutas proporcionadas: se documenta lo observado, sin reconstruir imágenes.','small')
- for item in visual_review['images'][start:start+8]:
-  h(str(item['number'])+'. '+item['title'])
-  p(item['observed'],'small')
- p('Las guías visibles no prueban su ejecución. US$2 sigue siendo una estimación. El estado de cero nodos tiene su fecha de corte; las reservas nuevas no alteran las métricas históricas.','small')
- p('Consultar docs/EVIDENCIA-WEB-ACTUAL.md y azure/evidence/microproyecto3/web-current-check.json para el alcance y la consulta HTTP actual de solo lectura. Las imágenes siguientes son antecedentes históricos y una captura real del pipeline.','small')
+for item in visual_review['images']:
+ page();title('E'+str(item['number'])+'. '+item['title'])
+ p('Versión web en Azure · '+item['time_colombia']+' (Colombia, según el nombre del archivo).','small')
+ image_path=OUT/'capturas'/item['file']
+ if hashlib.sha256(image_path.read_bytes()).hexdigest()!=item['sha256']:
+  raise ValueError('Captura web diferente del original: '+item['file'])
+ story.append(Image(str(image_path),width=480,height=480*item['height']/item['width']))
+ story.append(Spacer(1,10))
+ md.append('!['+item['title']+'](capturas/'+item['file']+')\n')
+ p('<b>Qué se observa.</b> '+html.escape(item['observed']),'small')
+ p('<b>Relación con la solución.</b> '+html.escape(item['explanation']),'small')
+ p('<b>Alcance de la evidencia.</b> '+html.escape(item['scope']),'small')
+ p('Original completo sin alterar. La imagen acredita lo visible en esa sesión; las pruebas automáticas y los registros de Azure se consultan por separado.','small')
 
 # Se incrustan los PNG originales completos: el estado visible nunca se retoca.
 captures=json.loads((OUT/'capturas/manifest.json').read_text(encoding='utf-8'))
