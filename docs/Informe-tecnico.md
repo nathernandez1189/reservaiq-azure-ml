@@ -33,7 +33,7 @@ Pipeline de Azure ML completado: mango_wire_5f09pdg4m3. Modelo descargado, regis
 
 # 1. Requerimientos y alternativas
 
-La necesidad se traduce en una decisión verificable: qué reservas revisar primero cuando existe una capacidad K. La alerta por umbral es un análisis complementario y no obliga a contactar a todos los registros señalados.
+La necesidad se traduce en una decisión verificable: qué reservas revisar primero cuando existe una capacidad K. El calendario permite elegir creación, llegada y salida. El guardado conserva una copia local y los contadores permiten consultar su estado. La alerta por umbral complementa esa revisión.
 
 | ID | Requerimiento | Criterio de aceptación |
 | --- | --- | --- |

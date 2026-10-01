@@ -43,8 +43,8 @@
 			<rect x="1090" y="264" width="640" height="126" rx="12" ry="12" style="stroke: rgb(27%,38%,42%); stroke-linecap: butt; stroke-width: 2; fill: rgb(12%,23%,28%); fill-rule: evenodd;"/>
 			<rect x="1090" y="279" width="5" height="96" rx="2" ry="2" style="stroke: none; stroke-linecap: butt; stroke-width: 2; fill: rgb(40%,87%,81%); fill-rule: evenodd;"/>
 			<text x="1111" y="347" style="font-family: Helvetica-Bold; font-size: 30px;fill: rgb(92%,96%,96%); stroke:none;" transform="translate(0,694) scale(1,-1)">Aplicación de reservas</text>
-			<text x="1111" y="312" style="font-family: Helvetica; font-size: 25px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,624) scale(1,-1)">Formulario / CSV → API → índice del modelo</text>
-			<text x="1111" y="284" style="font-family: Helvetica; font-size: 25px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,568) scale(1,-1)">Análisis, guardado, lista K y exportación</text>
+			<text x="1111" y="312" style="font-family: Helvetica; font-size: 25px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,624) scale(1,-1)">Calendario / CSV, validación e inferencia</text>
+			<text x="1111" y="284" style="font-family: Helvetica; font-size: 25px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,568) scale(1,-1)">Análisis, guardado y revisión por capacidad K</text>
 			<rect x="455" y="268" width="410" height="95" rx="12" ry="12" style="stroke: rgb(27%,38%,42%); stroke-linecap: butt; stroke-width: 2; fill: rgb(12%,23%,28%); fill-rule: evenodd;"/>
 			<rect x="455" y="283" width="5" height="65" rx="2" ry="2" style="stroke: none; stroke-linecap: butt; stroke-width: 2; fill: rgb(40%,87%,81%); fill-rule: evenodd;"/>
 			<text x="476" y="320" style="font-family: Helvetica-Bold; font-size: 30px;fill: rgb(92%,96%,96%); stroke:none;" transform="translate(0,640) scale(1,-1)">Personal del hotel</text>
@@ -52,7 +52,7 @@
 			<rect x="1090" y="89" width="640" height="126" rx="12" ry="12" style="stroke: rgb(27%,38%,42%); stroke-linecap: butt; stroke-width: 2; fill: rgb(12%,23%,28%); fill-rule: evenodd;"/>
 			<rect x="1090" y="104" width="5" height="96" rx="2" ry="2" style="stroke: none; stroke-linecap: butt; stroke-width: 2; fill: rgb(40%,87%,81%); fill-rule: evenodd;"/>
 			<text x="1111" y="172" style="font-family: Helvetica-Bold; font-size: 30px;fill: rgb(92%,96%,96%); stroke:none;" transform="translate(0,344) scale(1,-1)">SQLite local</text>
-			<text x="1111" y="137" style="font-family: Helvetica; font-size: 25px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,274) scale(1,-1)">Datos, índice, referencia y estado de revisión</text>
+			<text x="1111" y="137" style="font-family: Helvetica; font-size: 25px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,274) scale(1,-1)">Fechas, entradas, índice, código y estado</text>
 			<text x="1111" y="109" style="font-family: Helvetica; font-size: 25px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,218) scale(1,-1)">.runtime/reservaiq.sqlite3</text>
 			<polyline points="1380 264, 1380 215" style="stroke: rgb(40%,87%,81%); stroke-linecap: round; stroke-width: 3.3; fill: None; fill-rule: evenodd;"/>
 			<polygon points="1380 215, 1374.5 227, 1385.5 227" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(40%,87%,81%); fill-rule: evenodd;"/>

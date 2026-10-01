@@ -49,7 +49,7 @@ La ejecución y el registro en Azure son históricos: el grupo temporal fue elim
 
 ## Fuente y reproducción del diagrama
 
-El informe y las figuras del repositorio utilizan la misma definición vectorial en `scripts/diagrama_arquitectura.py`. La variante oscura mantiene la misma topología para reutilizarla en diapositivas. La nueva base SQLite está reflejada en el repositorio y el informe; esta actualización no modifica automáticamente el diseño alojado en Canva. Para regenerar las figuras y el informe:
+El informe y las figuras del repositorio utilizan la misma definición vectorial en `scripts/diagrama_arquitectura.py`. La variante oscura mantiene la misma topología para reutilizarla en diapositivas. El flujo operativo amplía el detalle de la aplicación local y conserva los tres componentes del pipeline. Para regenerar las figuras y el informe:
 
 ```bash
 python -m pip install -r requirements-docs.txt
@@ -71,3 +71,17 @@ El almacenamiento vive en el computador que ejecuta el servidor; no hay sincroni
 ### Fechas dentro de la aplicación local
 
 El calendario recibe creación, llegada y salida; calcula anticipación, mes de llegada y noches entre semana/de fin de semana. El servidor repite la validación antes de inferir o guardar. Son las mismas diez variables del modelo: las fechas completas se conservan como metadatos opcionales en SQLite, sin añadirse al entrenamiento. El día de salida se excluye de las noches. La migración al esquema 2 conserva las reservas previas con fechas desconocidas (`stay: null`). El flujo Azure y las métricas históricas permanecen iguales.
+
+![Flujo operativo desde las fechas hasta el guardado y la revisión humana](figuras/flujo-reserva.svg)
+
+Las tres fechas permanecen visibles y se pueden elegir con el mismo calendario. Ocultarlo conserva la selección. **Solo analizar** devuelve el índice sin escribir una reserva. **Analizar y guardar** valida, calcula y conserva entradas y resultado, y confirma con un código RI. **Mis reservas** recupera los registros y permite consultar las categorías desde sus contadores, editar, revisar, archivar y restaurar.
+
+La vía CSV utiliza el mismo contrato de diez variables. Después del análisis muestra una vista previa y requiere una acción explícita para guardar el lote. Los CSV y registros históricos sin fechas completas mantienen sus variables originales, sin inventar fechas de creación o estancia.
+
+| Cambio de experiencia de usuario | Consecuencia en el diseño |
+| --- | --- |
+| Tres fechas visibles y calendario plegable | Captura y cálculo de variables en la interfaz, comprobados de nuevo por el servidor |
+| Guardado, edición y recuperación | Base SQLite local con transacciones y control de revisiones |
+| Contadores pulsables | Filtros de consulta sobre los registros locales |
+| Lista de pendientes por capacidad K | Priorización operativa de las copias locales |
+| Nuevas reservas y estados | No alteran el modelo, las particiones ni las métricas históricas |

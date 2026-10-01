@@ -12,7 +12,7 @@ Hotel Brisa del Valle, cliente ficticio de Cali, necesita distribuir una capacid
 
 ## Material de la entrega
 
-[Informe técnico en PDF](docs/ReservaIQ-Informe-tecnico.pdf) · [Presentación ampliada en Canva](https://www.canva.com/d/20i32hmvo0gpTiA) · [Contenido de las 12 diapositivas](docs/PRESENTACION.md) · [Correspondencia con la rúbrica](docs/ENTREGA.md).
+[Informe técnico en PDF](docs/ReservaIQ-Informe-tecnico.pdf) · [Presentación ampliada en Canva](https://www.canva.com/d/0RDtRC3Au5C7vEJ) · [Contenido de las 12 diapositivas](docs/PRESENTACION.md) · [Correspondencia con la rúbrica](docs/ENTREGA.md).
 
 La presentación cubre requerimientos, alternativas, datos, diseño, evaluación, ejecución Azure, costos y demo, con una duración objetivo de 15 minutos. El enlace de Canva solicita iniciar sesión; la copia del contenido puede consultarse directamente en este repositorio. [Qué contiene cada material y cómo se relacionan el repositorio y el ZIP](docs/ENTREGA.md#repositorio-zip-y-formato-de-entrega).
 

@@ -63,5 +63,34 @@
     "live_browser_e2e_verified": false,
     "cloud_resources_started": false,
     "creation_date_visible_and_calendar_selection_verified": true
+  },
+  "presentation_refresh": {
+    "checked_at_utc": "2026-10-01T01:15:07.541867+00:00",
+    "canva_design_id": "DAHWnsZXHPY",
+    "canva_saved_and_read_back": true,
+    "content_slides": 12,
+    "closing_pages": 1,
+    "architecture_asset_verified": true,
+    "architecture_svg_sha256": "c4f34d514542de8e5c073135a4777a1c92901208cbfd5ddd3d49ecd79fc70a47",
+    "covered_features": [
+      "requirements_and_acceptance",
+      "three_visible_dates",
+      "collapsible_calendar",
+      "local_sqlite_persistence",
+      "clickable_status_filters",
+      "explicit_analyze_vs_save",
+      "56_tests_per_platform"
+    ],
+    "report_pages": 13,
+    "modified_report_pages_visually_reviewed": [
+      2,
+      5
+    ],
+    "diagram_visual_review": "local vector render inspected",
+    "native_slide_visual_review": "Previews supplied by Canva; direct browser review blocked because admin policy verification was unavailable",
+    "timing": "14 minutes planned plus 1 minute margin; not a measured rehearsal",
+    "native_presenter_notes_updated": false,
+    "private_updated_reading_script_in_repository": false,
+    "cloud_resources_started": false
   }
 }
