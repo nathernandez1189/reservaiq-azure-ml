@@ -40,8 +40,9 @@ class ReservationStore:
         con = sqlite3.connect(self.path, timeout=10)
         con.row_factory = sqlite3.Row
         try:
+            con.execute('BEGIN IMMEDIATE')
             version = con.execute('PRAGMA user_version').fetchone()[0]
-            if version not in (0, 1):
+            if version not in (0, 1, 2):
                 raise ValueError('Esta base de reservas requiere una versión más reciente de ReservaIQ.')
             con.execute('''CREATE TABLE IF NOT EXISTS reservations (
                 id TEXT PRIMARY KEY, reference TEXT NOT NULL, inputs TEXT NOT NULL,
@@ -50,7 +51,10 @@ class ReservationStore:
                 created_at TEXT NOT NULL, updated_at TEXT NOT NULL)''')
             con.execute('''CREATE TABLE IF NOT EXISTS requests (
                 request_id TEXT PRIMARY KEY, payload_hash TEXT NOT NULL, response TEXT NOT NULL)''')
-            con.execute('PRAGMA user_version = 1')
+            columns = {r['name'] for r in con.execute('PRAGMA table_info(reservations)')}
+            if 'stay' not in columns:
+                con.execute('ALTER TABLE reservations ADD COLUMN stay TEXT')
+            con.execute('PRAGMA user_version = 2')
             con.commit()
             with con:
                 yield con
@@ -62,6 +66,7 @@ class ReservationStore:
         data = dict(row)
         data['inputs'] = json.loads(data['inputs'])
         data['result'] = json.loads(data['result'])
+        data['stay'] = json.loads(data['stay']) if data.get('stay') else None
         return data
 
     def list(self):
@@ -89,10 +94,10 @@ class ReservationStore:
                 rid = 'RI-' + uuid.uuid4().hex[:12].upper()
                 now = timestamp()
                 con.execute('''INSERT INTO reservations
-                    (id,reference,inputs,result,model_sha256,source,created_at,updated_at)
-                    VALUES (?,?,?,?,?,?,?,?)''', (
+                    (id,reference,inputs,result,model_sha256,source,created_at,updated_at,stay)
+                    VALUES (?,?,?,?,?,?,?,?,?)''', (
                     rid, ref or rid, encode(entry['inputs']), encode(entry['result']),
-                    entry['model_sha256'], entry['source'], now, now))
+                    entry['model_sha256'], entry['source'], now, now, encode(entry.get('stay'))))
                 saved.append(self.record(con.execute('SELECT * FROM reservations WHERE id=?', (rid,)).fetchone()))
             con.execute('INSERT INTO requests VALUES (?,?,?)', (request_id, payload_hash, encode(saved)))
             return saved
@@ -110,8 +115,8 @@ class ReservationStore:
             if row['status'] == 'archived':
                 raise ConflictError('Primero restaura la reserva archivada desde Mis reservas.')
             con.execute('''UPDATE reservations SET reference=?, inputs=?, result=?,
-                model_sha256=?, status='pending', revision=revision+1, updated_at=? WHERE id=?''', (
-                ref or rid, encode(entry['inputs']), encode(entry['result']), entry['model_sha256'], timestamp(), rid))
+                model_sha256=?, stay=?, status='pending', revision=revision+1, updated_at=? WHERE id=?''', (
+                ref or rid, encode(entry['inputs']), encode(entry['result']), entry['model_sha256'], encode(entry.get('stay')), timestamp(), rid))
             return self.record(con.execute('SELECT * FROM reservations WHERE id=?', (rid,)).fetchone())
 
     def set_status(self, rid, expected_revision, status):

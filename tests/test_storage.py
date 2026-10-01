@@ -12,6 +12,7 @@ from urllib.error import HTTPError
 import uuid
 import app
 from storage import ReservationStore
+from booking_dates import features_from_stay
 
 class PersistenceTests(unittest.TestCase):
     def setUp(self):
@@ -138,6 +139,48 @@ class PersistenceTests(unittest.TestCase):
         self.assertEqual(response['count'],500)
         self.assertEqual(len({r['id'] for r in response['reservations']}),500)
         self.assertEqual(len(self.store.list()),500)
+
+    def test_calendar_predict_save_edit_and_restart_preserve_dates(self):
+        stay={'booked_on':'2026-10-01','check_in':'2026-10-02','check_out':'2026-10-05'}
+        inputs={**self.inputs,**features_from_stay(stay)}
+        status,prediction=self.request('/api/predict',{'inputs':inputs,'stay':stay})
+        self.assertEqual(status,200,prediction)
+        self.assertEqual(prediction,self.request('/api/predict',inputs)[1])
+        self.assertEqual(self.store.list(),[])
+        payload=self.payload();payload.update(inputs=inputs,stay=stay)
+        status,data=self.request('/api/reservations',payload)
+        self.assertEqual(status,200,data)
+        saved=data['reservation']
+        self.assertEqual(saved['stay'],stay)
+        self.assertEqual(ReservationStore(self.path).list(),[saved])
+        self.server.shutdown();self.server.server_close();self.thread.join()
+        app.STORE=ReservationStore(self.path)
+        self.server=app.ThreadingHTTPServer(('127.0.0.1',0),app.Handler)
+        self.thread=Thread(target=self.server.serve_forever,daemon=True);self.thread.start()
+        self.url=f'http://127.0.0.1:{self.server.server_port}'
+        self.assertEqual(self.request('/api/reservations')[1]['reservations'],[saved])
+        edited={**stay,'check_out':'2026-10-06'}
+        status,data=self.request('/api/reservations/update',{'id':saved['id'],'revision':1,'inputs':{**inputs,**features_from_stay(edited)},'stay':edited,'reference':'Nueva salida'})
+        self.assertEqual(status,200,data)
+        self.assertEqual(data['reservation']['stay'],edited)
+        self.assertEqual(data['reservation']['id'],saved['id'])
+        self.assertEqual(data['reservation']['revision'],2)
+        self.assertEqual(len(self.store.list()),1)
+
+    def test_calendar_rejects_inconsistent_or_invalid_metadata_without_saving(self):
+        stay={'booked_on':'2026-10-01','check_in':'2026-10-02','check_out':'2026-10-05'}
+        inputs={**self.inputs,**features_from_stay(stay)}
+        cases=[({**inputs,'lead_time':2},stay),
+               (inputs,{**stay,'check_out':'2026-10-02'}),
+               (inputs,{**stay,'check_out':'2026-02-29'}),
+               (inputs,{**stay,'check_in':'2026-12-05'}),
+               (inputs,{**stay,'extra':True})]
+        for values,dates in cases:
+            with self.subTest(dates=dates):
+                payload=self.payload();payload.update(inputs=values,stay=dates)
+                self.assertEqual(self.request('/api/predict',{'inputs':values,'stay':dates})[0],400)
+                self.assertEqual(self.request('/api/reservations',payload)[0],400)
+        self.assertEqual(self.store.list(),[])
 
     def test_batch_limit_and_unknown_record(self):
         for rows in ([],[self.inputs]*501):

@@ -9,6 +9,7 @@ import os
 import sqlite3
 import joblib
 from core import infer, validate_input
+from booking_dates import validate_stay, features_from_stay
 from storage import ReservationStore, ConflictError, MissingReservation, reference
 
 ROOT = Path(__file__).resolve().parent
@@ -31,9 +32,12 @@ def reservation_entry(payload, source='manual'):
     if not isinstance(payload, dict):
         raise ValueError('Envía los datos de una reserva.')
     clean = validate_input(payload.get('inputs'))
+    stay = validate_stay(payload.get('stay'))
+    if stay is not None and any(clean[k] != v for k, v in features_from_stay(stay).items()):
+        raise ValueError('Las fechas no coinciden con los días y noches del análisis. Vuelve a elegir la estancia.')
     return {'inputs': clean, 'result': infer(BUNDLE, clean),
             'reference': reference(payload.get('reference', '')),
-            'source': source, 'model_sha256': MODEL_SHA256}
+            'source': source, 'model_sha256': MODEL_SHA256, 'stay': stay}
 
 
 def batch_results(rows):
@@ -65,6 +69,8 @@ class Handler(BaseHTTPRequestHandler):
             static = {'/': ('web/index.html', 'text/html'), '/index.html': ('web/index.html', 'text/html'),
                       '/style.css': ('web/style.css', 'text/css'), '/app.js': ('web/app.js', 'text/javascript'),
                       '/csv.js': ('web/csv.js', 'text/javascript'),
+                      '/dates.js': ('web/dates.js', 'text/javascript'),
+                      '/booking.js': ('web/booking.js', 'text/javascript'),
                       '/arquitectura.svg': ('docs/figuras/arquitectura-canva.svg', 'image/svg+xml'),
                       '/api/sample.csv': ('ejemplos-csv/reservas-listas.csv', 'text/csv')}
             if route in static:
@@ -99,7 +105,8 @@ class Handler(BaseHTTPRequestHandler):
                 raise ValueError('La solicitud es demasiado grande. Divide el archivo en lotes más pequeños.')
             payload = json.loads(self.rfile.read(length))
             if route == '/api/predict':
-                return self.respond(200, infer(BUNDLE, payload))
+                result = reservation_entry(payload)['result'] if isinstance(payload, dict) and 'inputs' in payload else infer(BUNDLE, payload)
+                return self.respond(200, result)
             if route == '/api/batch':
                 results = batch_results(payload)
                 return self.respond(200, {'count': len(results), 'flagged': sum(x['flagged'] for x in results), 'results': results})
