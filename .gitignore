@@ -7,3 +7,8 @@ __pycache__/
 .runtime/
 azure/evidence-private/
 *.log
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+node_modules/

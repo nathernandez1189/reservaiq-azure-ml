@@ -16,3 +16,11 @@ azure/evidence-private/
 scripts/
 requirements-docs.txt
 azure/evidence/
+node_modules/
+package.json
+package-lock.json
+iniciar.py
+iniciar-windows.cmd
+iniciar-mac.command
+storage.py
+*.sqlite3*
