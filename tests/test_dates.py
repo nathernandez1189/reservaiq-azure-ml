@@ -1,5 +1,6 @@
 """Independent date arithmetic and non-destructive storage migration checks."""
 import json
+from contextlib import closing
 from pathlib import Path
 import sqlite3
 import tempfile
@@ -39,7 +40,7 @@ class DateTests(unittest.TestCase):
     def test_migrates_v1_without_changing_saved_fields(self):
         with tempfile.TemporaryDirectory() as folder:
             path=Path(folder)/'legacy.sqlite3'
-            with sqlite3.connect(path) as con:
+            with closing(sqlite3.connect(path)) as con, con:
                 con.execute('CREATE TABLE reservations (id TEXT PRIMARY KEY, reference TEXT NOT NULL, inputs TEXT NOT NULL, result TEXT NOT NULL, model_sha256 TEXT NOT NULL, source TEXT NOT NULL, status TEXT NOT NULL, revision INTEGER NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)')
                 row=('RI-OLD','Hernández',json.dumps({'lead_time':28}),json.dumps({'score':0.398}),'original-sha','example','reviewed',3,'created','updated')
                 con.execute('INSERT INTO reservations VALUES (?,?,?,?,?,?,?,?,?,?)',row)
@@ -50,7 +51,7 @@ class DateTests(unittest.TestCase):
             self.assertEqual(records[0]['reference'],'Hernández')
             self.assertEqual(records[0]['revision'],3)
             self.assertEqual(records[0]['status'],'reviewed')
-            with sqlite3.connect(path) as con:
+            with closing(sqlite3.connect(path)) as con, con:
                 self.assertEqual(con.execute('PRAGMA user_version').fetchone()[0],2)
                 self.assertEqual(con.execute('SELECT id,reference,inputs,result,model_sha256,source,status,revision,created_at,updated_at FROM reservations').fetchone(),row)
             self.assertEqual(ReservationStore(path).list(),records)
@@ -58,7 +59,7 @@ class DateTests(unittest.TestCase):
     def test_refuses_future_database_version_without_overwriting_it(self):
         with tempfile.TemporaryDirectory() as folder:
             path=Path(folder)/'future.sqlite3'
-            with sqlite3.connect(path) as con: con.execute('PRAGMA user_version=99')
+            with closing(sqlite3.connect(path)) as con, con: con.execute('PRAGMA user_version=99')
             original=path.read_bytes()
             with self.assertRaises(ValueError):ReservationStore(path).list()
             self.assertEqual(path.read_bytes(),original)
