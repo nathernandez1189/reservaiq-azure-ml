@@ -1,6 +1,7 @@
 "use strict";
 const $ = (id) => document.getElementById(id);
 let summary,
+  lastStay,
   lastResult,
   lastInputs,
   revealed = false;
@@ -23,8 +24,8 @@ const names = {
   stays_in_week_nights: "Noches entre semana",
   hotel: "Tipo de hotel",
   meal: "Alimentación",
-  market_segment: "Segmento de mercado",
-  distribution_channel: "Canal de distribución",
+  market_segment: "¿Cómo se originó la reserva?",
+  distribution_channel: "Canal por el que se recibió",
   reserved_room_type: "Categoría de habitación",
   customer_type: "Tipo de reserva",
 };
@@ -200,37 +201,40 @@ function inputs() {
   return d;
 }
 function buildForm() {
-  let html = "";
+  let fields = "";
   for (const [k, values] of Object.entries(categories))
-    html += field(
+    fields += field(
       k,
       `<select id="${k}" aria-describedby="help-${k}">${values.map((v) => `<option value="${v}">${labels[v] || v}</option>`).join("")}</select>`,
     );
-  html += '<h3 class="form-group">Llegada y duración de la estancia</h3>';
-  for (const [k, [min, max]] of Object.entries(numeric))
-    html += field(
-      k,
-      k === "arrival_month"
-        ? `<select id="${k}" aria-describedby="help-${k}">${monthNames.map((v, i) => `<option value="${i + 1}">${v}</option>`).join("")}</select>`
-        : `<input id="${k}" type="number" min="${min}" max="${max}" step="1" required aria-describedby="help-${k}">`,
-    );
-  $("form-fields").innerHTML = html;
+  $("form-fields").innerHTML = fields;
+  $("numeric-fields").innerHTML = Object.entries(numeric)
+    .map(([k, [min, max]]) =>
+      field(
+        k,
+        k === "arrival_month"
+          ? `<select id="${k}" aria-describedby="help-${k}">${monthNames.map((v, i) => `<option value="${i + 1}">${v}</option>`).join("")}</select>`
+          : `<input id="${k}" type="number" min="${min}" max="${max}" step="1" required aria-describedby="help-${k}">`,
+      ),
+    )
+    .join("");
   Object.keys(names).forEach((k) => ($(k).oninput = edited));
   $("reference").oninput = edited;
+  Booking.init({ names, labels, inputs, edited });
 }
 function field(k, control) {
   return `<div class="field"><label for="${k}">${names[k]}</label>${control}<small id="help-${k}">${help[k]}</small></div>`;
 }
 function stayTotal() {
-  const total =
-    Number($("stays_in_weekend_nights").value) +
-    Number($("stays_in_week_nights").value);
-  $("stay-total").textContent =
-    `Estancia total: ${total} ${total === 1 ? "noche" : "noches"}. Debe sumar entre 1 y 30 noches.`;
+  Booking.refresh();
 }
 function resetResult(message = "Lista para analizar") {
   lastResult = null;
   lastInputs = null;
+  lastStay = null;
+  $("result-ready").hidden = true;
+  $("result-empty").hidden = false;
+  $("after-save").hidden = true;
   $("score").textContent = "—";
   $("decision").textContent = message;
   $("decision").style.color = "var(--text)";
@@ -291,6 +295,7 @@ function newReservation(navigate = true) {
   $("calculate").disabled = false;
   $("save-feedback").hidden = true;
   $("error").textContent = "";
+  Booking.reset();
   resetResult();
   stayTotal();
   if (navigate) go("lab");
@@ -310,6 +315,7 @@ function loadInputs(d, description, ref = "Ejemplo histórico") {
   $("save-state").className = "pill amber";
   $("save-feedback").hidden = true;
   $("error").textContent = "";
+  Booking.reset(null, true);
   resetResult();
   stayTotal();
   go("lab");
@@ -332,7 +338,14 @@ function loadExample() {
   );
 }
 function showResult(result, values) {
+  $("result-ready").hidden = false;
+  $("result-empty").hidden = true;
   lastResult = result;
+  try {
+    lastStay = Booking.getStay();
+  } catch {
+    lastStay = null;
+  }
   lastInputs = structuredClone(values);
   $("score").textContent = (result.score * 100).toLocaleString("es-CO", {
     minimumFractionDigits: 1,
@@ -357,9 +370,12 @@ function lockForm(value) {
     .forEach((el) => (el.disabled = value));
   $("new-reservation").disabled = value;
   $("example-reservation").disabled = value;
+  Booking.setBusy(value);
 }
 async function calculate(persist) {
-  if (busy || !$("predict-form").reportValidity()) return;
+  if (busy || !Booking.validate()) return;
+  Booking.refresh();
+  const stay = Booking.getStay();
   const values = inputs();
   if (
     values.stays_in_weekend_nights + values.stays_in_week_nights < 1 ||
@@ -377,6 +393,7 @@ async function calculate(persist) {
     if (persist) {
       const payload = {
         inputs: values,
+        stay,
         reference: $("reference").value,
         source,
         request_id: requestId,
@@ -398,8 +415,14 @@ async function calculate(persist) {
       $("save-feedback").textContent =
         `Guardada · ${activeRecord.id}. Puedes recuperarla en Mis reservas, incluso después de reiniciar la aplicación.`;
       $("save-feedback").hidden = false;
+      $("after-save").hidden = false;
+      $("save-feedback").focus({ preventScroll: true });
+      $("save-feedback").scrollIntoView?.({
+        block: "nearest",
+        behavior: "smooth",
+      });
     } else {
-      showResult(await api("/api/predict", values), values);
+      showResult(await api("/api/predict", { inputs: values, stay }), values);
       $("save-state").textContent = activeRecord
         ? dirty
           ? "Cambios sin guardar"
@@ -418,10 +441,12 @@ async function calculate(persist) {
 }
 $("predict-form").onsubmit = (e) => {
   e.preventDefault();
-  calculate(true);
+  if (Booking.getStep() < 3) Booking.showStep(Booking.getStep() + 1);
+  else calculate(true);
 };
 $("analyze-only").onclick = () => calculate(false);
 $("new-reservation").onclick = () => newReservation();
+$("another-reservation").onclick = () => newReservation();
 $("saved-new").onclick = () => newReservation();
 $("example-reservation").onclick = loadExample;
 $("guide-example").onclick = loadExample;
@@ -430,6 +455,7 @@ $("export").onclick = () =>
     {
       reservation_id: activeRecord?.id || null,
       inputs: lastInputs,
+      stay: lastStay,
       result: lastResult,
       generated_at: new Date().toISOString(),
     },
@@ -509,8 +535,40 @@ async function refreshSaved() {
 function renderSaved() {
   const counts = { pending: 0, reviewed: 0, archived: 0 };
   savedRecords.forEach((r) => counts[r.status]++);
-  $("saved-counts").innerHTML =
-    `<span><b>${savedRecords.length}</b> guardadas</span><span><b>${counts.pending}</b> pendientes</span><span><b>${counts.reviewed}</b> revisadas</span><span><b>${counts.archived}</b> archivadas</span>`;
+  const filterNames = {
+    all: "Todas las guardadas",
+    active: "Reservas activas",
+    pending: "Reservas pendientes",
+    reviewed: "Reservas revisadas",
+    archived: "Reservas archivadas",
+  };
+  const countFilters = [
+    ["all", "Guardadas", savedRecords.length],
+    ["pending", "Pendientes", counts.pending],
+    ["reviewed", "Revisadas", counts.reviewed],
+    ["archived", "Archivadas", counts.archived],
+  ];
+  $("saved-counts").innerHTML = countFilters
+    .map(
+      ([key, label, count]) =>
+        `<button type="button" class="count-filter" data-count-filter="${key}" aria-pressed="${$("saved-filter").value === key}" aria-controls="saved-list" aria-label="Ver ${label.toLowerCase()}: ${count}"><b>${count}</b><span>${label}</span><small>Ver registros →</small></button>`,
+    )
+    .join("");
+  $("saved-counts")
+    .querySelectorAll("[data-count-filter]")
+    .forEach((button) => {
+      button.onclick = () => {
+        const value = button.dataset.countFilter;
+        $("saved-filter").value = value;
+        $("saved-search").value = "";
+        savedPage = 0;
+        renderSaved();
+        $("saved-counts")
+          .querySelector(`[data-count-filter="${value}"]`)
+          .focus({ preventScroll: true });
+        $("saved-results-title").scrollIntoView({ block: "nearest" });
+      };
+    });
   const capacity = Math.max(
     1,
     Math.min(500, Number($("saved-capacity").value) || 1),
@@ -537,6 +595,8 @@ function renderSaved() {
     .sort(
       (a, b) => b.result.score - a.result.score || a.id.localeCompare(b.id),
     );
+  $("saved-results-title").textContent =
+    `${filterNames[filter]} · ${filtered.length} ${filtered.length === 1 ? "registro" : "registros"}${search ? " encontrados" : ""}`;
   const pages = Math.max(1, Math.ceil(filtered.length / 20));
   savedPage = Math.min(savedPage, pages - 1);
   $("saved-page").textContent =
@@ -546,14 +606,14 @@ function renderSaved() {
   $("saved-export").disabled = savedRecords.length === 0;
   if (!filtered.length) {
     $("saved-list").innerHTML =
-      `<div class="empty"><h2>${savedRecords.length ? "No hay coincidencias" : "Todavía no has guardado reservas"}</h2><p>${savedRecords.length ? "Cambia la búsqueda o el estado para ver otras reservas." : "Crea una reserva y pulsa Analizar y guardar. Después aparecerá aquí."}</p></div>`;
+      `<div class="empty"><h3>${!savedRecords.length ? "Todavía no has guardado reservas" : search ? "No hay coincidencias con esa búsqueda" : filter === "pending" ? "No tienes reservas pendientes" : filter === "reviewed" ? "Todavía no has marcado reservas como revisadas" : filter === "archived" ? "No tienes reservas archivadas" : "No hay reservas en esta categoría"}</h3><p>${savedRecords.length ? "Pulsa Guardadas para ver todos los registros o elige otra categoría." : "Crea una reserva y pulsa Analizar y guardar. Después aparecerá aquí."}</p></div>`;
     return;
   }
   $("saved-list").innerHTML = filtered
     .slice(savedPage * 20, savedPage * 20 + 20)
     .map(
       (r) =>
-        `<article class="saved-card ${priority.has(r.id) ? "priority" : ""}"><div><h3>${esc(r.reference)}</h3><p class="small muted">${esc(r.id)} · ${sourceLabels[r.source]} · ${new Date(r.updated_at).toLocaleString("es-CO")}</p><span class="badge ${r.status}">${stateLabels[r.status]}</span>${priority.has(r.id) ? '<span class="badge reviewed">Prioritaria</span>' : ""}<p class="small muted">${labels[r.inputs.hotel]} · ${r.inputs.lead_time} días de anticipación · ${r.inputs.stays_in_weekend_nights + r.inputs.stays_in_week_nights} noches</p><div class="actions">${r.status === "archived" ? `<button class="linkbutton" data-status="pending" data-id="${r.id}">Restaurar</button>` : `<button class="linkbutton" data-open="${r.id}">Abrir</button><button class="linkbutton" data-status="${r.status === "pending" ? "reviewed" : "pending"}" data-id="${r.id}">${r.status === "pending" ? "Marcar revisada" : "Volver a pendiente"}</button><button class="linkbutton" data-status="archived" data-id="${r.id}">Archivar</button>`}</div></div><div class="saved-score"><strong>${(r.result.score * 100).toFixed(1)}</strong><span class="small muted">índice / 100</span></div></article>`,
+        `<article class="saved-card ${priority.has(r.id) ? "priority" : ""}"><div><h3>${esc(r.reference)}</h3><p class="small muted">${esc(r.id)} · ${sourceLabels[r.source]} · ${new Date(r.updated_at).toLocaleString("es-CO")}</p><span class="badge ${r.status}">${stateLabels[r.status]}</span>${priority.has(r.id) ? '<span class="badge reviewed">Prioritaria</span>' : ""}<p class="small muted">${r.stay ? `${ReservaDates.format(r.stay.check_in)} → ${ReservaDates.format(r.stay.check_out)}<br>` : "Fechas no registradas · "}${labels[r.inputs.hotel]} · ${r.inputs.lead_time} días de anticipación · ${r.inputs.stays_in_weekend_nights + r.inputs.stays_in_week_nights} noches</p><div class="actions">${r.status === "archived" ? `<button class="linkbutton" data-status="pending" data-id="${r.id}">Restaurar</button>` : `<button class="linkbutton" data-open="${r.id}">Abrir</button><button class="linkbutton" data-status="${r.status === "pending" ? "reviewed" : "pending"}" data-id="${r.id}">${r.status === "pending" ? "Marcar revisada" : "Volver a pendiente"}</button><button class="linkbutton" data-status="archived" data-id="${r.id}">Archivar</button>`}</div></div><div class="saved-score"><strong>${(r.result.score * 100).toFixed(1)}</strong><span class="small muted">índice / 100</span></div></article>`,
     )
     .join("");
   document
@@ -586,6 +646,7 @@ async function openSaved(id) {
     $("calculate").disabled = true;
     $("error").textContent = "";
     $("save-feedback").hidden = true;
+    Booking.reset(r.stay || null, !r.stay);
     showResult(r.result, r.inputs);
     stayTotal();
     go("lab");
@@ -638,7 +699,7 @@ $("saved-export").onclick = async () => {
     const data = await api("/api/reservations");
     download(
       {
-        format: "reservaiq-reservations-v1",
+        format: "reservaiq-reservations-v2",
         exported_at: new Date().toISOString(),
         ...data,
       },

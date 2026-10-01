@@ -214,6 +214,7 @@
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
     <div class="shell">
       <aside class="sidebar">
         <div class="brand">
@@ -230,11 +231,13 @@
           </div>
         </div>
         <nav class="nav" aria-label="Navegación principal">
+          <p class="nav-label">Tu espacio</p>
           <button data-view="overview" aria-current="page">
             <span>01</span>Inicio</button
           ><button data-view="lab"><span>02</span>Nueva reserva</button
-          ><button data-view="saved"><span>03</span>Mis reservas</button
-          ><button data-view="guide"><span>04</span>Cómo probarlo</button
+          ><button data-view="saved"><span>03</span>Mis reservas</button>
+          <p class="nav-label">Aprende y verifica</p>
+          <button data-view="guide"><span>04</span>Cómo probarlo</button
           ><button data-view="model">
             <span>05</span>Resultados del modelo</button
           ><button data-view="project"><span>06</span>Diseño y Azure</button>
@@ -248,7 +251,7 @@
           <p>Juan · Natalia · Miguel Ángel<br />Microproyecto 3 / UAO</p>
         </div>
       </aside>
-      <main class="main">
+      <main class="main" id="main-content">
         <div class="topbar">
           <span>RESERVAS / INTELIGENCIA DE NEGOCIO</span
           ><span class="pill" id="cloud-status"
@@ -260,14 +263,21 @@
           <section class="view" id="overview">
             <div class="hero">
               <div>
-                <p class="eyebrow">Una decisión antes de la llegada</p>
-                <h1>Menos incertidumbre.<br />Mejores prioridades.</h1>
+                <p class="eyebrow">
+                  Tu asistente para revisar reservas de hotel
+                </p>
+                <h1>
+                  Organiza tus reservas.<br /><span class="accent"
+                    >Sabe cuáles revisar primero.</span
+                  >
+                </h1>
                 <p>
-                  Si hoy solo puedes revisar algunas reservas, empieza por las
-                  que concentran más señales de cancelación.
+                  Elige las fechas de una estancia, guarda la reserva y recibe
+                  una señal que te ayuda a decidir si conviene revisarla. Todo
+                  queda organizado en tu computador.
                 </p>
                 <button class="primary" data-go="lab">
-                  Crear una reserva ↗
+                  Elegir fechas y crear una reserva →
                 </button>
                 <p class="note">
                   Analiza y guarda una copia local de tus reservas. El modelo
@@ -327,7 +337,7 @@
             <div class="steps">
               <div>
                 <span class="stepnum">1</span>
-                <h2>Completa los datos</h2>
+                <h2>Elige la estancia</h2>
                 <p>
                   Diez datos de la reserva, con ayudas y un ejemplo para
                   empezar.
@@ -338,7 +348,7 @@
               </div>
               <div>
                 <span class="stepnum">2</span>
-                <h2>Analiza y guarda</h2>
+                <h2>Revisa y guarda</h2>
                 <p>
                   Recibe una sugerencia de revisión y conserva el resultado en
                   este computador.
@@ -359,211 +369,432 @@
                 </button>
               </div>
             </div>
-            <div class="sectiontitle compact">
-              <p class="eyebrow">Evidencia histórica · datos de Portugal</p>
-              <h2>Lo que logró el modelo en la prueba</h2>
-              <p>
-                Estos resultados pertenecen a datos históricos. Las reservas que
-                guardes aparecerán en <b>Mis reservas</b> y no cambian estas
-                métricas.
-              </p>
-            </div>
-            <div class="kpis">
-              <div class="kpi">
-                <span class="label">Concentración en el 20 % prioritario</span
-                ><strong class="value" id="lift"></strong
-                ><span class="sub">Frente a una selección aleatoria</span>
+            <div class="welcome-help">
+              <div>
+                <p class="eyebrow">¿Es tu primera visita?</p>
+                <h2>Conoce el recorrido con un ejemplo</h2>
+                <p>
+                  Practica sin datos personales. Te explicamos qué elegir, qué
+                  significa el índice y dónde recuperar lo guardado.
+                </p>
               </div>
-              <div class="kpi">
-                <span class="label">Precisión del 20 % prioritario</span
-                ><strong class="value" id="top-precision"></strong
-                ><span class="sub">Cancelaciones dentro de la selección</span>
-              </div>
-              <div class="kpi">
-                <span class="label">Cancelaciones capturadas</span
-                ><strong class="value" id="top-recall"></strong
-                ><span class="sub">Revisando el 20 % de las reservas</span>
-              </div>
-              <div class="kpi">
-                <span class="label">Reservas de prueba</span
-                ><strong class="value" id="test-n"></strong
-                ><span class="sub">Separación por fechas</span>
-              </div>
-            </div>
-            <p class="metrics-context">
-              Resultados retrospectivos sobre toda la prueba reservada. No
-              demuestran el efecto de una llamada ni ingresos recuperados.
-            </p>
-            <div class="panel">
-              <div class="panelhead">
-                <div>
-                  <h2>Ejemplo histórico: elige cuántas revisar</h2>
-                  <p class="muted small">
-                    Cohorte ilustrativa: 150 reservas reales del conjunto de
-                    prueba, ordenadas por el índice del modelo.
-                  </p>
-                </div>
-                <span class="pill">Simulación retrospectiva</span>
-              </div>
-              <div class="capacity">
-                <label for="capacity"
-                  >Revisar
-                  <strong id="capacity-label">30</strong> reservas</label
-                ><input
-                  id="capacity"
-                  type="range"
-                  min="5"
-                  max="75"
-                  value="30"
-                  step="5"
-                /><span class="small muted" id="capacity-info"></span
-                ><button class="secondary" id="export-queue">
-                  Exportar lista ↓
-                </button>
-              </div>
-              <div class="queuewrap">
-                <table class="queue">
-                  <thead>
-                    <tr>
-                      <th>Reserva</th>
-                      <th>Hotel / segmento</th>
-                      <th>Anticipación</th>
-                      <th>Noches</th>
-                      <th>Índice / 100</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody id="queue"></tbody>
-                </table>
-              </div>
-              <p class="note" id="queue-foot"></p>
-              <button class="linkbutton" id="reveal">
-                Revelar resultados históricos
+              <button class="secondary" data-go="guide">
+                Ver cómo funciona →
               </button>
-              <p class="toast" id="queue-truth" aria-live="polite"></p>
             </div>
-            <div class="grid2">
-              <div class="panel">
-                <h2>El modelo se gana su lugar</h2>
-                <p class="muted small">
-                  Average precision en validación; mayor es mejor.
+            <details class="historical-evidence">
+              <summary>
+                Ver resultados del modelo y ejemplos históricos
+                <span>Para conocer la evidencia del proyecto</span>
+              </summary>
+              <div class="sectiontitle compact">
+                <p class="eyebrow">Evidencia histórica · datos de Portugal</p>
+                <h2>Lo que logró el modelo en la prueba</h2>
+                <p>
+                  Estos resultados pertenecen a datos históricos. Las reservas
+                  que guardes aparecerán en <b>Mis reservas</b> y no cambian
+                  estas métricas.
                 </p>
-                <div id="bars"></div>
               </div>
-              <div class="panel">
-                <h2>La transparencia también cuenta</h2>
-                <p class="muted">
-                  La prioridad del modelo ayuda a enfocar la revisión humana.
-                  Algunas alertas serán falsas y algunas cancelaciones pasarán
-                  inadvertidas.
-                </p>
-                <div id="cases" class="casegrid"></div>
+              <div class="kpis">
+                <div class="kpi">
+                  <span class="label">Concentración en el 20 % prioritario</span
+                  ><strong class="value" id="lift"></strong
+                  ><span class="sub">Frente a una selección aleatoria</span>
+                </div>
+                <div class="kpi">
+                  <span class="label">Precisión del 20 % prioritario</span
+                  ><strong class="value" id="top-precision"></strong
+                  ><span class="sub">Cancelaciones dentro de la selección</span>
+                </div>
+                <div class="kpi">
+                  <span class="label">Cancelaciones capturadas</span
+                  ><strong class="value" id="top-recall"></strong
+                  ><span class="sub">Revisando el 20 % de las reservas</span>
+                </div>
+                <div class="kpi">
+                  <span class="label">Reservas de prueba</span
+                  ><strong class="value" id="test-n"></strong
+                  ><span class="sub">Separación por fechas</span>
+                </div>
               </div>
-            </div>
-          </section>
-          <section class="view" id="lab" hidden>
-            <div class="sectiontitle">
-              <p class="eyebrow">
-                Paso 1 · Datos / Paso 2 · Análisis y guardado
+              <p class="metrics-context">
+                Resultados retrospectivos sobre toda la prueba reservada. No
+                demuestran el efecto de una llamada ni ingresos recuperados.
               </p>
-              <h1>Una reserva, una decisión informada</h1>
-              <p>
-                Completa los diez datos o carga un ejemplo.
-                <b>Analizar y guardar</b> conserva la reserva en este
-                computador; <b>Solo analizar</b> permite probar sin guardarla.
-              </p>
-              <div class="actions">
-                <button class="secondary" id="new-reservation">
-                  Empezar otra reserva</button
-                ><button class="linkbutton" id="example-reservation">
-                  Cargar ejemplo de prueba</button
-                ><button class="linkbutton" data-go="saved">
-                  Ir a Mis reservas →
-                </button>
-              </div>
-            </div>
-            <div class="labgrid">
               <div class="panel">
                 <div class="panelhead">
-                  <h2>Datos de la reserva</h2>
+                  <div>
+                    <h2>Ejemplo histórico: elige cuántas revisar</h2>
+                    <p class="muted small">
+                      Cohorte ilustrativa: 150 reservas reales del conjunto de
+                      prueba, ordenadas por el índice del modelo.
+                    </p>
+                  </div>
+                  <span class="pill">Simulación retrospectiva</span>
+                </div>
+                <div class="capacity">
+                  <label for="capacity"
+                    >Revisar
+                    <strong id="capacity-label">30</strong> reservas</label
+                  ><input
+                    id="capacity"
+                    type="range"
+                    min="5"
+                    max="75"
+                    value="30"
+                    step="5"
+                  /><span class="small muted" id="capacity-info"></span
+                  ><button class="secondary" id="export-queue">
+                    Exportar lista ↓
+                  </button>
+                </div>
+                <div class="queuewrap">
+                  <table class="queue">
+                    <thead>
+                      <tr>
+                        <th>Reserva</th>
+                        <th>Hotel / segmento</th>
+                        <th>Anticipación</th>
+                        <th>Noches</th>
+                        <th>Índice / 100</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="queue"></tbody>
+                  </table>
+                </div>
+                <p class="note" id="queue-foot"></p>
+                <button class="linkbutton" id="reveal">
+                  Revelar resultados históricos
+                </button>
+                <p class="toast" id="queue-truth" aria-live="polite"></p>
+              </div>
+              <div class="grid2">
+                <div class="panel">
+                  <h2>El modelo se gana su lugar</h2>
+                  <p class="muted small">
+                    Average precision en validación; mayor es mejor.
+                  </p>
+                  <div id="bars"></div>
+                </div>
+                <div class="panel">
+                  <h2>La transparencia también cuenta</h2>
+                  <p class="muted">
+                    La prioridad del modelo ayuda a enfocar la revisión humana.
+                    Algunas alertas serán falsas y algunas cancelaciones pasarán
+                    inadvertidas.
+                  </p>
+                  <div id="cases" class="casegrid"></div>
+                </div>
+              </div>
+            </details>
+          </section>
+          <section class="view" id="lab" hidden>
+            <div class="sectiontitle booking-title">
+              <div>
+                <p class="eyebrow">Una reserva, paso a paso</p>
+                <h1>
+                  Planifica la estancia.<br />Deja las cuentas a ReservaIQ.
+                </h1>
+                <p>
+                  Elige fechas, revisa los detalles y guarda una copia con su
+                  análisis. Tú decides qué hacer después.
+                </p>
+              </div>
+              <button class="secondary" id="new-reservation">
+                Nueva reserva
+              </button>
+            </div>
+            <div class="booking-layout">
+              <div class="panel booking-panel">
+                <div class="panelhead">
                   <span class="pill amber" id="save-state" role="status"
                     >Sin guardar</span
-                  >
+                  ><button class="linkbutton" id="example-reservation">
+                    Usar ejemplo histórico
+                  </button>
                 </div>
-                <div class="truth" id="case-truth"></div>
-                <form id="predict-form">
-                  <div class="field full reference-field">
-                    <label for="reference"
-                      >Referencia para reconocerla · opcional</label
-                    ><input
-                      id="reference"
-                      maxlength="80"
-                      placeholder="Por ejemplo: Reserva del grupo A"
-                      aria-describedby="reference-help"
-                    /><small id="reference-help"
-                      >Usa una referencia interna, sin nombres ni datos de
-                      contacto. Si la dejas vacía, se asigna un código.</small
-                    >
+                <ol class="stepper" aria-label="Pasos para crear la reserva">
+                  <li>
+                    <button type="button" data-step="1" aria-current="step">
+                      <span>1</span>Fechas
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" data-step="2">
+                      <span>2</span>Detalles
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" data-step="3">
+                      <span>3</span>Revisar y guardar
+                    </button>
+                  </li>
+                </ol>
+                <form id="predict-form" novalidate>
+                  <div id="booking-step-1" class="booking-step">
+                    <h2 tabindex="-1">¿Cuándo será la estancia?</h2>
+                    <p class="step-description">
+                      Selecciona primero la llegada y después la salida. También
+                      puedes escribir las fechas en los campos.
+                    </p>
+                    <div id="calendar-mode">
+                      <div class="date-fields">
+                        <div class="field">
+                          <label for="check-in">Llegada</label
+                          ><input
+                            id="check-in"
+                            aria-describedby="date-error"
+                            type="date"
+                            aria-describedby="date-help date-error"
+                          />
+                        </div>
+                        <div class="field">
+                          <label for="check-out">Salida</label
+                          ><input
+                            id="check-out"
+                            aria-describedby="date-error"
+                            type="date"
+                            aria-describedby="date-help date-error"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="calendar-board"
+                        role="group"
+                        aria-label="Calendario de la estancia"
+                      >
+                        <div class="calendar-toolbar">
+                          <button
+                            type="button"
+                            class="calendar-arrow"
+                            id="calendar-prev"
+                            aria-label="Mes anterior"
+                          >
+                            ←
+                          </button>
+                          <p id="calendar-prompt" aria-live="polite">
+                            Elige el día de llegada
+                          </p>
+                          <button
+                            type="button"
+                            class="calendar-arrow"
+                            id="calendar-next"
+                            aria-label="Mes siguiente"
+                          >
+                            →
+                          </button>
+                        </div>
+                        <div class="calendar-months" id="calendar-months"></div>
+                        <div class="calendar-legend">
+                          <span><i></i>Estancia seleccionada</span
+                          ><button type="button" id="clear-dates">
+                            Cambiar fechas
+                          </button>
+                        </div>
+                      </div>
+                      <p id="date-help" class="note">
+                        Puedes elegir llegada hasta 60 días después de crear la
+                        reserva y una estancia de 1 a 30 noches. El calendario
+                        no consulta disponibilidad de habitaciones.
+                      </p>
+                      <details class="booking-created">
+                        <summary>¿La reserva se creó otro día?</summary>
+                        <div class="field">
+                          <label for="booked-on"
+                            >Fecha de creación de la reserva</label
+                          ><input
+                            type="date"
+                            id="booked-on"
+                            aria-describedby="date-error"
+                            min="1900-01-01"
+                            max="2100-12-31"
+                          /><small
+                            >Usamos hoy por defecto. Esta fecha permite calcular
+                            cuántos días de anticipación tuvo la reserva; se
+                            conserva al guardarla.</small
+                          >
+                        </div>
+                      </details>
+                    </div>
+                    <div id="historical-mode" hidden>
+                      <div class="historical-notice">
+                        <b>Ejemplo o registro sin fechas completas</b>
+                        <p>
+                          Conservamos sus datos originales: mes, anticipación y
+                          noches. No inventamos días de llegada o salida.
+                        </p>
+                      </div>
+                      <div class="fields" id="numeric-fields"></div>
+                      <button
+                        type="button"
+                        class="linkbutton"
+                        id="use-calendar"
+                      >
+                        Elegir fechas para este escenario →
+                      </button>
+                    </div>
+                    <p class="errors" id="date-error" role="alert"></p>
+                    <div id="stay-total" class="stay-total" aria-live="polite">
+                      Elige dos fechas para ver la duración.
+                    </div>
                   </div>
-                  <div class="fields" id="form-fields"></div>
-                  <p class="note" id="stay-total" aria-live="polite"></p>
-                  <div class="actions">
-                    <button class="primary" id="calculate" type="submit">
-                      Analizar y guardar</button
-                    ><button class="secondary" type="button" id="analyze-only">
-                      Solo analizar
+                  <div id="booking-step-2" class="booking-step" hidden>
+                    <h2 tabindex="-1">Cuéntanos un poco sobre la reserva</h2>
+                    <p class="step-description">
+                      Revisa los valores sugeridos y ajústalos a tu caso. Cada
+                      dato ayuda a interpretar la reserva.
+                    </p>
+                    <div class="field reference-field">
+                      <label for="reference"
+                        >¿Cómo quieres identificarla? · opcional</label
+                      ><input
+                        id="reference"
+                        maxlength="80"
+                        placeholder="Ejemplo: Viaje de octubre"
+                        aria-describedby="reference-help"
+                      /><small id="reference-help"
+                        >Usa una referencia, sin nombres ni datos de contacto.
+                        Si la dejas vacía, asignamos un código.</small
+                      >
+                    </div>
+                    <div class="fields" id="form-fields"></div>
+                  </div>
+                  <div id="booking-step-3" class="booking-step" hidden>
+                    <h2 tabindex="-1">Todo listo para revisar</h2>
+                    <p class="step-description">
+                      Confirma el resumen. Al guardar calculamos el índice y
+                      conservamos estos datos para que puedas volver a abrirlos.
+                    </p>
+                    <dl class="review-summary" id="review-summary"></dl>
+                    <details class="technical-summary">
+                      <summary>¿Qué datos recibe el modelo?</summary>
+                      <p class="note">
+                        Son las mismas diez variables del experimento. Las
+                        fechas se convierten en anticipación, mes y noches; no
+                        se reentrena el modelo.
+                      </p>
+                      <div id="derived-fields"></div>
+                    </details>
+                    <div class="actions">
+                      <button class="primary" id="calculate" type="submit">
+                        Analizar y guardar</button
+                      ><button
+                        class="secondary"
+                        type="button"
+                        id="analyze-only"
+                      >
+                        Solo analizar
+                      </button>
+                    </div>
+                    <p class="note">
+                      Guardar crea una copia local. No confirma una habitación
+                      ni contacta al huésped.
+                    </p>
+                  </div>
+                  <div class="wizard-actions">
+                    <button
+                      type="button"
+                      class="linkbutton"
+                      id="step-back"
+                      hidden
+                    >
+                      ← Volver</button
+                    ><span id="step-counter">Paso 1 de 3</span
+                    ><button type="button" class="primary" id="step-next">
+                      Continuar con los detalles →
                     </button>
                   </div>
                 </form>
+                <p class="truth" id="case-truth"></p>
                 <p id="error" class="errors" role="alert"></p>
                 <div
                   id="save-feedback"
                   class="feedback"
                   hidden
                   role="status"
+                  tabindex="-1"
                 ></div>
-                <p class="note">
-                  Alcance: anticipación de 0 a 60 días; estancia total de 1 a 30
-                  noches. Guardar aquí no equivale a confirmar una reserva con
-                  un hotel.
-                </p>
-              </div>
-              <div class="panel resultpanel" aria-live="polite">
-                <div class="panelhead">
-                  <h2>Resultado y siguiente paso</h2>
-                  <span class="pill" id="model-version"></span>
+                <div class="actions" id="after-save" hidden>
+                  <button class="primary" data-go="saved">
+                    Ver en Mis reservas →</button
+                  ><button class="linkbutton" id="another-reservation">
+                    Crear otra reserva
+                  </button>
                 </div>
-                <div class="dial" id="dial">
-                  <div class="dialinner">
-                    <strong id="score">—</strong><small>índice / 100</small>
+              </div>
+              <aside class="booking-sidebar">
+                <div class="panel itinerary">
+                  <span class="stamp">Tu estancia</span>
+                  <h2 id="itinerary-title">Empieza por las fechas</h2>
+                  <p id="itinerary-dates">
+                    Tu resumen se irá completando aquí.
+                  </p>
+                  <div class="itinerary-facts" id="itinerary-facts"></div>
+                  <p class="note" id="itinerary-context">
+                    Sin datos personales. Guardado en este computador.
+                  </p>
+                </div>
+                <div
+                  class="panel resultpanel"
+                  id="result-panel"
+                  aria-live="polite"
+                >
+                  <div class="panelhead">
+                    <h2>Tu resultado</h2>
+                    <span class="pill" id="model-version"></span>
+                  </div>
+                  <div id="result-empty">
+                    <span class="result-icon" aria-hidden="true">↗</span>
+                    <h3>Una ayuda para decidir</h3>
+                    <p>
+                      Después del análisis verás si conviene priorizar una
+                      revisión o mantener el seguimiento habitual.
+                    </p>
+                    <div class="result-preview">
+                      <span>1 · Elige las fechas</span
+                      ><span>2 · Revisa los detalles</span
+                      ><span>3 · Analiza y guarda</span>
+                    </div>
+                  </div>
+                  <div id="result-ready" hidden>
+                    <div class="dial" id="dial">
+                      <div class="dialinner">
+                        <strong id="score">—</strong><small>índice / 100</small>
+                      </div>
+                    </div>
+                    <div class="decision" id="decision">
+                      Lista para analizar
+                    </div>
+                    <p class="decisiondetail" id="threshold"></p>
+                    <div class="next-action" id="next-action"></div>
+                    <details>
+                      <summary>¿Cómo interpreto este número?</summary>
+                      <p class="note">
+                        Un índice mayor indica más señales históricas de
+                        cancelación. No es una probabilidad calibrada: 40/100 no
+                        significa exactamente un 40 % de probabilidad. La
+                        decisión sigue siendo humana.
+                      </p>
+                    </details>
+                    <button
+                      class="linkbutton"
+                      type="button"
+                      id="export"
+                      disabled
+                    >
+                      Descargar este resultado ↓
+                    </button>
                   </div>
                 </div>
-                <div class="decision" id="decision">
-                  Completa los datos para empezar
-                </div>
-                <p class="decisiondetail" id="threshold"></p>
-                <div class="next-action" id="next-action">
-                  Al analizar verás si conviene priorizar una revisión humana.
-                </div>
-                <p class="note">
-                  Un índice mayor indica más señales de cancelación. No es una
-                  probabilidad calibrada: 40/100 no significa que el huésped
-                  tenga exactamente un 40 % de probabilidad de cancelar.
-                </p>
-                <button class="linkbutton" type="button" id="export" disabled>
-                  Descargar este resultado ↓
-                </button>
-                <details>
-                  <summary>Comparar con cuatro casos históricos</summary>
-                  <p class="note">
-                    Estos ejemplos muestran aciertos y errores reales de la
-                    prueba. Cargarlos no los guarda automáticamente.
-                  </p>
-                  <div class="casegrid" id="labcases"></div>
-                </details>
-              </div>
+              </aside>
             </div>
-            <div class="panel batch-panel">
+            <details class="panel batch-panel">
+              <summary>
+                ¿Tienes varias reservas? Importa un archivo CSV
+                <span>Hasta 500 registros</span>
+              </summary>
               <p class="eyebrow">Varias reservas a la vez</p>
               <h2>Importar un archivo CSV</h2>
               <p class="muted">
@@ -592,7 +823,16 @@
               </div>
               <p id="batch-result" class="note" aria-live="polite"></p>
               <div class="queuewrap" id="batch-preview"></div>
-            </div>
+            </details>
+            <details class="panel historical-cases">
+              <summary>Explorar aciertos y errores del modelo</summary>
+              <p class="note">
+                Estos casos históricos permiten comparar cancelaciones
+                detectadas, falsas alertas y errores. Cargarlos no los guarda
+                automáticamente.
+              </p>
+              <div class="casegrid" id="labcases"></div>
+            </details>
           </section>
           <section class="view" id="saved" hidden>
             <div class="sectiontitle">
@@ -613,7 +853,16 @@
               </div>
             </div>
             <p class="feedback" id="saved-message" role="status" hidden></p>
-            <div id="saved-counts" class="saved-counts"></div>
+            <div
+              id="saved-counts"
+              class="saved-counts"
+              role="group"
+              aria-label="Ver reservas por estado"
+            ></div>
+            <p class="note">
+              Pulsa una tarjeta para ver sus registros. Guardadas incluye todos
+              los estados; al elegir una tarjeta se limpia la búsqueda.
+            </p>
             <div class="panel">
               <div class="filters">
                 <div class="field">
@@ -648,6 +897,13 @@
                 </div>
               </div>
               <p id="saved-priority" class="note"></p>
+              <h2
+                id="saved-results-title"
+                class="saved-results-title"
+                aria-live="polite"
+              >
+                Reservas activas
+              </h2>
               <div id="saved-list"></div>
               <div class="actions pagination">
                 <button class="secondary" id="saved-prev">Anterior</button
@@ -680,6 +936,46 @@
                 Empezar con el ejemplo
               </button>
             </div>
+            <article class="panel calendar-tutorial">
+              <p class="eyebrow">Tu primera reserva · con calendario</p>
+              <h2>De las fechas a una reserva guardada</h2>
+              <ol class="plain-list">
+                <li>
+                  <b>Fechas:</b> entra en Nueva reserva. Selecciona la llegada y
+                  después la salida. La última fecha es el día en que sales: no
+                  añade otra noche.
+                </li>
+                <li>
+                  <b>Detalles:</b> continúa, añade una referencia y revisa las
+                  seis opciones del hotel y la reserva. Cada campo explica qué
+                  significa.
+                </li>
+                <li>
+                  <b>Revisar y guardar:</b> comprueba el resumen y pulsa
+                  Analizar y guardar. Espera el mensaje con código RI-… y abre
+                  Mis reservas.
+                </li>
+              </ol>
+              <p class="expect">
+                <b>Prueba concreta:</b> en “¿La reserva se creó otro día?”
+                escribe 01/10/2026; elige llegada el 02/10 y salida el 05/10.
+                Debe mostrar 3 noches: 1 entre semana y 2 de fin de semana, con
+                1 día de anticipación. Es un caso de práctica, sin desenlace
+                conocido.
+              </p>
+              <p class="note">
+                Hoy se usa como fecha de creación al empezar. Puedes elegir
+                llegadas hasta 60 días después y estancias de 1 a 30 noches. El
+                calendario registra fechas; no consulta habitaciones disponibles
+                ni confirma una compra.
+              </p>
+              <button class="secondary" data-go="lab">
+                Ir a Nueva reserva →
+              </button>
+            </article>
+            <h2 class="guide-subtitle">
+              Después, compara con un caso histórico conocido
+            </h2>
             <div class="guide-steps">
               <article class="panel">
                 <span class="stepnum">1</span>
@@ -696,7 +992,7 @@
               </article>
               <article class="panel">
                 <span class="stepnum">2</span>
-                <h2>Analiza y guarda</h2>
+                <h2>Revisa y guarda</h2>
                 <p>
                   Pulsa <b>Analizar y guardar</b>. El servidor calcula el índice
                   y guarda los datos y el resultado juntos.
@@ -725,9 +1021,10 @@
                 <span class="stepnum">4</span>
                 <h2>Cambia un dato y compara</h2>
                 <p>
-                  Abre esa reserva y cambia la anticipación de 28 a 7 días.
-                  Pulsa primero <b>Solo analizar</b> y después
-                  <b>Guardar cambios</b>.
+                  Abre esa reserva, vuelve al paso <b>Fechas</b> y cambia la
+                  anticipación de 28 a 7 días. Regresa a
+                  <b>Revisar y guardar</b>. Pulsa primero <b>Solo analizar</b> y
+                  después <b>Guardar cambios</b>.
                 </p>
                 <p class="expect">
                   <b>Comprueba:</b> índice aproximado 13,6/100 y seguimiento
@@ -758,7 +1055,7 @@
                   En Nueva reserva descarga el CSV de ejemplo, selecciónalo y
                   pulsa <b>Analizar lote</b>. Revisa la vista previa y pulsa
                   <b>Guardar lote</b>. Luego prueba una anticipación de 61 días
-                  o una estancia de 0 noches en el formulario.
+                  o una estancia de 0 noches en el modo de ejemplo histórico.
                 </p>
                 <p class="expect">
                   <b>Comprueba:</b> se analizan y guardan 8 reservas del CSV.
@@ -1031,6 +1328,8 @@
         </div>
       </main>
     </div>
+    <script src="/dates.js"></script>
+    <script src="/booking.js"></script>
     <script src="/csv.js"></script>
     <script src="/app.js"></script>
   </body>

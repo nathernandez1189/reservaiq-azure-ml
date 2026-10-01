@@ -26,5 +26,7 @@ jobs:
       - run: python -X utf8=0 -m unittest discover -s tests -v
       - run: node --check web/app.js
       - run: node --check web/csv.js
+      - run: node --check web/dates.js
+      - run: node --check web/booking.js
       - run: npm ci --ignore-scripts
       - run: npm test

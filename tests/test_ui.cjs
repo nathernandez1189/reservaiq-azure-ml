@@ -39,7 +39,7 @@ async function setup(t) {
     else if (url === "/api/health") body = { status: "ok" };
     else if (url === "/api/reservations" && !payload)
       body = { reservations: records, count: records.length };
-    else if (url === "/api/predict") body = result(payload);
+    else if (url === "/api/predict") body = result(payload.inputs || payload);
     else if (url === "/api/batch")
       body = {
         count: payload.length,
@@ -77,6 +77,7 @@ async function setup(t) {
       Object.assign(r, {
         inputs: payload.inputs,
         reference: payload.reference,
+        stay: payload.stay,
         result: result(payload.inputs),
         revision: r.revision + 1,
       });
@@ -92,6 +93,9 @@ async function setup(t) {
     }
     return { ok, json: async () => structuredClone(body) };
   };
+  w.HTMLElement.prototype.scrollIntoView = () => {};
+  w.eval(fs.readFileSync("web/dates.js", "utf8"));
+  w.eval(fs.readFileSync("web/booking.js", "utf8"));
   w.eval(fs.readFileSync("web/csv.js", "utf8"));
   w.eval(fs.readFileSync("web/app.js", "utf8"));
   await flush();
@@ -116,7 +120,9 @@ test("first load has six routes, helpful fields and no automatic save", async (t
   const ui = await setup(t);
   assert.equal(ui.w.document.querySelectorAll(".view").length, 6);
   assert.equal(
-    ui.w.document.querySelectorAll("#form-fields [aria-describedby]").length,
+    ui.w.document.querySelectorAll(
+      "#form-fields [aria-describedby], #numeric-fields [aria-describedby]",
+    ).length,
     10,
   );
   assert.equal(ui.$("save-state").textContent, "Sin guardar");
@@ -205,9 +211,192 @@ test("network failures explain recovery and never claim a save", async (t) => {
 });
 test("zero-night reservations are rejected before any save request", async (t) => {
   const u = await setup(t);
+  await u.click("example-reservation");
   u.edit("stays_in_weekend_nights", "0");
   u.edit("stays_in_week_nights", "0");
   await u.click("calculate");
   assert.match(u.$("error").textContent, /entre 1 y 30 noches/);
   assert.equal(u.calls.filter((x) => x.payload).length, 0);
+});
+
+test("calendar blocks incomplete dates and takes a new reservation through three steps", async (t) => {
+  const u = await setup(t);
+  await u.click("new-reservation");
+  await u.click("step-next");
+  assert.equal(u.w.Booking.getStep(), 1);
+  assert.match(u.$("date-error").textContent, /llegada/);
+  u.edit("booked-on", "2026-10-01");
+  u.$("calendar-months").querySelector('[data-date="2026-10-02"]').click();
+  assert.equal(u.$("check-in").value, "2026-10-02");
+  assert.match(u.$("calendar-prompt").textContent, /salida/);
+  u.$("calendar-months").querySelector('[data-date="2026-10-05"]').click();
+  assert.equal(u.$("check-out").value, "2026-10-05");
+  assert.equal(u.$("lead_time").value, "1");
+  assert.equal(u.$("arrival_month").value, "10");
+  assert.equal(u.$("stays_in_weekend_nights").value, "2");
+  assert.equal(u.$("stays_in_week_nights").value, "1");
+  assert.match(u.$("stay-total").textContent, /3 noches/);
+  await u.click("step-next");
+  assert.equal(u.w.Booking.getStep(), 2);
+  u.edit("reference", "Fin de semana");
+  await u.click("step-next");
+  assert.equal(u.w.Booking.getStep(), 3);
+  assert.match(u.$("review-summary").textContent, /Fin de semana/);
+  await u.click("calculate");
+  assert.equal(u.records.length, 1);
+  assert.deepEqual(u.records[0].stay, {
+    booked_on: "2026-10-01",
+    check_in: "2026-10-02",
+    check_out: "2026-10-05",
+  });
+  assert.equal(u.$("after-save").hidden, false);
+  assert.equal(u.$("result-ready").hidden, false);
+  u.w.document.querySelector('[data-view="saved"]').click();
+  await flush();
+  assert.match(u.$("saved-list").textContent, /2026/);
+  u.$("saved-list").querySelector("[data-open]").click();
+  await flush();
+  assert.equal(u.$("check-in").value, "2026-10-02");
+  assert.equal(u.$("calendar-mode").hidden, false);
+  u.edit("check-out", "2026-10-06");
+  assert.equal(u.$("result-ready").hidden, true);
+  await u.click("calculate");
+  assert.equal(u.records.length, 1);
+  assert.equal(u.records[0].stay.check_out, "2026-10-06");
+  assert.equal(u.records[0].inputs.stays_in_week_nights, 2);
+  await u.click("another-reservation");
+  assert.equal(u.w.Booking.getStep(), 1);
+  assert.equal(u.$("check-in").value, "");
+});
+test("calendar supports keyboard focus and a stay crossing into the next month", async (t) => {
+  const u = await setup(t);
+  await u.click("new-reservation");
+  u.edit("booked-on", "2026-10-01");
+  const day = u.$("calendar-months").querySelector('[data-date="2026-10-01"]');
+  day.focus();
+  day.dispatchEvent(
+    new u.w.KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }),
+  );
+  assert.equal(u.w.document.activeElement.dataset.date, "2026-10-02");
+  u.$("calendar-months").querySelector('[data-date="2026-10-31"]').click();
+  assert.equal(u.w.document.activeElement.dataset.date, "2026-11-01");
+  u.$("calendar-months").querySelector('[data-date="2026-11-02"]').click();
+  assert.equal(u.$("stays_in_weekend_nights").value, "2");
+  assert.equal(u.$("stays_in_week_nights").value, "0");
+});
+test("historical examples keep their original numeric features and never invent dates", async (t) => {
+  const u = await setup(t);
+  await u.click("example-reservation");
+  assert.equal(u.$("calendar-mode").hidden, true);
+  assert.equal(u.$("historical-mode").hidden, false);
+  assert.equal(u.$("check-in").value, "");
+  assert.equal(u.w.Booking.getStay(), null);
+  await u.click("calculate");
+  assert.equal(u.records[0].stay, null);
+  await u.click("use-calendar");
+  assert.equal(u.$("calendar-mode").hidden, false);
+  assert.equal(u.w.Booking.getStep(), 1);
+  assert.equal(u.$("result-ready").hidden, true);
+});
+test("typed invalid dates and boundary years do not crash the calendar or save", async (t) => {
+  const u = await setup(t);
+  await u.click("new-reservation");
+  const errors = [];
+  u.w.addEventListener("error", (event) => errors.push(event.error));
+  u.edit("booked-on", "0001-01-01");
+  u.edit("check-in", "0001-01-02");
+  u.edit("check-out", "0001-01-03");
+  await u.click("step-next");
+  assert.equal(u.w.Booking.getStep(), 1);
+  u.edit("booked-on", "2100-12-01");
+  u.edit("check-in", "2100-12-30");
+  u.edit("check-out", "2100-12-31");
+  assert.equal(
+    u.$("calendar-months").querySelectorAll(".calendar-month").length,
+    1,
+  );
+  assert.equal(u.$("stays_in_week_nights").value, "1");
+  u.edit("booked-on", "1900-01-01");
+  u.edit("check-in", "");
+  u.edit("check-out", "");
+  const first = u
+    .$("calendar-months")
+    .querySelector('[data-date="1900-01-01"]');
+  first.dispatchEvent(
+    new u.w.KeyboardEvent("keydown", { key: "PageUp", bubbles: true }),
+  );
+  assert.equal(u.w.document.activeElement.dataset.date, "1900-01-01");
+  assert.deepEqual(errors, []);
+  assert.equal(u.records.length, 0);
+});
+
+test("clickable counts reveal each category, clear searches and keep active state in sync", async (t) => {
+  const u = await setup(t);
+  await u.click("example-reservation");
+  await u.click("calculate");
+  const original = structuredClone(u.records[0]);
+  u.records[0].status = "reviewed";
+  u.w.document.querySelector('[data-view="saved"]').click();
+  await flush();
+  const category = async (key) => {
+    u.$("saved-counts").querySelector(`[data-count-filter="${key}"]`).click();
+    await flush();
+  };
+  await category("reviewed");
+  assert.equal(u.$("saved-filter").value, "reviewed");
+  assert.equal(u.$("saved-list").querySelectorAll(".saved-card").length, 1);
+  assert.match(u.$("saved-results-title").textContent, /Revisadas|revisadas/);
+  assert.equal(
+    u
+      .$("saved-counts")
+      .querySelector('[data-count-filter="reviewed"]')
+      .getAttribute("aria-pressed"),
+    "true",
+  );
+  u.edit("saved-search", "no existe");
+  assert.equal(u.$("saved-list").querySelectorAll(".saved-card").length, 0);
+  await category("reviewed");
+  assert.equal(u.$("saved-search").value, "");
+  assert.equal(u.$("saved-list").querySelectorAll(".saved-card").length, 1);
+  await category("pending");
+  assert.match(u.$("saved-list").textContent, /No tienes reservas pendientes/);
+  await category("archived");
+  assert.match(u.$("saved-list").textContent, /No tienes reservas archivadas/);
+  u.records.push(
+    { ...original, id: "RI-ARCHIVED", status: "archived" },
+    { ...original, id: "RI-PENDING", status: "pending" },
+  );
+  await u.click("saved-refresh");
+  for (const [key, status] of [
+    ["pending", "pending"],
+    ["reviewed", "reviewed"],
+    ["archived", "archived"],
+  ]) {
+    await category(key);
+    assert.equal(u.$("saved-list").querySelectorAll(".saved-card").length, 1);
+    assert.equal(
+      u.$("saved-list").querySelector(`.badge.${status}`) !== null,
+      true,
+    );
+  }
+  await category("all");
+  assert.equal(u.$("saved-list").querySelectorAll(".saved-card").length, 3);
+  u.edit("saved-filter", "reviewed");
+  assert.equal(
+    u
+      .$("saved-counts")
+      .querySelector('[data-count-filter="reviewed"]')
+      .getAttribute("aria-pressed"),
+    "true",
+  );
+  // Changing a card must leave the pagination at the first page of its category.
+  for (let i = 0; i < 22; i++)
+    u.records.push({ ...original, id: "RI-MANY-" + i, status: "pending" });
+  await u.click("saved-refresh");
+  await category("all");
+  await u.click("saved-next");
+  assert.match(u.$("saved-page").textContent, /Página 2/);
+  await category("reviewed");
+  assert.match(u.$("saved-page").textContent, /Página 1 de 1/);
+  assert.equal(u.w.document.activeElement.dataset.countFilter, "reviewed");
 });
