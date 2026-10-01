@@ -110,7 +110,9 @@ Las reservas nuevas no cambian el entrenamiento ni las métricas históricas. El
 
 [Leer el informe técnico en PDF](docs/ReservaIQ-Informe-tecnico.pdf). Incluye requerimientos, alternativas, diseño, implementación, resultados, costos, fuentes y un anexo con cuatro capturas históricas de la aplicación y una captura real del pipeline de Azure.
 
-[Ver las capturas comentadas y el pipeline de Azure](docs/CAPTURAS.md). Las imágenes originales corresponden a la interfaz anterior, con cuatro vistas y sin guardado local. Muestran una sesión con indicador de modelo local; la ejecución de Azure se acredita mediante los registros enlazados arriba.
+[Ver el inventario visual actualizado de la demo web](docs/EVIDENCIA-WEB-ACTUAL.md): calendario, reservas compartidas, pruebas guiadas, resultados y arquitectura. La revisión describe las 15 capturas aportadas; sus PNG siguen pendientes de incorporación.
+
+[Ver las capturas históricas y el pipeline de Azure](docs/CAPTURAS.md). Las imágenes originales corresponden a la interfaz anterior, con cuatro vistas y sin guardado local. Muestran una sesión con indicador de modelo local; la ejecución de Azure se acredita mediante los registros enlazados arriba.
 
 ## Diseño y reproducibilidad
 

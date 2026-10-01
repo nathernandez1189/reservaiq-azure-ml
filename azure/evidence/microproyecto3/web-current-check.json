@@ -1,0 +1,22 @@
+{
+  "checked_at_utc": "2026-10-01T05:10:13.502715+00:00",
+  "url": "https://reservaiq-microproyecto3-20261001.azurewebsites.net/",
+  "method": "HTTPS GET únicamente, TLS verificado con cliente del sistema",
+  "http_status": {
+    "/": 200,
+    "/api/health": 200,
+    "/api/summary": 200,
+    "/api/reservations": 200
+  },
+  "health": {
+    "status": "ok",
+    "model": "Gradient Boosting",
+    "azure_verified": true,
+    "model_sha256": "d1a01086d1fa360d52dd21888a505ad8197b6b18d67784b81bfe0ac304d859dd",
+    "storage": "azure_blob"
+  },
+  "reservation_count": 9,
+  "scope": "Comprueba respuestas HTTP y lectura; no es una captura visual, prueba de escritura ni reinicio. No se modificaron reservas o recursos.",
+  "browser_visual_check": "No disponible: la herramienta no pudo cargar la política de acceso del navegador.",
+  "screenshots_reviewed": "15 adjuntos del equipo descritos en docs/EVIDENCIA-WEB-ACTUAL.md; PNG originales no incorporados."
+}

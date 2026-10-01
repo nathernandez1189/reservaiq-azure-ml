@@ -293,6 +293,88 @@ El experimento demuestra una priorización histórica con capacidad limitada y e
 
 ---
 
+# Evidencia de la versión web actual
+
+Revisión de 15 imágenes aportadas por el equipo: 30 de septiembre de 2026, 23:38-23:40 en Colombia. Los PNG originales no están disponibles en las rutas proporcionadas: se documenta lo observado, sin reconstruir imágenes.
+
+## 1. Inicio y propósito
+
+La portada presenta la priorización de reservas, el acceso para elegir fechas y tres pasos de uso. Identifica una demo web compartida con reservas ficticias.
+
+## 2. Recorrido inicial
+
+Se ven las tarjetas elegir estancia, revisar y guardar, y probar y comprender; también el acceso al ejemplo guiado.
+
+## 3. Creación y fechas de la reserva
+
+El formulario muestra creación, llegada y salida, el estado Sin guardar, los tres pasos y el control Ocultar calendario.
+
+## 4. Calendario y carga CSV
+
+Se ve el calendario, la indicación de elegir fechas, el botón para continuar y los apartados de CSV hasta 500 registros y casos históricos.
+
+## 5. Reservas guardadas y organización
+
+Mis reservas muestra 9 guardadas, 1 pendiente, 0 revisadas y 8 archivadas. La reserva ficticia activa tiene índice 5,7 y acciones Abrir, Marcar revisada y Archivar.
+
+## 6. Prueba guiada del calendario
+
+Se explica el caso creación 01/10/2026, llegada 02/10 y salida 05/10: tres noches, una entre semana y dos de fin de semana, con un día de anticipación.
+
+## 7. Caso histórico, guardado y edición
+
+La guía presenta el registro 12301, índice esperado 39,8 y comparación al cambiar de 28 a 7 días de anticipación, con índice esperado 13,6.
+
+## 8. Estados, lote y conexión
+
+La guía explica revisar, archivar, restaurar, analizar y guardar un CSV, además de probar entradas inválidas. Se ve Comprobar conexión.
+
+Las guías visibles no prueban su ejecución. US$2 sigue siendo una estimación. El estado de cero nodos tiene su fecha de corte; las reservas nuevas no alteran las métricas históricas.
+
+Consultar docs/EVIDENCIA-WEB-ACTUAL.md y azure/evidence/microproyecto3/web-current-check.json para el alcance y la consulta HTTP actual de solo lectura. Las imágenes siguientes son antecedentes históricos y una captura real del pipeline.
+
+
+---
+
+# Evidencia de la versión web actual
+
+Revisión de 15 imágenes aportadas por el equipo: 30 de septiembre de 2026, 23:38-23:40 en Colombia. Los PNG originales no están disponibles en las rutas proporcionadas: se documenta lo observado, sin reconstruir imágenes.
+
+## 9. Evaluación en prueba reservada
+
+Se ven 21.236 registros de entrenamiento, 6.161 de validación y 7.990 de prueba. Matriz: TP 1.467, FN 364, FP 2.715 y TN 3.444; ROC AUC 0,731 y AP 0,413.
+
+## 10. Comparación y límites del modelo
+
+La tabla de validación compara base, regresión logística, Random Forest y Gradient Boosting. Se ven importancias por permutación y controles contra fuga de información.
+
+## 11. Problema y decisión de negocio
+
+La vista describe al Hotel Brisa del Valle, cliente ficticio, y la decisión de revisar K reservas con entrada, resultado y acción humana.
+
+## 12. Correspondencia con la rúbrica
+
+Se muestran los cuatro criterios: análisis 20 %, diseño 25 %, implementación 30 % y presentación 25 %, con enlaces a documentos, pruebas y Canva.
+
+## 13. Alternativas de solución
+
+La tabla compara reglas manuales, clasificación con revisión humana y AutoML; debajo comienza el diagrama de arquitectura.
+
+## 14. Arquitectura completa de la demo web
+
+El diagrama conecta datos, prepare, train, evaluate, registro del modelo, App Service F1, navegador y Blob privado con SQLite. La prueba reservada y el modelo llegan por separado a evaluación.
+
+## 15. Flujo, procedencia y costo estimado
+
+Se ve el flujo en cinco pasos, trabajo Completed, modelo Azure ML y cero nodos al corte explícito 2026-10-01 02:46 UTC. El costo mostrado es aproximadamente US$2.
+
+Las guías visibles no prueban su ejecución. US$2 sigue siendo una estimación. El estado de cero nodos tiene su fecha de corte; las reservas nuevas no alteran las métricas históricas.
+
+Consultar docs/EVIDENCIA-WEB-ACTUAL.md y azure/evidence/microproyecto3/web-current-check.json para el alcance y la consulta HTTP actual de solo lectura. Las imágenes siguientes son antecedentes históricos y una captura real del pipeline.
+
+
+---
+
 # A1. Centro de decisiones
 
 Captura aportada por el equipo · 2026-09-24 21:09:25 (según el nombre del archivo).

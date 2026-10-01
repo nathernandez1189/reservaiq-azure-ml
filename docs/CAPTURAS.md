@@ -1,5 +1,9 @@
 # Capturas comentadas de ReservaIQ
 
+## Evidencia de la versión web actual
+
+La revisión principal corresponde a las **15 capturas de la versión web** aportadas por el equipo el 30 de septiembre, 23:38–23:40 en Colombia. [Consultar observaciones, alcance y correspondencia con la rúbrica](EVIDENCIA-WEB-ACTUAL.md). El inventario ya está actualizado; los 15 PNG están pendientes de incorporación porque los originales no se encuentran en las rutas proporcionadas. Las imágenes incrustadas más abajo corresponden al pipeline real y a la interfaz local histórica, no al estado visual actual.
+
 ## Captura real de Azure ML
 
 ![MICROPROYECTO3 pipeline completado](capturas/05-azure-pipeline-microproyecto3.png)

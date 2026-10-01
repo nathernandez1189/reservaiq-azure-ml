@@ -15,6 +15,7 @@ La vista **Diseño y Azure** de la aplicación contiene una correspondencia con 
 - [Contenido de las 12 diapositivas](PRESENTACION.md): copia de consulta dentro del repositorio, disponible sin una cuenta de Canva.
 - [Guía de uso y guardado](GUIA-DE-USO.md) y [pruebas guiadas](PRUEBAS-GUIADAS.md).
 - [Instrucciones para ejecutar la demo](../README.md#ejecutar-la-aplicación) y [CSV listo para cargar](../ejemplos-csv/reservas-listas.csv).
+- [Evidencia actual de la demo web](EVIDENCIA-WEB-ACTUAL.md): revisión de 15 capturas aportadas, con alcance y relación con la rúbrica; archivos PNG pendientes de incorporación.
 - [Evidencias de ejecución y verificación](EVIDENCIAS.md), [capturas comentadas](CAPTURAS.md) y [nueva ejecución en Azure](../azure/evidence/microproyecto3/execution.json).
 
 El enlace de Canva proporcionado por la integración solicitó iniciar sesión en la comprobación del 29/09/2026. No se ha confirmado acceso anónimo al diseño. La copia de contenido permite revisar la presentación desde GitHub; conserva la información, tablas y flujo, pero no reproduce la maquetación gráfica de Canva.

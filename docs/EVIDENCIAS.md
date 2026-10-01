@@ -12,6 +12,12 @@ Corte: 1 de octubre de 2026 UTC. Nueva ejecución `microproyecto3-reejecucion-20
 
 Las comprobaciones de API y componentes no equivalen a un recorrido visual completo del sitio alojado. La revisión visual automatizada del navegador quedó bloqueada por la política de acceso. Tampoco se ha medido el ensayo de 15 minutos.
 
+## Revisión actual de la demo web
+
+Se revisaron las 15 imágenes aportadas por el equipo de la interfaz de seis vistas. [Inventario y explicación de cada pantalla](EVIDENCIA-WEB-ACTUAL.md). Se distinguen las instrucciones visibles de las pruebas ejecutadas y la estimación de US$2 del costo facturado. Los PNG originales todavía no están incorporados; la revisión visual se basa en los adjuntos de la conversación.
+
+La [consulta HTTPS actual de solo lectura](../azure/evidence/microproyecto3/web-current-check.json) comprueba disponibilidad, estado del modelo y lectura de reservas. No guarda registros ni reinicia recursos.
+
 ## Registro histórico de comprobaciones anteriores
 
 Los conteos y estados siguientes corresponden a las versiones y fechas indicadas. Se conservan como antecedentes y no sustituyen el corte actual.
@@ -38,7 +44,7 @@ python -m unittest discover -s tests -v
 
 Las pruebas comprueban quince aspectos del modelo, datos y API. Incluyen el CSV entregado, la concordancia entre resultados individuales y por lote y la lectura de resultados con una configuración regional de Windows. La prueba de procedencia exige trabajo Completed y SHA256 coincidente antes de afirmar un modelo de Azure.
 
-## Revisión de interfaz y capturas
+## Revisión histórica de interfaz y capturas del 24 de septiembre
 
 Se revisaron las cuatro capturas aportadas por el equipo: [galería comentada](CAPTURAS.md). Los originales y sus huellas se conservan en `docs/capturas/`. El anexo del informe reproduce cada imagen y explica la decisión, los resultados visibles y los límites de la evidencia.
 

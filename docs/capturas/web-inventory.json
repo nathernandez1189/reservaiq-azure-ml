@@ -1,0 +1,141 @@
+{
+  "source": "15 imágenes adjuntas por el equipo en la conversación, revisadas visualmente",
+  "scope": "Inventario descriptivo de las capturas; no incluye sus archivos PNG. Las rutas del Escritorio proporcionadas ya no contienen los originales. No se reconstruyeron imágenes ni se atribuyeron huellas a archivos ausentes.",
+  "images": [
+    {
+      "number": 1,
+      "time_colombia": "2026-09-30 23:38:35",
+      "title": "Inicio y propósito",
+      "observed": "La portada presenta la priorización de reservas, el acceso para elegir fechas y tres pasos de uso. Identifica una demo web compartida con reservas ficticias.",
+      "explanation": "Introduce la necesidad del hotel y el recorrido principal.",
+      "scope": "La etiqueta de Azure ML se complementa con los registros del trabajo; la captura no prueba por sí sola la infraestructura.",
+      "image_in_repository": false
+    },
+    {
+      "number": 2,
+      "time_colombia": "2026-09-30 23:38:41",
+      "title": "Recorrido inicial",
+      "observed": "Se ven las tarjetas elegir estancia, revisar y guardar, y probar y comprender; también el acceso al ejemplo guiado.",
+      "explanation": "Facilita el primer uso y el descubrimiento de las funciones.",
+      "scope": "Documenta la interfaz, no una medición de usabilidad con usuarios.",
+      "image_in_repository": false
+    },
+    {
+      "number": 3,
+      "time_colombia": "2026-09-30 23:38:50",
+      "title": "Creación y fechas de la reserva",
+      "observed": "El formulario muestra creación, llegada y salida, el estado Sin guardar, los tres pasos y el control Ocultar calendario.",
+      "explanation": "Expone la fecha de creación y permite comprender cómo se deriva la anticipación.",
+      "scope": "Llegada y salida aún están vacías; esta imagen no documenta una reserva guardada.",
+      "image_in_repository": false
+    },
+    {
+      "number": 4,
+      "time_colombia": "2026-09-30 23:38:57",
+      "title": "Calendario y carga CSV",
+      "observed": "Se ve el calendario, la indicación de elegir fechas, el botón para continuar y los apartados de CSV hasta 500 registros y casos históricos.",
+      "explanation": "Distingue el recorrido individual de la importación por lote.",
+      "scope": "Los apartados están cerrados; no muestra una importación ejecutada ni la validación de 500 filas.",
+      "image_in_repository": false
+    },
+    {
+      "number": 5,
+      "time_colombia": "2026-09-30 23:39:04",
+      "title": "Reservas guardadas y organización",
+      "observed": "Mis reservas muestra 9 guardadas, 1 pendiente, 0 revisadas y 8 archivadas. La reserva ficticia activa tiene índice 5,7 y acciones Abrir, Marcar revisada y Archivar.",
+      "explanation": "Hace visible el registro guardado, los filtros y la prioridad según capacidad.",
+      "scope": "Los conteos pertenecen a esta sesión. Una captura aislada no acredita permanencia después de reiniciar; esa prueba tiene su registro HTTPS independiente.",
+      "image_in_repository": false
+    },
+    {
+      "number": 6,
+      "time_colombia": "2026-09-30 23:39:15",
+      "title": "Prueba guiada del calendario",
+      "observed": "Se explica el caso creación 01/10/2026, llegada 02/10 y salida 05/10: tres noches, una entre semana y dos de fin de semana, con un día de anticipación.",
+      "explanation": "Ofrece pasos y resultados esperados que un evaluador puede reproducir.",
+      "scope": "Es una guía visible, no el resultado de ejecutar el caso. La variante web requiere conexión a Azure; la alternativa local permite practicar sin recursos de cómputo Azure.",
+      "image_in_repository": false
+    },
+    {
+      "number": 7,
+      "time_colombia": "2026-09-30 23:39:24",
+      "title": "Caso histórico, guardado y edición",
+      "observed": "La guía presenta el registro 12301, índice esperado 39,8 y comparación al cambiar de 28 a 7 días de anticipación, con índice esperado 13,6.",
+      "explanation": "Relaciona el análisis con guardar, recuperar y actualizar sin duplicar el registro.",
+      "scope": "Los valores son resultados esperados de la guía; la captura no muestra la ejecución de esas cuatro acciones.",
+      "image_in_repository": false
+    },
+    {
+      "number": 8,
+      "time_colombia": "2026-09-30 23:39:31",
+      "title": "Estados, lote y conexión",
+      "observed": "La guía explica revisar, archivar, restaurar, analizar y guardar un CSV, además de probar entradas inválidas. Se ve Comprobar conexión.",
+      "explanation": "Permite revisar el ciclo de uso y los controles de entrada.",
+      "scope": "No muestra el resultado del botón ni una respuesta de rechazo; consultar las pruebas registradas para esas comprobaciones.",
+      "image_in_repository": false
+    },
+    {
+      "number": 9,
+      "time_colombia": "2026-09-30 23:39:39",
+      "title": "Evaluación en prueba reservada",
+      "observed": "Se ven 21.236 registros de entrenamiento, 6.161 de validación y 7.990 de prueba. Matriz: TP 1.467, FN 364, FP 2.715 y TN 3.444; ROC AUC 0,731 y AP 0,413.",
+      "explanation": "Permite revisar resultados y errores sin confundir alerta por umbral con prioridad por capacidad.",
+      "scope": "Son métricas históricas; las reservas nuevas no las modifican. El índice no es una probabilidad calibrada.",
+      "image_in_repository": false
+    },
+    {
+      "number": 10,
+      "time_colombia": "2026-09-30 23:39:46",
+      "title": "Comparación y límites del modelo",
+      "observed": "La tabla de validación compara base, regresión logística, Random Forest y Gradient Boosting. Se ven importancias por permutación y controles contra fuga de información.",
+      "explanation": "Explica la selección por AP y las variables relevantes, junto con las restricciones del experimento.",
+      "scope": "La importancia es global y no causal. Los datos históricos de Portugal requieren validación antes de uso real en Colombia.",
+      "image_in_repository": false
+    },
+    {
+      "number": 11,
+      "time_colombia": "2026-09-30 23:40:04",
+      "title": "Problema y decisión de negocio",
+      "observed": "La vista describe al Hotel Brisa del Valle, cliente ficticio, y la decisión de revisar K reservas con entrada, resultado y acción humana.",
+      "explanation": "Vincula la solución técnica con una necesidad y una capacidad limitada.",
+      "scope": "La demo no confirma habitaciones ni demuestra cancelaciones evitadas.",
+      "image_in_repository": false
+    },
+    {
+      "number": 12,
+      "time_colombia": "2026-09-30 23:40:16",
+      "title": "Correspondencia con la rúbrica",
+      "observed": "Se muestran los cuatro criterios: análisis 20 %, diseño 25 %, implementación 30 % y presentación 25 %, con enlaces a documentos, pruebas y Canva.",
+      "explanation": "Facilita localizar la evidencia de cada requisito del microproyecto.",
+      "scope": "La correspondencia no asigna una nota ni certifica haber realizado una exposición de 15 minutos.",
+      "image_in_repository": false
+    },
+    {
+      "number": 13,
+      "time_colombia": "2026-09-30 23:40:26",
+      "title": "Alternativas de solución",
+      "observed": "La tabla compara reglas manuales, clasificación con revisión humana y AutoML; debajo comienza el diagrama de arquitectura.",
+      "explanation": "Documenta ventajas, límites y la selección del clasificador.",
+      "scope": "La comparación de AutoML es conceptual; los candidatos efectivamente entrenados están en la tabla de validación.",
+      "image_in_repository": false
+    },
+    {
+      "number": 14,
+      "time_colombia": "2026-09-30 23:40:32",
+      "title": "Arquitectura completa de la demo web",
+      "observed": "El diagrama conecta datos, prepare, train, evaluate, registro del modelo, App Service F1, navegador y Blob privado con SQLite. La prueba reservada y el modelo llegan por separado a evaluación.",
+      "explanation": "Distingue entrenamiento, evaluación, publicación e inferencia; representa el guardado compartido y la variante local independiente.",
+      "scope": "Es un diagrama explicativo de la implementación. El registro y la publicación son pasos posteriores al pipeline; guardar no reentrena.",
+      "image_in_repository": false
+    },
+    {
+      "number": 15,
+      "time_colombia": "2026-09-30 23:40:43",
+      "title": "Flujo, procedencia y costo estimado",
+      "observed": "Se ve el flujo en cinco pasos, trabajo Completed, modelo Azure ML y cero nodos al corte explícito 2026-10-01 02:46 UTC. El costo mostrado es aproximadamente US$2.",
+      "explanation": "Relaciona los componentes con el uso web y expone fecha de comprobación y alcance económico.",
+      "scope": "US$2 es una estimación, no un costo facturado. Cero nodos corresponde al corte indicado, no a una consulta en vivo. Consultar COSTOS.md para cargos fechados.",
+      "image_in_repository": false
+    }
+  ]
+}

@@ -182,6 +182,17 @@ for label,url in [('1. Antonio, Almeida y Nunes: datos hoteleros','https://doi.o
  p(f'<link href="{html.escape(url,quote=True)}" color="#087e80">{label}</link>','small')
 
 
+# La revisión actual se documenta sin recrear capturas ausentes.
+visual_review=json.loads((OUT/'capturas/web-inventory.json').read_text(encoding='utf-8'))
+for start in (0,8):
+ page();title('Evidencia de la versión web actual')
+ p('Revisión de 15 imágenes aportadas por el equipo: 30 de septiembre de 2026, 23:38-23:40 en Colombia. Los PNG originales no están disponibles en las rutas proporcionadas: se documenta lo observado, sin reconstruir imágenes.','small')
+ for item in visual_review['images'][start:start+8]:
+  h(str(item['number'])+'. '+item['title'])
+  p(item['observed'],'small')
+ p('Las guías visibles no prueban su ejecución. US$2 sigue siendo una estimación. El estado de cero nodos tiene su fecha de corte; las reservas nuevas no alteran las métricas históricas.','small')
+ p('Consultar docs/EVIDENCIA-WEB-ACTUAL.md y azure/evidence/microproyecto3/web-current-check.json para el alcance y la consulta HTTP actual de solo lectura. Las imágenes siguientes son antecedentes históricos y una captura real del pipeline.','small')
+
 # Se incrustan los PNG originales completos: el estado visible nunca se retoca.
 captures=json.loads((OUT/'capturas/manifest.json').read_text(encoding='utf-8'))
 for item in captures['images']:
