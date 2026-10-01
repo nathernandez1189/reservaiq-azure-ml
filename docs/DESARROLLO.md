@@ -97,3 +97,6 @@ El lanzador `iniciar.py` prepara un entorno Python 3.12 y utiliza el mismo inté
 El formulario numérico exigía calcular noches y anticipación. Se reemplazó el recorrido manual por Fechas → Detalles → Revisar y guardar. `web/dates.js` convierte fechas civiles a cuatro variables existentes; `web/booking.js` coordina el calendario y los pasos; `booking_dates.py` valida el mismo contrato en el servidor. No se modificó ni reentrenó el modelo.
 
 SQLite pasa al esquema 2 con una columna opcional `stay` (creación, llegada, salida). La migración conserva las filas y las revisiones previas. El servidor exige que esas fechas coincidan con las cuatro variables derivadas, evitando guardar metadatos contradictorios. El CSV mantiene sus diez columnas y el modo histórico conserva sus variables originales cuando faltan fechas completas. [Decisiones y límites de UX](EXPERIENCIA-DE-USUARIO.md).
+
+
+Tras observar una captura aportada por el equipo, se añadió el control Mostrar/Ocultar calendario y el cierre después de seleccionar la salida. La visibilidad es estado de interfaz: no cambia fechas, resultados ni persistencia. Diseño y Azure reúne ahora la correspondencia de la rúbrica y una explicación del flujo, manteniendo los requisitos académicos separados de la operación cotidiana.

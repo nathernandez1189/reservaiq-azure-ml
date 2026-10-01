@@ -38,6 +38,8 @@ Abre **http://127.0.0.1:8765**. Mantén la terminal abierta. No abras `web/index
 6. Pulsa **Analizar y guardar**. Comprueba el índice, la sugerencia y el mensaje **Guardada en este computador**, con un código `RI-…`.
 7. Pulsa **Ver en Mis reservas** o entra por el menú. La tarjeta muestra las fechas; **Abrir** recupera el mismo registro.
 
+**Mostrar u ocultar:** el botón junto a las fechas recoge o despliega el calendario sin borrarlas. Al elegir la salida sobre el calendario se recoge automáticamente; los campos y el resumen permanecen visibles. Puedes volver a mostrarlo cuando quieras.
+
 **Alcance:** llegada entre 0 y 60 días después de crear la reserva; estancia de 1 a 30 noches. El fin de semana cuenta las noches de sábado y domingo. No se comprueba disponibilidad de habitaciones. Guardar es conservar una copia para analizar, no confirmar una reserva con un hotel.
 
 **Con teclado:** Tab entra al calendario; las flechas recorren días y semanas; Inicio/Fin recorren la semana y RePág/AvPág cambian de mes. Enter o espacio selecciona. También puedes escribir las fechas en sus campos.

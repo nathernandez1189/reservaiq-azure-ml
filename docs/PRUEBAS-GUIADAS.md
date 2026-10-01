@@ -29,6 +29,7 @@ Usa datos de ejemplo. Las reservas que guardes permanecerán en tu computador. P
 | C1 | Abrir Nueva reserva y Continuar sin elegir fechas | Explicación junto a los campos; se mantiene el paso Fechas y no se guarda nada. |
 | C2 | En ¿La reserva se creó otro día?, escribir 01/10/2026 | El calendario se sitúa en octubre. Esta fecha es solo un caso de práctica reproducible. |
 | C3 | Elegir llegada 02/10/2026 y salida 05/10/2026 | 3 noches: viernes, sábado y domingo. 1 entre semana, 2 de fin de semana; 1 día de anticipación. El lunes de salida no cuenta. |
+| C3b | Después de elegir la salida, pulsar Mostrar calendario y luego Ocultar calendario | El panel se despliega y recoge sin cambiar fechas, noches, índice ni guardado. Los campos y resumen siguen visibles. |
 | C4 | Continuar con los detalles; referencia `Prueba calendario`; revisar los seis campos | Ayudas junto a cada opción; el resumen muestra el contexto de la estancia. |
 | C5 | Revisar mi reserva → Solo analizar | Índice y recomendación reales del modelo para ese escenario; no hay registro guardado todavía. No se presupone una puntuación ni cancelación. |
 | C6 | Analizar y guardar; ir a Mis reservas | Código RI-… y tarjeta con las fechas de llegada y salida. |

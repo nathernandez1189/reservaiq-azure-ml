@@ -400,3 +400,63 @@ test("clickable counts reveal each category, clear searches and keep active stat
   assert.match(u.$("saved-page").textContent, /Página 1 de 1/);
   assert.equal(u.w.document.activeElement.dataset.countFilter, "reviewed");
 });
+
+test("calendar can be hidden without losing dates or changing an existing result", async (t) => {
+  const u = await setup(t);
+  await u.click("new-reservation");
+  assert.equal(u.$("calendar-board").hidden, false);
+  u.edit("booked-on", "2026-10-01");
+  u.$("calendar-months").querySelector('[data-date="2026-10-02"]').click();
+  u.$("calendar-months").querySelector('[data-date="2026-10-05"]').click();
+  assert.equal(u.$("calendar-board").hidden, true);
+  assert.equal(u.$("toggle-calendar").getAttribute("aria-expanded"), "false");
+  assert.equal(u.$("toggle-calendar").textContent, "Mostrar calendario");
+  const stay = JSON.stringify(u.w.Booking.getStay());
+  await u.click("toggle-calendar");
+  assert.equal(u.$("calendar-board").hidden, false);
+  assert.equal(u.$("toggle-calendar").getAttribute("aria-expanded"), "true");
+  await u.click("step-next");
+  await u.click("step-next");
+  await u.click("analyze-only");
+  const score = u.$("score").textContent;
+  await u.click("step-back");
+  await u.click("step-back");
+  await u.click("toggle-calendar");
+  assert.equal(u.$("calendar-board").hidden, true);
+  assert.equal(JSON.stringify(u.w.Booking.getStay()), stay);
+  assert.equal(u.$("score").textContent, score);
+  assert.equal(u.$("lead_time").value, "1");
+  assert.equal(u.records.length, 0);
+  // Calendar visibility is a UI preference, never an analysis or persistence action.
+  await u.click("step-next");
+  await u.click("step-next");
+  await u.click("calculate");
+  u.w.document.querySelector('[data-view="saved"]').click();
+  await flush();
+  u.$("saved-list").querySelector("[data-open]").click();
+  await flush();
+  assert.equal(u.$("calendar-board").hidden, true);
+  assert.equal(JSON.stringify(u.w.Booking.getStay()), stay);
+});
+test("project view links the four rubric criteria to evidence and working demo navigation", async (t) => {
+  const u = await setup(t);
+  u.w.document.querySelector('[data-view="project"]').click();
+  const project = u.$("project");
+  assert.equal(project.hidden, false);
+  assert.equal(project.querySelectorAll(".rubric-card").length, 4);
+  assert.deepEqual(
+    [...project.querySelectorAll(".rubric-weight")].map((x) => x.textContent),
+    [
+      "20 % · Análisis",
+      "25 % · Diseño",
+      "30 % · Implementación",
+      "25 % · Presentación",
+    ],
+  );
+  assert.match(project.textContent, /no asigna una calificación/);
+  project.querySelector('[data-go="guide"]').click();
+  assert.equal(u.$("guide").hidden, false);
+  project.querySelector('[data-go="model"]').click();
+  assert.equal(u.$("model").hidden, false);
+  assert.equal(u.records.length, 0);
+});

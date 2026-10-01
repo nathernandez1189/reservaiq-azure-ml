@@ -14,6 +14,7 @@ Se tomó como referencia la [explicación de experiencia de usuario de IBM](http
 | Calcular cuatro variables temporales | Calendario de llegada/salida y fecha de creación por defecto hoy | Las noches, su distribución, mes y anticipación se calculan automáticamente |
 | Demasiados campos al mismo tiempo | Fechas → Detalles → Revisar y guardar | Indicador de paso, botones Atrás/Continuar y revisión antes de guardar |
 | Contadores que no permiten consultar registros | Tarjetas Guardadas, Pendientes, Revisadas y Archivadas pulsables | Filtran la lista, resaltan la categoría y explican los estados vacíos |
+| Calendario grande después de elegir la estancia | Botón Mostrar/Ocultar y cierre al seleccionar salida | Las fechas y el resumen permanecen; ocultar no vuelve a analizar ni modifica registros |
 | No recordar lo elegido | Resumen de estancia durante el recorrido y revisión de todos los datos | Se muestran llegada, salida, noches y contexto |
 | Confundir analizar con guardar | Acciones y estados explícitos; confirmación con código y acceso a Mis reservas | Solo analizar no crea un registro; guardar confirma una escritura correcta |
 | Confundir copia local con compra | Texto al guardar y en Inicio | Se explica que no se consulta disponibilidad ni se confirma una habitación |
@@ -37,7 +38,7 @@ El sistema no reserva inventario, cobra, contacta huéspedes ni sincroniza regis
 
 ## Validación y siguiente comprobación con personas
 
-Las pruebas automáticas verifican aritmética, límites, cambios de año, recuperación de datos, consistencia entre cliente y servidor, teclado y pasos del formulario con componentes simulados. Los comandos y resultados están en [Evidencias](EVIDENCIAS.md). El acceso de navegador quedó bloqueado por una comprobación administrativa indisponible; no se generaron capturas nuevas ni se afirmó una prueba visual de extremo a extremo.
+Las pruebas automáticas verifican aritmética, límites, cambios de año, recuperación de datos, consistencia entre cliente y servidor, teclado y pasos del formulario con componentes simulados. Los comandos y resultados están en [Evidencias](EVIDENCIAS.md). El acceso de navegador quedó bloqueado por una comprobación administrativa indisponible; no se generaron capturas automatizadas ni se afirmó una prueba visual de extremo a extremo. Se revisó visualmente el recorte de calendario aportado en la conversación. El archivo temporal no pudo leerse por restricciones del sistema, por lo que no se añadió una copia al repositorio.
 
 Una prueba breve con cada integrante puede usar estas tareas, sin explicar primero dónde pulsar:
 

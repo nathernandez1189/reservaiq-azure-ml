@@ -99,3 +99,12 @@ Se añadió el calendario de llegada/salida, la derivación de variables tempora
 El acceso a la aplicación en el navegador volvió a ser rechazado por una comprobación de seguridad administrativa indisponible. No se eludió ese control. La apariencia en tamaños de pantalla, la navegación en navegador real y la usabilidad con personas no están certificadas por estas pruebas; quedan descritas en [Experiencia de usuario](EXPERIENCIA-DE-USUARIO.md) y [Pruebas guiadas](PRUEBAS-GUIADAS.md). No se publicaron capturas que aparenten demostrar esa nueva revisión visual. Las capturas anteriores mantienen sus fechas y alcance.
 
 Las pruebas se ejecutaron con bases aisladas. No se iniciaron máquinas ni recursos de Azure, y no se publicaron reservas personales.
+
+
+### Ajuste final: ocultar calendario y revisar la rúbrica
+
+La última ampliación pasó **24 pruebas JavaScript** (55 en total al sumar las 31 Python). Se comprueba ocultar/mostrar sin cambiar fechas o resultado; cierre al elegir salida; recuperación de una reserva con el calendario recogido; y navegación desde los cuatro criterios del proyecto a sus pruebas y resultados.
+
+La primera ejecución remota detectó dos fallos de limpieza de los archivos temporales de las pruebas de migración en Windows. Se corrigió el cierre explícito de sus conexiones SQLite; la aplicación ya cerraba sus conexiones. El resultado de la nueva ejecución remota se consulta en Actions para la revisión final.
+
+Se revisó el recorte de calendario aportado en la conversación, con hora 19:30:08 del 30/09/2026 en el nombre. Muestra llegada 02/10/2026 y salida 10/10/2026; precede al control de ocultar y no acredita guardado ni navegación completa. El archivo temporal no pudo leerse por restricciones del sistema y no se publicó una copia ni una huella inventada.

@@ -545,7 +545,6 @@
                           <label for="check-in">Llegada</label
                           ><input
                             id="check-in"
-                            aria-describedby="date-error"
                             type="date"
                             aria-describedby="date-help date-error"
                           />
@@ -554,13 +553,28 @@
                           <label for="check-out">Salida</label
                           ><input
                             id="check-out"
-                            aria-describedby="date-error"
                             type="date"
                             aria-describedby="date-help date-error"
                           />
                         </div>
                       </div>
+                      <div class="calendar-visibility">
+                        <span id="calendar-visibility-note"
+                          >Elige tu estancia en el calendario o escribe las
+                          fechas.</span
+                        >
+                        <button
+                          type="button"
+                          class="secondary"
+                          id="toggle-calendar"
+                          aria-expanded="true"
+                          aria-controls="calendar-board"
+                        >
+                          Ocultar calendario
+                        </button>
+                      </div>
                       <div
+                        id="calendar-board"
                         class="calendar-board"
                         role="group"
                         aria-label="Calendario de la estancia"
@@ -1245,6 +1259,176 @@
                 capacidad limitada de revisión.
               </p>
             </div>
+            <div class="project-intro panel">
+              <p class="eyebrow">De la necesidad a una decisión comprobable</p>
+              <h2>¿A cuáles reservas les dedicamos tiempo hoy?</h2>
+              <p>
+                El equipo del hotel solo puede revisar <b>K reservas</b>. La
+                aplicación ordena sus pendientes según las señales del modelo y
+                deja al personal decidir qué hacer. Esa es la decisión que se
+                quiere apoyar.
+              </p>
+              <div class="project-outcomes">
+                <div>
+                  <b>Entrada</b
+                  ><span
+                    >Fechas y características de la reserva, o un CSV.</span
+                  >
+                </div>
+                <div>
+                  <b>Resultado</b
+                  ><span
+                    >Índice del modelo, copia guardada y lista priorizada.</span
+                  >
+                </div>
+                <div>
+                  <b>Acción humana</b
+                  ><span
+                    >Verificar información y necesidades del huésped; registrar
+                    la revisión.</span
+                  >
+                </div>
+              </div>
+              <p class="note">
+                Cliente ficticio. El modelo usa datos históricos de Portugal. La
+                demo no confirma habitaciones ni demuestra cancelaciones
+                evitadas.
+              </p>
+            </div>
+            <div class="rubric-heading">
+              <p class="eyebrow">Correspondencia con el Microproyecto 3</p>
+              <h2>Qué se entrega y cómo comprobarlo</h2>
+              <p class="muted">
+                Los pesos son los del enunciado del profesor. Esta
+                correspondencia muestra evidencia; no asigna una calificación.
+              </p>
+            </div>
+            <div class="rubric-grid">
+              <article class="panel rubric-card">
+                <span class="rubric-weight">20 % · Análisis</span>
+                <h3>Problema, requisitos y alternativas</h3>
+                <p>
+                  Hotel, necesidad de priorización, alcance de datos,
+                  restricciones, modelos y costos aproximados documentados.
+                </p>
+                <ul>
+                  <li>Individual y CSV de hasta 500 reservas.</li>
+                  <li>Anticipación 0–60 días; estancia 1–30 noches.</li>
+                  <li>Reglas manuales, clasificación y AutoML comparados.</li>
+                </ul>
+                <a
+                  href="https://github.com/nathernandez1189/reservaiq-azure-ml/blob/main/docs/Informe-tecnico.md"
+                  target="_blank"
+                  rel="noopener"
+                  >Leer análisis y alternativas ↗</a
+                >
+              </article>
+              <article class="panel rubric-card">
+                <span class="rubric-weight">25 % · Diseño</span>
+                <h3>Componentes y flujo trazables</h3>
+                <p>
+                  El diagrama conecta datos, preparación, entrenamiento,
+                  evaluación, registro y demo local. SQLite conserva las copias
+                  de reservas.
+                </p>
+                <ul>
+                  <li>Prueba y modelo entran por separado a evaluación.</li>
+                  <li>La descarga verificada conecta Azure con la demo.</li>
+                  <li>Las reservas nuevas no alteran las métricas.</li>
+                </ul>
+                <a
+                  href="https://github.com/nathernandez1189/reservaiq-azure-ml/blob/main/docs/ARQUITECTURA.md"
+                  target="_blank"
+                  rel="noopener"
+                  >Ver componentes y transferencias ↗</a
+                >
+              </article>
+              <article class="panel rubric-card">
+                <span class="rubric-weight">30 % · Implementación</span>
+                <h3>Una demo que permite comprobar</h3>
+                <p>
+                  Elegir fechas, analizar, guardar, recuperar, editar y
+                  priorizar; importar un lote y mostrar aciertos, errores y
+                  límites del modelo.
+                </p>
+                <ul>
+                  <li>Ejemplo histórico con resultado conocido.</li>
+                  <li>Persistencia después de reiniciar.</li>
+                  <li>Rechazo de entradas inválidas y errores explicados.</li>
+                </ul>
+                <button class="linkbutton" data-go="guide">
+                  Abrir las pruebas guiadas →
+                </button>
+              </article>
+              <article class="panel rubric-card">
+                <span class="rubric-weight">25 % · Presentación</span>
+                <h3>Explicar y demostrar en 15 minutos</h3>
+                <p>
+                  La presentación preparada recorre requerimientos, diseño y
+                  demo. Juan, Natalia y Miguel Ángel explican el caso, la
+                  solución y la decisión de negocio.
+                </p>
+                <p class="note">
+                  Los materiales apoyan la exposición. El cumplimiento de los 15
+                  minutos y la sustentación debe comprobarse al presentar.
+                </p>
+                <a
+                  href="https://www.canva.com/d/20i32hmvo0gpTiA"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir presentación en Canva ↗</a
+                ><a
+                  href="https://github.com/nathernandez1189/reservaiq-azure-ml/blob/main/docs/PRESENTACION.md"
+                  target="_blank"
+                  rel="noopener"
+                  >Consultar contenido y actualizaciones ↗</a
+                >
+              </article>
+            </div>
+            <details class="panel project-alternatives">
+              <summary>¿Por qué esta solución y no otra?</summary>
+              <div class="tablewrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Alternativa</th>
+                      <th>A favor</th>
+                      <th>Límite</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Reglas manuales</td>
+                      <td>Fáciles de explicar y aplicar.</td>
+                      <td>Umbrales rígidos y mantenimiento manual.</td>
+                    </tr>
+                    <tr>
+                      <td>Clasificador + revisión humana · elegido</td>
+                      <td>
+                        Permite comparar resultados y ordenar según capacidad.
+                      </td>
+                      <td>
+                        Necesita datos adecuados y seguimiento de errores.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>AutoML</td>
+                      <td>Explora modelos de forma automatizada.</td>
+                      <td>Más ensayos y consumo variable.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="note">
+                Dentro de la clasificación se compararon una base de referencia,
+                regresión logística, Random Forest y Gradient Boosting. La
+                selección se hizo en validación; la prueba se reservó para
+                evaluar.
+              </p>
+              <button class="linkbutton" data-go="model">
+                Ver la comparación medida y los errores →
+              </button>
+            </details>
             <div class="panel">
               <div class="panelhead">
                 <h2>Arquitectura de la solución</h2>
@@ -1277,6 +1461,41 @@
                 al entrenamiento ni alteran la evidencia histórica.
               </p>
             </div>
+            <details class="panel project-flow">
+              <summary>Leer el flujo paso a paso</summary>
+              <ol class="plain-list">
+                <li>
+                  <b>Datos y preparación:</b> Blob conserva el CSV. Preparación
+                  aplica el alcance, retira duplicados y separa entrenamiento,
+                  validación y prueba por fechas.
+                </li>
+                <li>
+                  <b>Entrenamiento:</b> compara candidatos, elige el modelo y
+                  fija el umbral utilizando validación.
+                </li>
+                <li>
+                  <b>Evaluación:</b> recibe el modelo fijado y la prueba
+                  reservada; produce métricas y predicciones. No vuelve a
+                  entrenar.
+                </li>
+                <li>
+                  <b>Registro y descarga:</b> se versiona el modelo y se
+                  verifican su huella y sus resultados antes de usar la copia
+                  local.
+                </li>
+                <li>
+                  <b>Uso local:</b> calendario o CSV → validación → inferencia →
+                  guardado opcional en SQLite → revisión humana. Mis reservas
+                  consulta esa base.
+                </li>
+              </ol>
+              <p class="note">
+                Workspace organiza trabajos y versiones; el clúster CPU ejecuta
+                las tres etapas con 0–1 nodos. El entrenamiento de Azure es
+                histórico y su grupo temporal fue cerrado. La demo funciona con
+                los artefactos descargados.
+              </p>
+            </details>
             <div class="grid2">
               <div class="panel">
                 <h2>Procedencia y ejecución</h2>

@@ -8,7 +8,8 @@
     month = "",
     hooks = {},
     busy = false,
-    focusDay = null;
+    focusDay = null,
+    calendarOpen = true;
   const numeric = [
     "lead_time",
     "arrival_month",
@@ -48,6 +49,17 @@
     return D.iso(
       new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + n, 1)),
     );
+  }
+  function setCalendarOpen(open) {
+    calendarOpen = open;
+    $("calendar-board").hidden = !open;
+    $("toggle-calendar").setAttribute("aria-expanded", String(open));
+    $("toggle-calendar").textContent = open
+      ? "Ocultar calendario"
+      : "Mostrar calendario";
+    $("calendar-visibility-note").textContent = open
+      ? "Elige tu estancia en el calendario o escribe las fechas."
+      : "Calendario oculto. Tus fechas se conservan y puedes editarlas arriba.";
   }
   function rawStay() {
     return {
@@ -263,6 +275,7 @@
     month = monthStart(focusDay);
     changed(false);
     if (choosingExit) {
+      setCalendarOpen(false);
       $("step-next").focus({ preventScroll: true });
       return;
     }
@@ -378,6 +391,7 @@
   function reset(stay = null, historical = false) {
     mode = historical ? "historical" : "calendar";
     focusDay = null;
+    setCalendarOpen(!stay);
     step = 1;
     $("booked-on").value = stay?.booked_on || D.today();
     $("check-in").value = stay?.check_in || "";
@@ -392,6 +406,7 @@
   }
   function init(options) {
     hooks = options;
+    $("toggle-calendar").onclick = () => setCalendarOpen(!calendarOpen);
     $("check-in").oninput = () => {
       const start = $("check-in").value,
         end = $("check-out").value;

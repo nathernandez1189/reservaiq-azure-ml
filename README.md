@@ -67,7 +67,7 @@ Carga únicamente el modelo incluido o artefactos propios de confianza. `joblib`
 
 ## Primer uso: analizar, guardar y recuperar
 
-1. **Fechas:** entra en Nueva reserva, elige llegada y salida en el calendario. Las noches y la anticipación se calculan automáticamente.
+1. **Fechas:** entra en Nueva reserva, elige llegada y salida en el calendario. Las noches y la anticipación se calculan automáticamente. Puedes mostrar u ocultar el calendario sin perder las fechas.
 2. **Detalles:** revisa las seis opciones explicadas y añade una referencia si quieres.
 3. **Revisar y guardar:** comprueba el resumen, pulsa Analizar y guardar y espera la confirmación con código `RI-…`.
 4. Abre **Mis reservas** para recuperar, editar, marcar revisada, archivar o restaurar. **Cómo probarlo** incluye un recorrido de calendario y otro con resultados históricos conocidos.
@@ -94,7 +94,7 @@ El [diccionario del CSV](ejemplos-csv/LEEME.md) detalla las diez columnas y sus 
 - **Mis reservas:** búsqueda, filtros, prioridades, estados de revisión y copia descargable.
 - **Cómo probarlo:** pasos, resultados esperados, comprobación de conexión y soluciones a errores comunes.
 - **Resultados del modelo:** particiones, candidatos, matriz de confusión e importancia global.
-- **Diseño y Azure:** arquitectura, procedencia verificable del modelo y costos documentados.
+- **Diseño y Azure:** correspondencia con los cuatro criterios de la rúbrica, alternativas, arquitectura y flujo explicado, procedencia verificable y costos documentados.
 
 Las reservas nuevas no cambian el entrenamiento ni las métricas históricas. El almacenamiento local no requiere recursos de Azure.
 

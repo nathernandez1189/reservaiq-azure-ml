@@ -4,6 +4,8 @@ Microproyecto 3 · Computación en la Nube · Prof. Oscar Mondragón.
 
 **Integrantes:** Juan Ospina Tenorio, Natalia Hernández Piedrahita y Miguel Ángel Diuza.
 
+La vista **Diseño y Azure** de la aplicación contiene una correspondencia con los cuatro criterios, accesos a evidencias, alternativas y una lectura del flujo paso a paso. **Cómo probarlo** guía la demostración.
+
 ## Material para la revisión
 
 - [Informe técnico en PDF](ReservaIQ-Informe-tecnico.pdf): análisis, alternativas, diseño, implementación, resultados, costos, fuentes y capturas comentadas.
