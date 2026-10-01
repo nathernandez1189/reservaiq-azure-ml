@@ -89,8 +89,8 @@ class ReservaIQTests(unittest.TestCase):
         html=(ROOT/'web/index.html').read_text(encoding='utf-8')
         sections=re.findall(r'<section\b[^>]*id="([^"]+)"[^>]*>(.*?)</section>',html,re.S)
         views=dict(sections)
-        self.assertEqual(set(views),{'overview','lab','model','project'})
-        self.assertIn('Controles para una evaluación honesta',views['model'])
+        self.assertEqual(set(views),{'overview','lab','saved','guide','model','project'})
+        self.assertIn('Controles para una evaluación honesta',' '.join(views['model'].split()))
         self.assertIn('src="/arquitectura.svg"',views['project'])
         for element in ['architecture-status','execution-status','execution-detail','execution-cost','cost-detail']:
             self.assertEqual(html.count(f'id="{element}"'),1)

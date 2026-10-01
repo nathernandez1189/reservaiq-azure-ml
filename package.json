@@ -1,0 +1,13 @@
+{
+  "name": "reservaiq-ui-checks",
+  "private": true,
+  "description": "Development checks only. Running the application requires Python, not Node.",
+  "scripts": {
+    "test": "node --test tests/*.cjs",
+    "format": "prettier --write web/app.js web/csv.js web/index.html web/style.css tests/*.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0",
+    "prettier": "3.6.2"
+  }
+}
