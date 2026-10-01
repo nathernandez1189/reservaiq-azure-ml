@@ -226,6 +226,7 @@ test("calendar blocks incomplete dates and takes a new reservation through three
   assert.equal(u.w.Booking.getStep(), 1);
   assert.match(u.$("date-error").textContent, /llegada/);
   u.edit("booked-on", "2026-10-01");
+  await u.click("date-select-check-in");
   u.$("calendar-months").querySelector('[data-date="2026-10-02"]').click();
   assert.equal(u.$("check-in").value, "2026-10-02");
   assert.match(u.$("calendar-prompt").textContent, /salida/);
@@ -272,6 +273,7 @@ test("calendar supports keyboard focus and a stay crossing into the next month",
   const u = await setup(t);
   await u.click("new-reservation");
   u.edit("booked-on", "2026-10-01");
+  await u.click("date-select-check-in");
   const day = u.$("calendar-months").querySelector('[data-date="2026-10-01"]');
   day.focus();
   day.dispatchEvent(
@@ -406,6 +408,7 @@ test("calendar can be hidden without losing dates or changing an existing result
   await u.click("new-reservation");
   assert.equal(u.$("calendar-board").hidden, false);
   u.edit("booked-on", "2026-10-01");
+  await u.click("date-select-check-in");
   u.$("calendar-months").querySelector('[data-date="2026-10-02"]').click();
   u.$("calendar-months").querySelector('[data-date="2026-10-05"]').click();
   assert.equal(u.$("calendar-board").hidden, true);
@@ -459,4 +462,62 @@ test("project view links the four rubric criteria to evidence and working demo n
   project.querySelector('[data-go="model"]').click();
   assert.equal(u.$("model").hidden, false);
   assert.equal(u.records.length, 0);
+});
+
+test("creation date is visible and editable in the same calendar with dates and saved records kept consistent", async (t) => {
+  const u = await setup(t);
+  await u.click("new-reservation");
+  assert.equal(u.$("booked-on").closest("details"), null);
+  assert.equal(u.$("booked-on").closest(".date-fields") !== null, true);
+  u.edit("booked-on", "2026-10-01");
+  await u.click("date-select-booked-on");
+  assert.equal(
+    u.$("date-select-booked-on").getAttribute("aria-pressed"),
+    "true",
+  );
+  assert.match(u.$("calendar-prompt").textContent, /cuándo se creó/);
+  await u.click("calendar-prev");
+  u.$("calendar-months").querySelector('[data-date="2026-09-30"]').click();
+  assert.equal(u.$("booked-on").value, "2026-09-30");
+  assert.equal(
+    u.$("date-select-check-in").getAttribute("aria-pressed"),
+    "true",
+  );
+  u.$("calendar-months").querySelector('[data-date="2026-10-02"]').click();
+  u.$("calendar-months").querySelector('[data-date="2026-10-05"]').click();
+  assert.equal(u.$("lead_time").value, "2");
+  assert.equal(u.$("stays_in_weekend_nights").value, "2");
+  await u.click("step-next");
+  await u.click("step-next");
+  await u.click("calculate");
+  assert.equal(u.records[0].stay.booked_on, "2026-09-30");
+  await u.click("step-back");
+  await u.click("step-back");
+  u.$("booked-on").focus();
+  assert.equal(u.$("calendar-board").hidden, false);
+  assert.equal(
+    u.$("date-select-booked-on").getAttribute("aria-pressed"),
+    "true",
+  );
+  await u.click("calendar-next");
+  u.$("calendar-months").querySelector('[data-date="2026-10-01"]').click();
+  assert.equal(u.$("lead_time").value, "1");
+  assert.equal(u.$("check-in").value, "2026-10-02");
+  assert.equal(u.$("check-out").value, "2026-10-05");
+  assert.equal(u.$("result-ready").hidden, true);
+  await u.click("step-next");
+  await u.click("step-next");
+  await u.click("calculate");
+  assert.equal(u.records.length, 1);
+  assert.equal(u.records[0].revision, 2);
+  assert.equal(u.records[0].stay.booked_on, "2026-10-01");
+  await u.click("step-back");
+  await u.click("step-back");
+  await u.click("date-select-booked-on");
+  u.$("calendar-months").querySelector('[data-date="2026-10-03"]').click();
+  await u.click("step-next");
+  assert.equal(u.w.Booking.getStep(), 1);
+  assert.match(u.$("date-error").textContent, /60 días/);
+  assert.equal(u.records[0].stay.booked_on, "2026-10-01");
+  assert.equal(u.$("check-in").value, "2026-10-02");
 });

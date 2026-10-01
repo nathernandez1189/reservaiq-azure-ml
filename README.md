@@ -67,7 +67,7 @@ Carga únicamente el modelo incluido o artefactos propios de confianza. `joblib`
 
 ## Primer uso: analizar, guardar y recuperar
 
-1. **Fechas:** entra en Nueva reserva, elige llegada y salida en el calendario. Las noches y la anticipación se calculan automáticamente. Puedes mostrar u ocultar el calendario sin perder las fechas.
+1. **Fechas:** entra en Nueva reserva, revisa la fecha de creación visible y elige llegada y salida en el mismo calendario. Las noches y la anticipación se calculan automáticamente. Puedes mostrar u ocultar el calendario sin perder las fechas.
 2. **Detalles:** revisa las seis opciones explicadas y añade una referencia si quieres.
 3. **Revisar y guardar:** comprueba el resumen, pulsa Analizar y guardar y espera la confirmación con código `RI-…`.
 4. Abre **Mis reservas** para recuperar, editar, marcar revisada, archivar o restaurar. **Cómo probarlo** incluye un recorrido de calendario y otro con resultados históricos conocidos.

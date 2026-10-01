@@ -108,3 +108,6 @@ La última ampliación pasó **24 pruebas JavaScript** (55 en total al sumar las
 La primera ejecución remota detectó dos fallos de limpieza de los archivos temporales de las pruebas de migración en Windows. Se corrigió el cierre explícito de sus conexiones SQLite; la aplicación ya cerraba sus conexiones. El resultado de la nueva ejecución remota se consulta en Actions para la revisión final.
 
 Se revisó el recorte de calendario aportado en la conversación, con hora 19:30:08 del 30/09/2026 en el nombre. Muestra llegada 02/10/2026 y salida 10/10/2026; precede al control de ocultar y no acredita guardado ni navegación completa. El archivo temporal no pudo leerse por restricciones del sistema y no se publicó una copia ni una huella inventada.
+
+
+La fecha de creación quedó visible junto a llegada y salida y puede elegirse en el mismo calendario. La selección activa indica qué campo se modifica. El recorrido de creación, cambio de anticipación, guardado, edición y rechazo de una creación posterior a la llegada está cubierto por una prueba adicional: **25 pruebas JavaScript y 31 Python; 56 en total**.

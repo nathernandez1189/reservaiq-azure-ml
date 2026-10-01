@@ -536,11 +536,26 @@
                   <div id="booking-step-1" class="booking-step">
                     <h2 tabindex="-1">¿Cuándo será la estancia?</h2>
                     <p class="step-description">
-                      Selecciona primero la llegada y después la salida. También
-                      puedes escribir las fechas en los campos.
+                      Revisa cuándo se creó la reserva y elige llegada y salida.
+                      Pulsa un campo o el selector del calendario para cambiar
+                      cualquiera de las tres fechas.
                     </p>
                     <div id="calendar-mode">
                       <div class="date-fields">
+                        <div class="field">
+                          <label for="booked-on"
+                            >Fecha de creación de la reserva</label
+                          ><input
+                            type="date"
+                            id="booked-on"
+                            aria-describedby="creation-help date-error"
+                            min="1900-01-01"
+                            max="2100-12-31"
+                          /><small id="creation-help"
+                            >Cuándo se hizo la reserva. Hoy por defecto; puedes
+                            cambiarlo en el calendario.</small
+                          >
+                        </div>
                         <div class="field">
                           <label for="check-in">Llegada</label
                           ><input
@@ -579,6 +594,36 @@
                         role="group"
                         aria-label="Calendario de la estancia"
                       >
+                        <div
+                          class="date-targets"
+                          role="group"
+                          aria-label="Fecha que quieres elegir"
+                        >
+                          <button
+                            type="button"
+                            id="date-select-booked-on"
+                            data-date-target="booked-on"
+                            aria-pressed="false"
+                          >
+                            Creación de la reserva
+                          </button>
+                          <button
+                            type="button"
+                            id="date-select-check-in"
+                            data-date-target="check-in"
+                            aria-pressed="true"
+                          >
+                            Llegada
+                          </button>
+                          <button
+                            type="button"
+                            id="date-select-check-out"
+                            data-date-target="check-out"
+                            aria-pressed="false"
+                          >
+                            Salida
+                          </button>
+                        </div>
                         <div class="calendar-toolbar">
                           <button
                             type="button"
@@ -602,7 +647,8 @@
                         </div>
                         <div class="calendar-months" id="calendar-months"></div>
                         <div class="calendar-legend">
-                          <span><i></i>Estancia seleccionada</span
+                          <span><i class="creation-key"></i>Creación</span
+                          ><span><i></i>Llegada y salida</span
                           ><button type="button" id="clear-dates">
                             Cambiar fechas
                           </button>
@@ -613,24 +659,6 @@
                         reserva y una estancia de 1 a 30 noches. El calendario
                         no consulta disponibilidad de habitaciones.
                       </p>
-                      <details class="booking-created">
-                        <summary>¿La reserva se creó otro día?</summary>
-                        <div class="field">
-                          <label for="booked-on"
-                            >Fecha de creación de la reserva</label
-                          ><input
-                            type="date"
-                            id="booked-on"
-                            aria-describedby="date-error"
-                            min="1900-01-01"
-                            max="2100-12-31"
-                          /><small
-                            >Usamos hoy por defecto. Esta fecha permite calcular
-                            cuántos días de anticipación tuvo la reserva; se
-                            conserva al guardarla.</small
-                          >
-                        </div>
-                      </details>
                     </div>
                     <div id="historical-mode" hidden>
                       <div class="historical-notice">

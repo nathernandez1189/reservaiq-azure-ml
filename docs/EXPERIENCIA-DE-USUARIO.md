@@ -11,7 +11,7 @@ Se tomó como referencia la [explicación de experiencia de usuario de IBM](http
 | Fricción anterior | Cambio | Cómo se comprueba |
 | --- | --- | --- |
 | No saber dónde empezar | Inicio explica propósito y ofrece una acción principal: elegir fechas | Se puede identificar el primer paso sin leer métricas del modelo |
-| Calcular cuatro variables temporales | Calendario de llegada/salida y fecha de creación por defecto hoy | Las noches, su distribución, mes y anticipación se calculan automáticamente |
+| Calcular cuatro variables temporales | Calendario compartido para creación, llegada y salida; las tres fechas siempre visibles y creación por defecto hoy | Las noches, su distribución, mes y anticipación se calculan automáticamente |
 | Demasiados campos al mismo tiempo | Fechas → Detalles → Revisar y guardar | Indicador de paso, botones Atrás/Continuar y revisión antes de guardar |
 | Contadores que no permiten consultar registros | Tarjetas Guardadas, Pendientes, Revisadas y Archivadas pulsables | Filtran la lista, resaltan la categoría y explican los estados vacíos |
 | Calendario grande después de elegir la estancia | Botón Mostrar/Ocultar y cierre al seleccionar salida | Las fechas y el resumen permanecen; ocultar no vuelve a analizar ni modifica registros |

@@ -32,11 +32,13 @@ Abre **http://127.0.0.1:8765**. Mantén la terminal abierta. No abras `web/index
 
 1. En **Inicio**, pulsa **Elegir fechas y crear una reserva**; también puedes entrar en **Nueva reserva** desde el menú.
 2. **Paso 1 · Fechas.** Elige primero la llegada y luego la salida en el calendario. Puedes usar también los campos de fecha. El rango seleccionado marca las noches; el día de salida no añade otra noche.
-3. Revisa el resumen: noches totales, noches entre semana y fin de semana, y anticipación. Se calculan automáticamente. La fecha de creación empieza en hoy; si estás registrando una reserva creada antes, abre **¿La reserva se creó otro día?** y corrígela.
+3. Revisa el resumen: noches totales, noches entre semana y fin de semana, y anticipación. Se calculan automáticamente. La fecha de creación empieza en hoy; si estás registrando una reserva creada antes, cambia **Fecha de creación de la reserva**, siempre visible junto a llegada y salida.
 4. Pulsa **Continuar con los detalles**. **Paso 2 · Detalles.** Añade una referencia opcional, por ejemplo `Prueba del grupo`, y revisa las seis opciones explicadas. No hacen falta nombres de huéspedes ni datos de pago.
 5. Pulsa **Revisar mi reserva**. **Paso 3 · Revisar y guardar.** Comprueba fechas y datos. Puedes volver a cualquier paso para corregirlos.
 6. Pulsa **Analizar y guardar**. Comprueba el índice, la sugerencia y el mensaje **Guardada en este computador**, con un código `RI-…`.
 7. Pulsa **Ver en Mis reservas** o entra por el menú. La tarjeta muestra las fechas; **Abrir** recupera el mismo registro.
+
+**Las tres fechas usan el mismo calendario:** pulsa el campo de creación, llegada o salida, o usa los tres selectores del calendario. La selección activa indica qué fecha estás cambiando. Después de elegir creación, continúa con llegada y salida. Cambiar la creación recalcula la anticipación; conserva llegada y salida y te explica si quedan fuera del alcance.
 
 **Mostrar u ocultar:** el botón junto a las fechas recoge o despliega el calendario sin borrarlas. Al elegir la salida sobre el calendario se recoge automáticamente; los campos y el resumen permanecen visibles. Puedes volver a mostrarlo cuando quieras.
 

@@ -52,15 +52,16 @@
     "cloud_resources_started": false
   },
   "final_ux_verification": {
-    "checked_at_utc": "2026-10-01T00:39:39.526395+00:00",
+    "checked_at_utc": "2026-10-01T00:43:08.425346+00:00",
     "python_tests_passed": 31,
-    "javascript_tests_passed": 24,
-    "total_tests_passed": 55,
+    "javascript_tests_passed": 25,
+    "total_tests_passed": 56,
     "calendar_visibility_preserves_dates_and_result": true,
     "rubric_navigation_component_verified": true,
     "user_supplied_calendar_capture_reviewed": true,
     "capture_source": "user image in conversation; original temporary file inaccessible and not published",
     "live_browser_e2e_verified": false,
-    "cloud_resources_started": false
+    "cloud_resources_started": false,
+    "creation_date_visible_and_calendar_selection_verified": true
   }
 }
