@@ -31,31 +31,37 @@ def revision(value):
     return value
 
 class ReservationStore:
+    kind = 'local_sqlite'
+
     def __init__(self, path):
         self.path = Path(path)
+
+    @staticmethod
+    def initialize(con):
+        con.row_factory = sqlite3.Row
+        con.execute('BEGIN IMMEDIATE')
+        version = con.execute('PRAGMA user_version').fetchone()[0]
+        if version not in (0, 1, 2):
+            raise ValueError('Esta base de reservas requiere una versión más reciente de ReservaIQ.')
+        con.execute('''CREATE TABLE IF NOT EXISTS reservations (
+            id TEXT PRIMARY KEY, reference TEXT NOT NULL, inputs TEXT NOT NULL,
+            result TEXT NOT NULL, model_sha256 TEXT NOT NULL, source TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'pending', revision INTEGER NOT NULL DEFAULT 1,
+            created_at TEXT NOT NULL, updated_at TEXT NOT NULL)''')
+        con.execute('''CREATE TABLE IF NOT EXISTS requests (
+            request_id TEXT PRIMARY KEY, payload_hash TEXT NOT NULL, response TEXT NOT NULL)''')
+        columns = {r['name'] for r in con.execute('PRAGMA table_info(reservations)')}
+        if 'stay' not in columns:
+            con.execute('ALTER TABLE reservations ADD COLUMN stay TEXT')
+        con.execute('PRAGMA user_version = 2')
+        con.commit()
 
     @contextmanager
     def connect(self):
         self.path.parent.mkdir(parents=True, exist_ok=True)
         con = sqlite3.connect(self.path, timeout=10)
-        con.row_factory = sqlite3.Row
         try:
-            con.execute('BEGIN IMMEDIATE')
-            version = con.execute('PRAGMA user_version').fetchone()[0]
-            if version not in (0, 1, 2):
-                raise ValueError('Esta base de reservas requiere una versión más reciente de ReservaIQ.')
-            con.execute('''CREATE TABLE IF NOT EXISTS reservations (
-                id TEXT PRIMARY KEY, reference TEXT NOT NULL, inputs TEXT NOT NULL,
-                result TEXT NOT NULL, model_sha256 TEXT NOT NULL, source TEXT NOT NULL,
-                status TEXT NOT NULL DEFAULT 'pending', revision INTEGER NOT NULL DEFAULT 1,
-                created_at TEXT NOT NULL, updated_at TEXT NOT NULL)''')
-            con.execute('''CREATE TABLE IF NOT EXISTS requests (
-                request_id TEXT PRIMARY KEY, payload_hash TEXT NOT NULL, response TEXT NOT NULL)''')
-            columns = {r['name'] for r in con.execute('PRAGMA table_info(reservations)')}
-            if 'stay' not in columns:
-                con.execute('ALTER TABLE reservations ADD COLUMN stay TEXT')
-            con.execute('PRAGMA user_version = 2')
-            con.commit()
+            self.initialize(con)
             with con:
                 yield con
         finally:

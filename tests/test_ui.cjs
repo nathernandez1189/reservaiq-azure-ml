@@ -10,7 +10,7 @@ const flush = async () => {
   for (let i = 0; i < 6; i++)
     await new Promise((resolve) => setImmediate(resolve));
 };
-async function setup(t) {
+async function setup(t, cloud = false) {
   const dom = new JSDOM(html, {
     url: "http://127.0.0.1:8765",
     runScripts: "outside-only",
@@ -35,7 +35,7 @@ async function setup(t) {
     calls.push({ url, payload });
     let body,
       ok = true;
-    if (url === "/api/summary") body = summary;
+    if (url === "/api/summary") body = { ...summary, application: { cloud } };
     else if (url === "/api/health") body = { status: "ok" };
     else if (url === "/api/reservations" && !payload)
       body = { reservations: records, count: records.length };
@@ -520,4 +520,21 @@ test("creation date is visible and editable in the same calendar with dates and 
   assert.match(u.$("date-error").textContent, /60 días/);
   assert.equal(u.records[0].stay.booked_on, "2026-10-01");
   assert.equal(u.$("check-in").value, "2026-10-02");
+});
+
+test("cloud mode explains shared fictional data and saves without local-only claims", async (t) => {
+  const u = await setup(t, true);
+  assert.match(u.$("overview").textContent, /Demo académica compartida/);
+  assert.match(u.$("saved").textContent, /Todos los que abran este enlace/);
+  assert.doesNotMatch(
+    u.$("project").textContent,
+    /su grupo temporal fue cerrado/,
+  );
+  await u.click("example-reservation");
+  await u.click("calculate");
+  assert.equal(u.$("save-state").textContent, "Guardada en Azure");
+  assert.equal(u.records.length, 1);
+  u.w.document.querySelector('[data-view="saved"]').click();
+  await flush();
+  assert.equal(u.$("saved-list").querySelectorAll(".saved-card").length, 1);
 });

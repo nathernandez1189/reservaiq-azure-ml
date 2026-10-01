@@ -1,4 +1,4 @@
-"""Local demo API and persistent reservation copies. Bind only to localhost."""
+"""Local demo API; cloud_wsgi exposes the same routes behind Azure HTTPS."""
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlparse
@@ -13,18 +13,29 @@ from booking_dates import validate_stay, features_from_stay
 from storage import ReservationStore, ConflictError, MissingReservation, reference
 
 ROOT = Path(__file__).resolve().parent
-BUNDLE = joblib.load(ROOT/'artifacts/trained/model.joblib')
-MODEL_SHA256 = hashlib.sha256((ROOT/'artifacts/trained/model.joblib').read_bytes()).hexdigest()
-PROVENANCE_PATH = ROOT/'artifacts/runtime.json'
+ARTIFACTS = Path(os.environ.get('RESERVAIQ_ARTIFACTS_DIR', ROOT/'artifacts'))
+BUNDLE = joblib.load(ARTIFACTS/'trained/model.joblib')
+MODEL_SHA256 = hashlib.sha256((ARTIFACTS/'trained/model.joblib').read_bytes()).hexdigest()
+PROVENANCE_PATH = ARTIFACTS/'runtime.json'
 PROVENANCE = json.loads(PROVENANCE_PATH.read_text(encoding='utf-8')) if PROVENANCE_PATH.exists() else {'origin':'local','job_status':'not_run'}
 AZURE_VERIFIED = (PROVENANCE.get('origin') == 'azure_ml' and PROVENANCE.get('job_status') == 'Completed' and PROVENANCE.get('model_sha256') == MODEL_SHA256)
 STORE = ReservationStore(os.environ.get('RESERVAIQ_DB_PATH', ROOT/'.runtime/reservaiq.sqlite3'))
+PUBLIC_ORIGIN = os.environ.get('RESERVAIQ_PUBLIC_ORIGIN', '').rstrip('/')
+if PUBLIC_ORIGIN:
+    u = urlparse(PUBLIC_ORIGIN)
+    if u.scheme != 'https' or not u.hostname or u.username or u.password or u.query or u.fragment or u.path:
+        raise ValueError('RESERVAIQ_PUBLIC_ORIGIN debe ser un origen HTTPS sin ruta.')
+if os.environ.get('RESERVAIQ_STORAGE') == 'azure_blob':
+    from cloud_storage import BlobReservationStore, AzureBlobTransport
+    STORE = BlobReservationStore(AzureBlobTransport(os.environ['RESERVAIQ_STORAGE_URL'],
+                                 os.environ['RESERVAIQ_STORAGE_CONTAINER']))
 
 
 def public_summary():
-    summary = json.loads((ROOT/'artifacts/summary.json').read_text(encoding='utf-8'))
+    summary = json.loads((ARTIFACTS/'summary.json').read_text(encoding='utf-8'))
     summary['azure_verified'] = AZURE_VERIFIED
     summary['deployment'] = {**PROVENANCE, 'model_sha256': MODEL_SHA256, 'verified': AZURE_VERIFIED}
+    summary['application'] = {'storage': STORE.kind, 'cloud': STORE.kind == 'azure_blob'}
     return summary
 
 
@@ -75,18 +86,22 @@ class Handler(BaseHTTPRequestHandler):
                       '/api/sample.csv': ('ejemplos-csv/reservas-listas.csv', 'text/csv')}
             if route in static:
                 path, mime = static[route]
+                if route == '/arquitectura.svg' and STORE.kind == 'azure_blob':
+                    path = 'docs/figuras/arquitectura-azure-web.svg'
                 return self.respond(200, (ROOT/path).read_bytes(), mime+'; charset=utf-8')
             if route == '/api/summary':
                 return self.respond(200, public_summary())
             if route == '/api/health':
+                if STORE.kind == 'azure_blob':
+                    STORE.check()
                 return self.respond(200, {'status': 'ok', 'model': BUNDLE['name'], 'azure_verified': AZURE_VERIFIED,
-                                          'model_sha256': MODEL_SHA256, 'storage': 'local_sqlite'})
+                                          'model_sha256': MODEL_SHA256, 'storage': STORE.kind})
             if route == '/api/reservations':
                 records = STORE.list()
-                return self.respond(200, {'reservations': records, 'count': len(records), 'storage': 'local'})
+                return self.respond(200, {'reservations': records, 'count': len(records), 'storage': STORE.kind})
             self.respond(404, {'error': 'Recurso no encontrado'})
         except (OSError, sqlite3.Error):
-            self.respond(503, {'error': 'No se pudieron leer los archivos o las reservas. Revisa los permisos de la carpeta del proyecto y vuelve a intentar.'})
+            self.respond(503, {'error': 'No se pudieron consultar las reservas. Vuelve a intentar en un momento; tus datos anteriores se conservan.'})
         except (ValueError, TypeError, KeyError):
             self.respond(500, {'error': 'No se pudieron leer los datos guardados. Conserva tus archivos y revisa que la copia del proyecto esté completa.'})
 
@@ -97,7 +112,8 @@ class Handler(BaseHTTPRequestHandler):
         if route not in routes:
             return self.respond(404, {'error': 'Ruta no encontrada'})
         origin = self.headers.get('Origin')
-        if origin and origin not in [f'http://127.0.0.1:{self.server.server_port}', f'http://localhost:{self.server.server_port}']:
+        allowed_origins = [PUBLIC_ORIGIN] if PUBLIC_ORIGIN else [f'http://127.0.0.1:{self.server.server_port}', f'http://localhost:{self.server.server_port}']
+        if (origin and origin not in allowed_origins) or self.headers.get('Sec-Fetch-Site') == 'cross-site':
             return self.respond(403, {'error': 'Origen no permitido'})
         try:
             length = int(self.headers.get('Content-Length', '0'))
@@ -136,7 +152,7 @@ class Handler(BaseHTTPRequestHandler):
         except (ValueError, TypeError, KeyError) as error:
             self.respond(400, {'error': str(error)})
         except (OSError, sqlite3.Error):
-            self.respond(503, {'error': 'No se pudo guardar. Comprueba el espacio y los permisos de la carpeta del proyecto. Tus reservas anteriores se conservan.'})
+            self.respond(503, {'error': 'No se pudo confirmar el guardado. Conserva este intento y vuelve a probar. Tus reservas anteriores se mantienen.'})
 
     def log_message(self, format, *args):
         pass

@@ -245,8 +245,9 @@
         <div class="sidebottom">
           <p>
             <span class="statusdot"></span
-            ><strong>Demo local · modelo real</strong><br />Hotel Brisa del
-            Valle<br />Cliente ficticio · Cali
+            ><strong data-cloud-copy="Demo web · modelo real"
+              >Demo local · modelo real</strong
+            ><br />Hotel Brisa del Valle<br />Cliente ficticio · Cali
           </p>
           <p>Juan · Natalia · Miguel Ángel<br />Microproyecto 3 / UAO</p>
         </div>
@@ -271,7 +272,9 @@
                     >Sabe cuáles revisar primero.</span
                   >
                 </h1>
-                <p>
+                <p
+                  data-cloud-copy="Elige las fechas de una estancia, guarda una reserva de prueba y recibe una señal que te ayuda a decidir si conviene revisarla. Tu equipo puede consultar la misma lista desde este enlace."
+                >
                   Elige las fechas de una estancia, guarda la reserva y recibe
                   una señal que te ayuda a decidir si conviene revisarla. Todo
                   queda organizado en tu computador.
@@ -279,7 +282,10 @@
                 <button class="primary" data-go="lab">
                   Elegir fechas y crear una reserva →
                 </button>
-                <p class="note">
+                <p
+                  class="note"
+                  data-cloud-copy="Demo académica compartida: usa únicamente reservas ficticias y referencias sin datos personales. Las personas con este enlace pueden ver y editar la lista. No confirma habitaciones ni modifica reservas de un hotel."
+                >
                   Analiza y guarda una copia local de tus reservas. El modelo
                   ayuda a priorizar la revisión; no confirma habitaciones ni
                   modifica reservas en un hotel.
@@ -349,7 +355,9 @@
               <div>
                 <span class="stepnum">2</span>
                 <h2>Revisa y guarda</h2>
-                <p>
+                <p
+                  data-cloud-copy="Recibe una sugerencia de revisión y conserva el resultado en Azure."
+                >
                   Recibe una sugerencia de revisión y conserva el resultado en
                   este computador.
                 </p>
@@ -730,7 +738,10 @@
                         Solo analizar
                       </button>
                     </div>
-                    <p class="note">
+                    <p
+                      class="note"
+                      data-cloud-copy="Guardar conserva una reserva de prueba en la lista compartida. No confirma una habitación ni contacta al huésped."
+                    >
                       Guardar crea una copia local. No confirma una habitación
                       ni contacta al huésped.
                     </p>
@@ -774,7 +785,11 @@
                     Tu resumen se irá completando aquí.
                   </p>
                   <div class="itinerary-facts" id="itinerary-facts"></div>
-                  <p class="note" id="itinerary-context">
+                  <p
+                    class="note"
+                    id="itinerary-context"
+                    data-cloud-copy="Usa datos ficticios. Guardado compartido en Azure."
+                  >
                     Sin datos personales. Guardado en este computador.
                   </p>
                 </div>
@@ -878,9 +893,16 @@
           </section>
           <section class="view" id="saved" hidden>
             <div class="sectiontitle">
-              <p class="eyebrow">Tus datos · guardado local</p>
+              <p
+                class="eyebrow"
+                data-cloud-copy="Reservas de prueba · lista compartida"
+              >
+                Tus datos · guardado local
+              </p>
               <h1>Mis reservas</h1>
-              <p>
+              <p
+                data-cloud-copy="Las reservas de prueba se conservan en Azure al recargar o reiniciar la aplicación. Todos los que abran este enlace usan la misma lista. Pulsa Actualizar lista para ver los cambios de tus compañeros y descarga una copia antes del cierre del proyecto."
+              >
                 Las reservas se conservan al recargar la página o reiniciar la
                 aplicación. Cada computador tiene su propia copia; no se
                 sincronizan entre compañeros.
@@ -1039,7 +1061,10 @@
                   Pulsa <b>Analizar y guardar</b>. El servidor calcula el índice
                   y guarda los datos y el resultado juntos.
                 </p>
-                <p class="expect">
+                <p
+                  class="expect"
+                  data-cloud-copy="Comprueba: índice aproximado 39,8/100, Priorizar revisión, un código RI-… y Guardada en Azure. El umbral del modelo es 17/100."
+                >
                   <b>Comprueba:</b> índice aproximado 39,8/100, “Priorizar
                   revisión”, un código RI-… y “Guardada en este computador”. El
                   umbral del modelo es 17/100.
@@ -1109,7 +1134,10 @@
             <div class="grid2">
               <div class="panel">
                 <h2>Comprueba que todo está conectado</h2>
-                <p class="muted">
+                <p
+                  class="muted"
+                  data-cloud-copy="Esta comprobación consulta la aplicación web, las evidencias del modelo y el almacenamiento privado de Azure. No vuelve a ejecutar el entrenamiento."
+                >
                   Esta comprobación consulta el servidor, las evidencias del
                   modelo y el acceso al guardado local. No ejecuta entrenamiento
                   ni consume recursos de Azure.
@@ -1132,7 +1160,9 @@
                   <li>
                     <b>Nueva reserva:</b> analizar, guardar e importar un CSV.
                   </li>
-                  <li>
+                  <li
+                    data-cloud-copy="Mis reservas: recuperar y organizar la lista compartida de reservas de prueba."
+                  >
                     <b>Mis reservas:</b> recuperar y organizar tu copia local.
                   </li>
                   <li>
@@ -1148,18 +1178,24 @@
             </div>
             <details class="panel help">
               <summary>Si algo no funciona</summary>
-              <p>
+              <p
+                data-cloud-copy="No conecta: espera unos segundos y recarga. El plan gratuito puede tardar al iniciarse o alcanzar su cuota diaria. El equipo puede revisar el estado en App Service; las reservas siguen en el almacenamiento."
+              >
                 <b>No conecta:</b> mantén abierta la terminal donde iniciaste
                 ReservaIQ y entra a http://127.0.0.1:8765. Al cerrarla, la
                 página deja de responder, pero las reservas guardadas
                 permanecen.
               </p>
-              <p>
+              <p
+                data-cloud-copy="La página muestra un error: comprueba la conexión y vuelve a cargar. La instalación de dependencias se realiza en Azure durante el despliegue; no necesitas instalar Python para abrir este enlace."
+              >
                 <b>Falta joblib u otra librería:</b> inicia con el lanzador de
                 tu sistema o instala requirements.txt usando el mismo Python que
                 ejecuta app.py.
               </p>
-              <p>
+              <p
+                data-cloud-copy="No ves cambios de un compañero: entra a Mis reservas y pulsa Actualizar lista. Todos deben usar el mismo enlace web; las copias locales siguen siendo independientes."
+              >
                 <b>No ves las reservas de un compañero:</b> cada computador
                 guarda su propia base. El repositorio contiene el código y
                 ejemplos, no sus reservas.
@@ -1354,7 +1390,9 @@
               <article class="panel rubric-card">
                 <span class="rubric-weight">25 % · Diseño</span>
                 <h3>Componentes y flujo trazables</h3>
-                <p>
+                <p
+                  data-cloud-copy="El diagrama conecta los datos, las tres etapas de Azure ML, el registro del modelo, la aplicación web y el almacenamiento privado de reservas de prueba."
+                >
                   El diagrama conecta datos, preparación, entrenamiento,
                   evaluación, registro y demo local. SQLite conserva las copias
                   de reservas.
@@ -1480,7 +1518,10 @@
                     margin: 12px 0;
                   "
               /></a>
-              <p class="note">
+              <p
+                class="note"
+                data-cloud-copy="Las flechas muestran datos y artefactos. El pipeline contiene tres etapas; el registro y la publicación web son pasos posteriores. App Service ejecuta el modelo verificado. Las reservas de prueba se guardan como una copia SQLite en Blob privado mediante la identidad de la aplicación; no se incorporan al entrenamiento ni alteran sus métricas."
+              >
                 Las flechas muestran datos y artefactos. El pipeline contiene
                 tres etapas; registro y descarga son pasos posteriores. La demo
                 usa el modelo verificado y las métricas descargadas, sin
@@ -1506,18 +1547,25 @@
                   reservada; produce métricas y predicciones. No vuelve a
                   entrenar.
                 </li>
-                <li>
+                <li
+                  data-cloud-copy="Registro y publicación: se versiona el modelo y se comprueban su huella y sus resultados antes de incluirlo en la aplicación de Azure App Service."
+                >
                   <b>Registro y descarga:</b> se versiona el modelo y se
                   verifican su huella y sus resultados antes de usar la copia
                   local.
                 </li>
-                <li>
+                <li
+                  data-cloud-copy="Uso web: calendario o CSV → validación → inferencia → guardado opcional en Blob privado → revisión humana. Mis reservas consulta esa copia compartida."
+                >
                   <b>Uso local:</b> calendario o CSV → validación → inferencia →
                   guardado opcional en SQLite → revisión humana. Mis reservas
                   consulta esa base.
                 </li>
               </ol>
-              <p class="note">
+              <p
+                class="note"
+                data-cloud-copy="MICROPROYECTO3 conserva datos, componentes, trabajo y modelo en Azure ML. El clúster usa 0–1 nodos y vuelve a cero tras el entrenamiento. La demo usa App Service F1; las primeras aperturas pueden tardar. Disponibilidad prevista hasta el 5 de octubre de 2026, sujeta al límite total autorizado de US$3."
+              >
                 Workspace organiza trabajos y versiones; el clúster CPU ejecuta
                 las tres etapas con 0–1 nodos. El entrenamiento de Azure es
                 histórico y su grupo temporal fue cerrado. La demo funciona con

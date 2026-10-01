@@ -12,3 +12,5 @@ azure/evidence-private/
 *.sqlite3-wal
 *.sqlite3-shm
 node_modules/
+cloud-artifacts/
+deploy.zip

@@ -410,7 +410,7 @@ async function calculate(persist) {
       dirty = false;
       $("reference").value = activeRecord.reference;
       showResult(activeRecord.result, activeRecord.inputs);
-      $("save-state").textContent = "Guardada en este computador";
+      $("save-state").textContent = savedLocation();
       $("save-state").className = "pill verified";
       $("save-feedback").textContent =
         `Guardada · ${activeRecord.id}. Puedes recuperarla en Mis reservas, incluso después de reiniciar la aplicación.`;
@@ -426,7 +426,7 @@ async function calculate(persist) {
       $("save-state").textContent = activeRecord
         ? dirty
           ? "Cambios sin guardar"
-          : "Guardada en este computador"
+          : savedLocation()
         : "Analizada · sin guardar";
     }
   } catch (e) {
@@ -640,7 +640,7 @@ async function openSaved(id) {
     $("reference").value = r.reference;
     $("case-truth").textContent =
       `Copia guardada · ${r.id} · ${sourceLabels[r.source]} · resultado real desconocido`;
-    $("save-state").textContent = "Guardada en este computador";
+    $("save-state").textContent = savedLocation();
     $("save-state").className = "pill verified";
     $("calculate").textContent = "Guardar cambios";
     $("calculate").disabled = true;
@@ -771,7 +771,7 @@ $("batch-save").onclick = async () => {
       request_id: batchId,
     });
     $("batch-result").textContent =
-      `${data.count} reservas guardadas en este computador. Ya puedes abrirlas en Mis reservas. Volver a importar el archivo creará un lote nuevo.`;
+      `${data.count} reservas ${isCloud() ? "guardadas en Azure" : "guardadas en este computador"}. Ya puedes abrirlas en Mis reservas. Volver a importar el archivo creará un lote nuevo.`;
     complete = true;
   } catch (e) {
     $("batch-result").textContent = e.message;
@@ -788,7 +788,10 @@ $("health-check").onclick = async () => {
   const checks = [
     ["Servidor y modelo", "/api/health"],
     ["Evidencias del entrenamiento", "/api/summary"],
-    ["Acceso al guardado local", "/api/reservations"],
+    [
+      isCloud() ? "Acceso al guardado en Azure" : "Acceso al guardado local",
+      "/api/reservations",
+    ],
   ];
   const results = await Promise.all(
     checks.map(async ([label, url]) => {
@@ -810,6 +813,13 @@ fetch("/api/summary")
   })
   .then((s) => {
     summary = s;
+    if (isCloud())
+      document.querySelectorAll("[data-cloud-copy]").forEach((node) => {
+        node.textContent = node.dataset.cloudCopy;
+      });
+    if (isCloud())
+      document.querySelector('img[src="/arquitectura.svg"]').alt =
+        "Datos y pipeline de Azure ML, registro del modelo, aplicación web en App Service y reservas de prueba en Blob privado. Evaluación recibe la prueba por separado. Las reservas nuevas no entrenan el modelo.";
     let m = s.test;
     $("lift").textContent = m.top20.lift.toFixed(2) + "×";
     $("top-precision").textContent = pct(m.top20.precision);
@@ -882,7 +892,9 @@ fetch("/api/summary")
   })
   .catch((e) => {
     $("loading").textContent =
-      "No pudimos conectar con el modelo. Mantén abierta la terminal de ReservaIQ y vuelve a cargar esta página. Detalle: " +
+      (location.protocol === "https:"
+        ? "La aplicación está iniciando o no pudo responder. Espera unos segundos y vuelve a cargar. Detalle: "
+        : "No pudimos conectar con el modelo. Mantén abierta la terminal de ReservaIQ y vuelve a cargar esta página. Detalle: ") +
       e.message;
   });
 
@@ -899,7 +911,7 @@ function renderDeployment(s) {
     ["Datos y particiones auditados", "VERIFICADO"],
     ["Modelo utilizado por la aplicación", verified ? "AZURE ML" : "LOCAL"],
     ["Estado del trabajo", d.job_status || "Sin ejecución"],
-    ["Estado de cómputo", d.compute_state || "No creado"],
+    ["Cómputo al verificar la ejecución", d.compute_state || "No creado"],
   ]
     .map(([a, b]) => `<li>${a}<span>${b}</span></li>`)
     .join("");
@@ -913,4 +925,11 @@ function renderDeployment(s) {
   $("cost-detail").textContent =
     d.cost_note ||
     "Estimación basada en horas de cómputo y recursos asociados. No se presenta como factura consolidada.";
+}
+
+function isCloud() {
+  return summary?.application?.cloud === true;
+}
+function savedLocation() {
+  return isCloud() ? "Guardada en Azure" : "Guardada en este computador";
 }
