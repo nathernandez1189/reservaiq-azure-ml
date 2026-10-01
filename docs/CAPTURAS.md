@@ -1,6 +1,6 @@
 # Capturas comentadas de ReservaIQ
 
-Las cuatro imágenes fueron aportadas por el equipo. Se conservan completas, con su resolución original y sin modificar los estados mostrados. La fecha y hora proceden del nombre de cada archivo; las huellas SHA256 y dimensiones se registran en [el manifiesto](capturas/manifest.json).
+Las cuatro imágenes fueron aportadas por el equipo y documentan la interfaz anterior de cuatro vistas, sin persistencia de nuevas reservas. La versión actual tiene seis vistas y guardado local; consulta la [guía de uso](GUIA-DE-USO.md). Se conservan completas, con su resolución original y sin modificar los estados mostrados. La fecha y hora proceden del nombre de cada archivo; las huellas SHA256 y dimensiones se registran en [el manifiesto](capturas/manifest.json).
 
 **Alcance de esta evidencia:** las capturas muestran una sesión identificada como modelo local. La cuarta vista indica “Sin ejecución” y “Por verificar”. Esos estados no acreditan la ejecución de Azure. El pipeline completado, el modelo descargado y el cierre de recursos están documentados en [Evidencias](EVIDENCIAS.md#evidencia-de-azure). No se ha determinado la causa de la diferencia entre la sesión capturada y los registros.
 

@@ -72,3 +72,16 @@ Se añadió una prueba que reproduce ese fallo en el controlador GET con CP1252 
 Git conserva los CSV sin conversión de finales de línea para mantener sus huellas al clonar en Windows. GitHub Actions ejecuta las comprobaciones en Ubuntu y Windows con el modo UTF-8 implícito desactivado; el estado de cada ejecución se consulta en la acción del commit correspondiente. La comprobación automática no sustituye la confirmación de apertura en el computador del compañero.
 
 Si aparece `ModuleNotFoundError: No module named 'joblib'`, deben instalarse todas las dependencias de `requirements.txt` con el mismo intérprete que inicia la aplicación. El README utiliza directamente el Python de `.venv` en PowerShell para evitar mezclarlo con otra instalación. El modo `-X utf8` es una alternativa temporal documentada por [Python para Windows](https://docs.python.org/3.12/using/windows.html#utf-8-mode).
+
+## Guardado local y recorrido guiado — 30/09/2026
+
+Se añadieron persistencia SQLite y las vistas Mis reservas y Cómo probarlo. Las diez variables, el modelo, los datos históricos y sus métricas permanecen sin cambios.
+
+- **24 pruebas Python aprobadas:** modelo, contrato, API HTTP real y guardado, incluido un lote de 500 reservas. Se verificó recuperar el mismo registro después de reiniciar el servidor; reintentos concurrentes sin duplicados; edición por revisión; archivo y restauración; reversión completa de lotes inválidos. Las huellas de los artefactos históricos se comparan antes y después de las operaciones de persistencia.
+- **14 pruebas JavaScript aprobadas:** siete del lector CSV y siete de componentes de interfaz con una API simulada en jsdom. Comprueban la separación entre analizar y guardar, edición, representación segura de referencias, filtros y restauración, vista previa del lote y errores de conexión. No representan una sesión en un navegador real.
+- Comandos: `python -X utf8=0 -m unittest discover -s tests -v` y `npm test`. GitHub Actions ejecuta ambas suites en Windows y Ubuntu; los resultados remotos se consultan en [Actions](https://github.com/nathernandez1189/reservaiq-azure-ml/actions/workflows/verificacion.yml).
+- Informe PDF de **13 páginas** renderizado y revisado. El diagrama incorpora la base local; las capturas originales se conservan identificadas como correspondientes a la interfaz anterior.
+
+**Límite de esta revisión:** el navegador rechazó el acceso porque no pudo verificar su política administrativa. No se eludió ese control. Por ello la nueva navegación, la apariencia responsive y las descargas en un navegador real quedan pendientes de comprobación visual. Las pruebas del servidor y los componentes sí se ejecutaron. La [prueba guiada](PRUEBAS-GUIADAS.md) permite realizar el recorrido al abrir la aplicación.
+
+No se inició cómputo ni se crearon recursos en Azure. Las bases locales y datos de prueba no forman parte del repositorio ni del ZIP de entrega.

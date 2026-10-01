@@ -144,3 +144,9 @@ En la prueba histórica, revisar el 20 % prioritario concentra **1,93 veces la f
 Distribución objetivo: Juan, diapositivas 1–4, cinco minutos; Natalia, 5–8, cinco minutos; Miguel Ángel, 9–12, cinco minutos incluida la demostración. El tiempo final debe comprobarse con un ensayo.
 
 Para revisar el respaldo de cada afirmación: [informe técnico](Informe-tecnico.md), [arquitectura](ARQUITECTURA.md), [modelo](MODELO.md), [costos](COSTOS.md) y [evidencias](EVIDENCIAS.md).
+
+## Actualización de la aplicación: guardado local
+
+La demo se amplió después de preparar estas doce diapositivas. En la aplicación actual, Centro de decisiones se llama Inicio y Explorar una reserva se llama Nueva reserva. Se añadieron Mis reservas y Cómo probarlo. Analizar y guardar conserva una copia local; Solo analizar no la guarda. La importación CSV ahora muestra una vista previa antes de guardar o descargar.
+
+El diagrama del repositorio y el informe incluyen SQLite local. Esta actualización del código no edita automáticamente el diseño alojado en Canva. El método de modelado, los resultados y la evidencia histórica de Azure conservan sus valores. La [guía de uso actual](GUIA-DE-USO.md) y las [pruebas guiadas](PRUEBAS-GUIADAS.md) describen las nuevas acciones.

@@ -9,6 +9,7 @@ Microproyecto 3 · Computación en la Nube · Prof. Oscar Mondragón.
 - [Informe técnico en PDF](ReservaIQ-Informe-tecnico.pdf): análisis, alternativas, diseño, implementación, resultados, costos, fuentes y capturas comentadas.
 - [Presentación ampliada en Canva](https://www.canva.com/d/20i32hmvo0gpTiA): 12 diapositivas para una exposición de 15 minutos.
 - [Contenido de las 12 diapositivas](PRESENTACION.md): copia de consulta dentro del repositorio, disponible sin una cuenta de Canva.
+- [Guía de uso y guardado local](GUIA-DE-USO.md) y [pruebas guiadas](PRUEBAS-GUIADAS.md).
 - [Instrucciones para ejecutar la demo](../README.md#ejecutar-la-aplicación) y [CSV listo para cargar](../ejemplos-csv/reservas-listas.csv).
 - [Evidencias de ejecución y verificación](EVIDENCIAS.md), [capturas comentadas](CAPTURAS.md) y [ejecución en Azure](../azure/evidence/run.json).
 
@@ -22,7 +23,7 @@ Esta tabla se basa en las instrucciones del microproyecto facilitadas por el cur
 | --- | ---: | --- | --- | --- |
 | Análisis de requerimientos | 20 % | Empresa, necesidades, requerimientos y restricciones; alternativas; pipeline, componentes o algoritmos; costos aproximados | Hotel ficticio Brisa del Valle; priorización por capacidad K; contrato de diez variables; comparación de reglas, clasificación y AutoML; evaluación de cuatro candidatos; escenario de US$1 con supuestos | [Informe](Informe-tecnico.md), [modelo y datos](MODELO.md), [costos](COSTOS.md); diapositivas 2–4 y 6–8 |
 | Propuesta de diseño | 25 % | Diagrama, relación y flujo entre componentes, descripción | Datos y Blob, componentes de preparación/entrenamiento/evaluación en Azure ML, modelo versionado y aplicación local con revisión humana | [Arquitectura](ARQUITECTURA.md), [pipeline](../azure/pipeline.yml), [preparación](../azure/prepare.yml), [entrenamiento](../azure/train.yml) y [evaluación](../azure/evaluate.yml); diapositivas 5 y 8 |
-| Implementación del demo | 30 % | Implementar la solución diseñada | Inferencia individual, priorización por K, procesamiento de CSV y exportación; modelo entrenado en Azure, descargado y comprobado; demostración de aciertos y errores | [Aplicación e instrucciones](../README.md), [modelo](../artifacts/), [pruebas](../tests/), [registros Azure](../azure/evidence/); diapositivas 9–11 |
+| Implementación del demo | 30 % | Implementar la solución diseñada | Inferencia individual, guardado local, estados de revisión, priorización por K, procesamiento de CSV y exportación; modelo entrenado en Azure, descargado y comprobado; demostración de aciertos y errores | [Aplicación e instrucciones](../README.md), [modelo](../artifacts/), [pruebas](../tests/), [registros Azure](../azure/evidence/); diapositivas 9–11 |
 | Presentación de la solución | 25 % | Exposición de 15 minutos que explique requerimientos, diseño y demo | Presentación ampliada de 12 diapositivas; distribución objetivo de cinco minutos por integrante, con demo dentro del último bloque | [Canva](https://www.canva.com/d/20i32hmvo0gpTiA) y [contenido consultable](PRESENTACION.md) |
 
 El material cubre los temas solicitados. El criterio de presentación también requiere realizar la exposición y mostrar la demo: disponer del archivo no demuestra que esa actividad ya se haya cumplido.

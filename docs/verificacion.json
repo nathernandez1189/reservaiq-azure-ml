@@ -17,5 +17,22 @@
   "visual_review_count": 4,
   "visual_review_scope": "Capturas aportadas con indicador de modelo local; evidencia Azure independiente.",
   "live_browser_e2e_verified": false,
-  "visual_review_checked_at_utc": "2026-09-25T02:13:36.782601+00:00"
+  "visual_review_checked_at_utc": "2026-09-25T02:13:36.782601+00:00",
+  "application_verification": {
+    "checked_at_utc": "2026-10-01T00:07:39.217997+00:00",
+    "python_tests_passed": 24,
+    "javascript_tests_passed": 14,
+    "total_tests_passed": 38,
+    "storage": "SQLite local; temporary databases for verification",
+    "maximum_batch_saved": 500,
+    "server_restart_persistence_verified": true,
+    "historical_artifacts_unchanged": true,
+    "python_command": "python -X utf8=0 -m unittest discover -s tests -v",
+    "javascript_command": "npm test",
+    "client_component_tests": "jsdom with a simulated API; not browser E2E",
+    "live_browser_e2e_verified": false,
+    "live_browser_blocker": "Browser policy check unavailable; no access granted",
+    "updated_report_pages_reviewed": 13,
+    "cloud_resources_started": false
+  }
 }

@@ -40,9 +40,9 @@ La lista por capacidad ordena los índices y selecciona exactamente K. Es distin
 
 ## 6. Aplicación e inferencia
 
-`app.py` carga un artefacto confiable y expone las rutas individuales y por lote. El servidor escucha en 127.0.0.1. Rechaza peticiones de otro origen, entradas mayores de 150 KB, lotes vacíos y más de 500 filas. `core.py` aplica el mismo contrato en ambos casos.
+`app.py` carga un artefacto confiable y expone las rutas individuales y por lote. El servidor escucha en 127.0.0.1. Rechaza peticiones de otro origen, solicitudes JSON mayores de 1 MB (el lector de CSV limita el archivo a 150 KB), lotes vacíos y más de 500 filas. `core.py` aplica el mismo contrato en ambos casos.
 
-`web/` implementa cuatro vistas: decisiones, reserva individual, evidencia y arquitectura. Los datos editados invalidan el resultado anterior. La lista completa y las predicciones se exportan en JSON; el CSV de `ejemplos-csv/` permite reproducir el lote sin preparar datos adicionales.
+`web/` implementa seis vistas: Inicio, Nueva reserva, Mis reservas, Cómo probarlo, Resultados del modelo y Diseño y Azure. Los datos editados invalidan el resultado anterior. La lista completa y las predicciones se exportan en JSON; el CSV de `ejemplos-csv/` permite reproducir el lote sin preparar datos adicionales.
 
 ## 7. Pipeline en Azure ML
 
@@ -77,6 +77,16 @@ La entrega distingue cuatro hechos: configuración validada, trabajo completado,
 
 Se descargaron las diez salidas de las tres etapas. Los marcadores de carpeta de Blob Storage son objetos vacíos y se excluyeron de la descarga de archivos. Se registró `reservaiq:1` directamente desde la salida `trained/model.joblib` del pipeline y se descargó esa versión por separado. Ambas copias tienen la misma huella.
 
-Después se recalcularon las 7.990 predicciones con el modelo descargado y sus métricas. Las decisiones y puntuaciones del modelo elegido coinciden con el experimento local, con diferencia máxima 0,0. Se actualizaron los artefactos de la aplicación y su procedencia. Las catorce pruebas incluyen comprobar todas esas predicciones y enlazar trabajo, etapas, versión y SHA256.
+Después se recalcularon las 7.990 predicciones con el modelo descargado y sus métricas. Las decisiones y puntuaciones del modelo elegido coinciden con el experimento local, con diferencia máxima 0,0. Se actualizaron los artefactos de la aplicación y su procedencia. Las pruebas incluyen comprobar todas esas predicciones y enlazar trabajo, etapas, versión y SHA256.
 
 La figura del README se genera desde `artifacts/summary.json` mediante `scripts/generar_grafica.py`, con ReportLab 4.4.9. La gráfica, el informe y la interfaz utilizan los resultados guardados del experimento. El estado de revisión visual se documenta aparte en `EVIDENCIAS.md`.
+
+## 11. Guardado y recorrido de uso
+
+La primera demo calculaba índices y exportaba archivos, pero no registraba nuevas reservas. Se añadió SQLite para conservar copias locales sin agregar infraestructura de pago. Guardar y analizar quedaron como acciones explícitas y distintas; cada registro lleva referencia, diez variables, resultado, versión, fechas y estado de revisión.
+
+Las escrituras por lote son atómicas y las claves de reintento evitan duplicaciones cuando se repite una solicitud. Las revisiones previenen que dos ventanas sobrescriban cambios sin aviso. Los ejemplos y las métricas históricas permanecen separados: los tests comparan las huellas de todos los artefactos antes y después de guardar.
+
+La interfaz añade ayudas por campo, estado visible del guardado, total de noches, resultados con siguiente paso, búsqueda y estados de revisión. La importación de CSV muestra primero una vista previa y permite guardar o descargar después. La prueba guiada conecta cada acción con un resultado esperado; la guía de uso explica persistencia, límites y recuperación.
+
+El lanzador `iniciar.py` prepara un entorno Python 3.12 y utiliza el mismo intérprete para instalar dependencias y ejecutar la aplicación. Así se evita el fallo de dependencia ausente cuando un integrante usa un Python distinto del entorno instalado. El modelo y la ejecución histórica de Azure no se modificaron.

@@ -15,6 +15,7 @@ El diagrama representa **transferencias de datos y artefactos**. Las flechas no 
 | Entrenamiento → registro | Artefacto `model.joblib` | Se registra como `reservaiq:1` desde la salida `trained` del trabajo completado |
 | Evaluación → aplicación local | Métricas, ejemplos y predicciones descargadas | Salida `report`; `summary.json` alimenta las vistas de evidencia y la cohorte ilustrativa |
 | Registro → aplicación local | Copia verificada del modelo | Descarga, SHA-256 y `artifacts/runtime.json` vinculan el modelo con su procedencia |
+| Aplicación ↔ SQLite local | Copia de la reserva, resultado, referencia, estado y revisión | `storage.py` conserva los registros en `.runtime/reservaiq.sqlite3`; no modifica los artefactos históricos |
 | Aplicación → personal del hotel | Índice, lista de tamaño K y exportaciones | La decisión sobre cualquier intervención sigue siendo humana |
 
 El diagrama destaca el uso de la prueba en evaluación. La carpeta `splits` también contiene validación y el manifiesto: evaluación lee validación para la importancia por permutación, sin reajustar el modelo ni el umbral. Las salidas se conservan en Blob; las flechas entre etapas resumen esos archivos almacenados y no son conexiones de red directas entre servicios.
@@ -32,6 +33,7 @@ El diagrama destaca el uso de la prueba en evaluación. La carpeta `splits` tamb
 | Registro en Azure ML | Identificar el modelo como `reservaiq:1` | Conservar la procedencia y la versión |
 | Descarga y verificación local | Comprobar archivo, huella y resultados | Vincular la demo con la ejecución documentada |
 | Servidor e interfaz local | Validar entradas, inferir, analizar lotes, mostrar prioridad y exportar | Demostrar el uso sin endpoint permanente |
+| SQLite local | Persistir copias, edición y estados de revisión mediante transacciones | Recuperar registros después de reiniciar, sin un servicio de nube adicional |
 | Personal del hotel | Interpretar resultados y decidir las acciones | Mantener supervisión humana |
 
 ## Secuencia de ejecución y operación
@@ -40,14 +42,14 @@ El diagrama destaca el uso de la prueba en evaluación. La carpeta `splits` tamb
 2. Esperar las tres etapas completadas y revisar las salidas. **Evaluación no crea ni reentrena el modelo.**
 3. Registrar el archivo de la salida de entrenamiento; descargar modelo y resultados. Estos pasos están documentados por separado en [`azure/README.md`](../azure/README.md).
 4. Verificar SHA-256, procedencia y coincidencia de las 7.990 predicciones antes de utilizar el modelo en la aplicación.
-5. Iniciar la aplicación local: una reserva o CSV pasa por validación de entradas y por el modelo para obtener índices. La lista por K de la demo utiliza una cohorte histórica ilustrativa de 150 reservas ya puntuadas; no es un sistema de reservas en producción.
+5. Iniciar la aplicación local: una reserva o CSV pasa por validación de entradas y por el modelo para obtener índices. Inicio conserva una cohorte histórica ilustrativa de 150 reservas ya puntuadas. Mis reservas ordena las copias locales y marca las K pendientes de mayor índice; no es un sistema hotelero de producción.
 6. Conservar las evidencias y cerrar los recursos temporales de Azure después de verificar las descargas. La demo continúa con sus archivos locales.
 
 La ejecución y el registro en Azure son históricos: el grupo temporal fue eliminado tras conservar los resultados. No se necesita recrearlo para evaluar la demo. La aplicación no está publicada como servicio de producción.
 
 ## Fuente y reproducción del diagrama
 
-El informe y las figuras del repositorio utilizan la misma definición vectorial en `scripts/diagrama_arquitectura.py`. La variante oscura mantiene la misma topología para su uso en Canva. Para regenerar las figuras y el informe:
+El informe y las figuras del repositorio utilizan la misma definición vectorial en `scripts/diagrama_arquitectura.py`. La variante oscura mantiene la misma topología para reutilizarla en diapositivas. La nueva base SQLite está reflejada en el repositorio y el informe; esta actualización no modifica automáticamente el diseño alojado en Canva. Para regenerar las figuras y el informe:
 
 ```bash
 python -m pip install -r requirements-docs.txt
@@ -56,3 +58,11 @@ python scripts/generar_informe.py
 ```
 
 El diagrama muestra los componentes pertinentes a los criterios del microproyecto; los recursos auxiliares y supuestos de consumo están descritos en [Costos](COSTOS.md). La imagen de ejecución, las dependencias, los datos y los artefactos se identifican en las [evidencias](EVIDENCIAS.md).
+
+## Guardado local y consistencia
+
+El servidor valida las diez variables y calcula el resultado antes de escribir. SQLite conserva entradas y resultado juntos, con identificador, fecha, huella del modelo y número de revisión. Cada solicitud nueva lleva una clave de reintento: repetirla devuelve el mismo registro. Un lote se confirma completo o se revierte completo.
+
+Editar exige la revisión que vio el usuario: si otra ventana cambió el registro, se devuelve un conflicto en lugar de sobrescribirlo. Archivar y restaurar son cambios reversibles de estado. La base no contiene etiquetas reales nuevas de cancelación y no alimenta el pipeline.
+
+El almacenamiento vive en el computador que ejecuta el servidor; no hay sincronización entre integrantes ni nueva ejecución de Azure. La biblioteca [sqlite3 de Python](https://docs.python.org/3.12/library/sqlite3.html) permite gestionar archivos SQLite sin un servidor de base de datos separado. Se utilizan parámetros SQL y transacciones para las escrituras.

@@ -1,6 +1,6 @@
 # CSV listo para cargar
 
-Selecciona reservas-listas.csv en «Explorar una reserva → Analizar un lote de reservas» y pulsa «Analizar lote». Contiene ocho reservas históricas de la partición de prueba, sin resultado de cancelación ni identificadores personales. Mantén la extensión .csv y el separador coma.
+Selecciona reservas-listas.csv en «Nueva reserva → Importar un archivo CSV» y pulsa «Analizar lote». Contiene ocho reservas históricas de la partición de prueba, sin resultado de cancelación ni identificadores personales. Revisa la vista previa y pulsa «Guardar lote» si quieres conservarlas. Mantén la extensión .csv; se admiten comas o punto y coma.
 
 | Variable | Significado | Valores admitidos |
 | --- | --- | --- |

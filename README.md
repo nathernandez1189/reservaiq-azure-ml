@@ -25,7 +25,7 @@ En 7.990 reservas históricas reservadas para prueba, seleccionar el 20 % de may
 | Capacidad del 20 % | 44,1 % | 38,5 % | Priorizar un número limitado de revisiones |
 | Umbral 0,17 elegido en validación | 35,1 % | 80,1 % | Analizar el intercambio entre detección y falsas alertas |
 
-Los datos provienen de dos hoteles de Portugal en 2015–2017. El cliente colombiano es ficticio. La aplicación no envía mensajes, modifica reservas ni efectúa cobros.
+Los datos provienen de dos hoteles de Portugal en 2015–2017. El cliente colombiano es ficticio. La aplicación permite guardar y editar copias locales; no envía mensajes, modifica reservas en un hotel ni efectúa cobros.
 
 ![Concentración de cancelaciones en el 20 % de mayor índice](docs/figuras/priorizacion.svg)
 
@@ -43,22 +43,21 @@ La demo se ejecuta localmente con el modelo incluido. No requiere una suscripci�
 
 ## Ejecutar la aplicación
 
-Requisitos: Python 3.12. Desde la carpeta del repositorio, en macOS o Linux:
+Requisito: **Python 3.12**. Si ya clonaste el repositorio, detén el servidor y actualiza con `git pull --ff-only`.
 
-```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python app.py --port 8765
-```
-
-En Windows PowerShell:
+En Windows abre `iniciar-windows.cmd` o ejecuta:
 
 ```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe app.py --port 8765
+py -3.12 iniciar.py
 ```
+
+En macOS/Linux:
+
+```bash
+python3.12 iniciar.py
+```
+
+El lanzador crea `.venv` e instala las dependencias que falten antes de abrir la aplicación con ese mismo entorno. Esto evita instalar `joblib` en un Python y ejecutar la demo con otro. En macOS también puedes abrir `iniciar-mac.command`.
 
 Abre **http://127.0.0.1:8765**. La instalación necesita Internet una vez; después la aplicación usa el modelo incluido. Para detener el servidor, pulsa Ctrl+C. Si el puerto está ocupado, identifica primero el proceso o utiliza `--port 8766`. No abras `web/index.html` directamente: la interfaz necesita la API.
 
@@ -66,26 +65,42 @@ Si una copia anterior en Windows muestra `Failed to fetch` y la terminal registr
 
 Carga únicamente el modelo incluido o artefactos propios de confianza. `joblib` no debe utilizarse para cargar modelos recibidos de fuentes desconocidas. El servidor está limitado a localhost y no es un servicio público de producción.
 
-## Analizar un CSV
+## Primer uso: analizar, guardar y recuperar
 
-1. Abre **Explorar una reserva → Analizar un lote de reservas**.
+1. Entra en **Nueva reserva**, completa los diez datos o pulsa **Cargar ejemplo de prueba**.
+2. Pulsa **Analizar y guardar** y espera el mensaje de confirmación con código `RI-…`.
+3. Abre **Mis reservas**: puedes recuperar, editar, marcar revisada, archivar o restaurar cada registro.
+4. En **Cómo probarlo** tienes seis pasos guiados y resultados esperados para comprobar el funcionamiento.
+
+**Solo analizar** no guarda. Los registros confirmados permanecen después de cerrar la aplicación, en `.runtime/reservaiq.sqlite3`. Cada computador tiene su propia base: no se comparte por GitHub ni se sincroniza con Azure. No elimines `.runtime` si quieres conservar tus reservas.
+
+[Guía completa de uso y solución de errores](docs/GUIA-DE-USO.md) · [Pruebas guiadas](docs/PRUEBAS-GUIADAS.md).
+
+## Analizar y guardar un CSV
+
+1. Abre **Nueva reserva → Importar un archivo CSV**.
 2. Selecciona [`ejemplos-csv/reservas-listas.csv`](ejemplos-csv/reservas-listas.csv).
-3. Pulsa **Analizar lote**. Se procesan ocho reservas y se descarga el resultado en JSON.
+3. Pulsa **Analizar lote**: se procesan ocho reservas y aparece una vista previa.
+4. Pulsa **Guardar lote** para conservarlas o **Descargar resultados** para obtener el JSON.
 
-El archivo ya contiene las diez columnas exactas, separadas por comas. El [diccionario del CSV](ejemplos-csv/LEEME.md) detalla los valores admitidos. Máximo 500 registros y 150 KB; anticipación de 0–60 días y estancia de 1–30 noches.
+El [diccionario del CSV](ejemplos-csv/LEEME.md) detalla las diez columnas y sus valores. Se admiten comas o punto y coma. Máximo 500 registros y 150 KB; anticipación de 0–60 días y estancia de 1–30 noches. Un lote con errores no se guarda parcialmente. Reimportar y analizar el mismo archivo inicia un lote nuevo.
 
 ## Qué incluye la aplicación
 
-- **Centro de decisiones:** capacidad K, lista ordenada, resultados históricos y exportación.
-- **Explorar una reserva:** inferencia real, escenarios editables, ejemplos de acierto y error, carga por lote.
-- **Evidencia del modelo:** particiones, comparación de candidatos, matriz de confusión e importancia global.
-- **Diseño y Azure:** componentes, procedencia verificable del modelo y costos documentados.
+- **Inicio:** recorrido de uso, métricas históricas y ejemplo de lista por capacidad K.
+- **Nueva reserva:** campos explicados, inferencia real, guardado, edición y carga de CSV con vista previa.
+- **Mis reservas:** búsqueda, filtros, prioridades, estados de revisión y copia descargable.
+- **Cómo probarlo:** pasos, resultados esperados, comprobación de conexión y soluciones a errores comunes.
+- **Resultados del modelo:** particiones, candidatos, matriz de confusión e importancia global.
+- **Diseño y Azure:** arquitectura, procedencia verificable del modelo y costos documentados.
+
+Las reservas nuevas no cambian el entrenamiento ni las métricas históricas. El almacenamiento local no requiere recursos de Azure.
 
 ## Informe técnico
 
 [Leer el informe técnico en PDF](docs/ReservaIQ-Informe-tecnico.pdf). Incluye requerimientos, alternativas, diseño, implementación, resultados, costos, fuentes y un anexo con las cuatro capturas comentadas.
 
-[Ver las capturas de las cuatro vistas](docs/CAPTURAS.md). Las imágenes aportadas muestran una sesión con indicador de modelo local; la ejecución de Azure se acredita mediante los registros enlazados arriba.
+[Ver las capturas de las cuatro vistas](docs/CAPTURAS.md). Las imágenes originales corresponden a la interfaz anterior, con cuatro vistas y sin guardado local. Muestran una sesión con indicador de modelo local; la ejecución de Azure se acredita mediante los registros enlazados arriba.
 
 ## Diseño y reproducibilidad
 
@@ -98,9 +113,12 @@ La evaluación recibe datos de prueba y el modelo entrenado; genera métricas y 
 Para reproducir el experimento completo y comprobar el proyecto:
 
 ```bash
-python pipeline.py all
 python -m unittest discover -s tests -v
+# Opcional: reproducir el entrenamiento completo
+python pipeline.py all
 ```
+
+Para las pruebas de desarrollo de la interfaz, ejecuta `npm ci` y `npm test` con Node.js 20 o posterior. Node no es necesario para usar la demo.
 
 El reentrenamiento reemplaza los artefactos de `artifacts/`; conserva una copia de los resultados que quieras comparar. Las versiones se fijan en `requirements.txt`. El flujo equivalente se define en `azure/pipeline.yml`. Las pruebas de GitHub Actions verifican integridad, particiones, métricas, inferencia y contrato del CSV.
 

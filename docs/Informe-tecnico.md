@@ -26,7 +26,7 @@ Los datos son reales e históricos, de dos hoteles de Portugal. No pertenecen al
 
 ## Estado de la evidencia
 
-Pipeline de Azure ML completado: mango_wire_5f09pdg4m3. Modelo descargado, registrado y verificado en la aplicación; catorce pruebas correctas. Las evidencias conservan estados, huellas y comparación entre ejecuciones. El anexo incluye cuatro capturas aportadas por el equipo de una sesión con indicador de modelo local; la ejecución Azure se acredita mediante registros independientes.
+Pipeline de Azure ML completado: mango_wire_5f09pdg4m3. Modelo descargado, registrado y verificado en la aplicación; pruebas de datos, API y guardado local verificadas. Las evidencias conservan estados, huellas y comparación entre ejecuciones. El anexo incluye cuatro capturas aportadas por el equipo de una sesión con indicador de modelo local; la ejecución Azure se acredita mediante registros independientes.
 
 
 ---
@@ -44,6 +44,7 @@ La necesidad se traduce en una decisión verificable: qué reservas revisar prim
 | R5 | Comparar y explicar | Candidatos, métricas, matriz y ejemplos de aciertos y errores. |
 | R6 | Ejecutar en Azure ML | Tres componentes, trabajo Completed y artefactos verificables. |
 | R7 | Limitar consumo | CPU, mínimo cero, máximo un nodo y límites de duración. |
+| R8 | Conservar reservas locales | Guardar, recuperar y editar después de reiniciar; archivo reversible. |
 
 ## Alternativas consideradas
 
@@ -135,11 +136,13 @@ Se fijan versiones de Python y librerías. selection.json documenta candidatos, 
 | Entrenamiento | Comparar candidatos y fijar modelo y umbral. |
 | Evaluación | Calcular métricas sobre prueba y exportar evidencia. |
 | Registro y descarga | Versionar el modelo y comprobar su huella. |
-| Aplicación local | Inferencia individual, lotes y lista por capacidad. |
+| Aplicación local y SQLite | Inferencia, lotes, prioridad y guardado local de reservas. |
 
 Preparación entrega entrenamiento y validación al componente de entrenamiento, y prueba al de evaluación. Entrenamiento produce el modelo; evaluación recibe ese modelo y produce métricas y predicciones. Las flechas representan datos y artefactos. [3]
 
 Registro y descarga son pasos posteriores al trabajo Completed, no componentes adicionales del pipeline. El registro pertenece a Azure; la aplicación usa los archivos descargados en el entorno local.
+
+Las copias nuevas se guardan en SQLite con resultado y estado de revisión. No se sincronizan entre equipos, no se envían a Azure y no cambian el entrenamiento ni las métricas históricas.
 
 El modelo descargado evita mantener un endpoint de inferencia. artifacts/runtime.json vincula la aplicación con trabajo, estado Completed, versión y SHA256. La etiqueta de origen Azure exige coincidencia con el archivo cargado. El estado histórico del trabajo y el cierre de recursos se documentan por separado.
 
@@ -177,36 +180,65 @@ La importancia por permutación utiliza 2.500 reservas de validación y tres rep
 
 # 6. Implementación y comprobación
 
-El servidor local carga el modelo y escucha en 127.0.0.1. La interfaz tiene cuatro vistas: decisiones, reserva individual, evidencia y diseño. El usuario puede variar K, editar una reserva, consultar casos de error, cargar un lote y exportar los resultados.
+El servidor local carga el modelo y escucha en 127.0.0.1. Las seis vistas son Inicio, Nueva reserva, Mis reservas, Cómo probarlo, Resultados del modelo y Diseño y Azure. El recorrido distingue analizar, guardar y revisar.
 
 | Ruta | Comportamiento |
 | --- | --- |
 | GET /api/summary | Métricas, ejemplos y procedencia comprobada. |
 | GET /api/health | Estado del servicio, modelo y huella. |
 | GET /api/sample.csv | Ocho reservas listas para cargar. |
-| POST /api/predict | Una reserva validada y resultado real del modelo. |
-| POST /api/batch | Entre 1 y 500 reservas; mismo contrato. |
+| POST /api/predict | Una reserva validada: inferencia sin guardar. |
+| POST /api/batch | Entre 1 y 500 reservas: inferencia sin guardar. |
+| GET /api/reservations | Consultar las copias locales guardadas. |
+| POST /api/reservations | Analizar y guardar una nueva reserva. |
+| POST /api/reservations/batch | Guardar todo el lote o ninguna fila. |
+| POST /api/reservations/update | Editar y recalcular con control de revisión. |
+| POST /api/reservations/status | Revisar, archivar o restaurar. |
 
-## Ejecutar y cargar un lote
+## Iniciar y usar
 
 ```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python app.py --port 8765
+py -3.12 iniciar.py  # Windows
+python3.12 iniciar.py  # macOS / Linux
 ```
 
-Abrir http://127.0.0.1:8765. En la vista de reserva, seleccionar ejemplos-csv/reservas-listas.csv y analizar. El archivo contiene exactamente las diez columnas; no incluye el desenlace. El resultado se descarga como JSON.
+Ejecutar únicamente la línea del sistema utilizado. El lanzador prepara el entorno y las dependencias. Abrir http://127.0.0.1:8765 y mantener la terminal abierta. En Nueva reserva, completar los diez campos y pulsar Analizar y guardar. Mis reservas permite recuperarla.
 
-## Catorce pruebas verificadas
+El CSV se selecciona en Nueva reserva, se analiza y muestra una vista previa. Guardar lote conserva todas las filas; Descargar resultados genera el JSON. La guía y las pruebas paso a paso están en docs/GUIA-DE-USO.md y docs/PRUEBAS-GUIADAS.md.
 
-Integridad del archivo; separación temporal; madurez de etiquetas; exclusión de desenlaces; selección en validación; concordancia de métricas; modelo guardado; rechazo de valores inválidos; categorías; API individual y por lote; solicitudes incorrectas; origen de peticiones; procedencia y CSV. Las comprobaciones están agrupadas en catorce métodos de prueba.
+
+---
+
+# 6.1. Persistencia y uso verificable
+
+## Qué se guarda y por qué
+
+SQLite conserva una copia local con referencia, diez variables, resultado, huella del modelo, fechas y estado de revisión. El archivo vive en .runtime/reservaiq.sqlite3 y no se publica en GitHub. Permite recuperar las reservas después de cerrar la página o reiniciar el servidor, sin agregar infraestructura de nube.
+
+Solo analizar no modifica la base. Guardar cambios mantiene el identificador y exige la revisión vigente para evitar sobrescrituras entre ventanas. Los reintentos de una misma creación devuelven el mismo registro. Un fallo en un lote revierte todas sus escrituras. Archivar es reversible.
+
+## Prueba guiada dentro de la aplicación
+
+1. Cargar el ejemplo histórico 12301: 28 días de anticipación y 3 noches.
+2. Analizar y guardar: índice aproximado 39,8 y código local.
+3. Abrir Mis reservas y recargar: el registro permanece.
+4. Cambiar a 7 días, analizar y guardar cambios: índice aproximado 13,6.
+5. Marcar revisada, archivar y restaurar.
+6. Analizar el CSV de 8 filas y guardarlo; comprobar errores con 61 días o 0 noches.
+
+## Comprobaciones automáticas y límites
+
+Las pruebas Python cubren integridad del dataset y modelo, separación temporal, métricas, las 7.990 predicciones, UTF-8 en Windows, API y persistencia real. Incluyen reiniciar el servidor, reintentos concurrentes sin duplicación, conflictos de edición y transacciones de lote. Las pruebas JavaScript comprueban el lector de CSV y los estados del cliente con un servidor simulado.
 
 ```bash
 python -m unittest discover -s tests -v
+npm ci
+npm test
 ```
 
-GitHub Actions ejecuta estas pruebas para cada cambio. Incluyen comparar las 7.990 predicciones de prueba con el modelo cargado. El anexo documenta la revisión de cuatro capturas aportadas. Las pruebas del servidor y las imágenes no certifican por sí solas la navegación y descarga de archivos de extremo a extremo.
+GitHub Actions ejecuta las comprobaciones en Windows y Linux. La evidencia fechada registra el resultado de cada suite. Las capturas del anexo documentan la interfaz anterior de cuatro vistas: no acreditan visualmente el guardado nuevo. La navegación de la nueva versión en un navegador real queda pendiente de comprobación cuando el control de acceso permita abrirlo.
+
+Las reservas nuevas no tienen una etiqueta real de cancelación conocida. No alimentan el entrenamiento ni alteran las métricas. Cada computador conserva su propia base. Para trasladarla, se cierra la aplicación y se copia .runtime. La exportación JSON permite consultar los datos, pero esta versión no incluye importación de esas copias.
 
 
 ---
@@ -251,7 +283,7 @@ El experimento demuestra una priorización histórica con capacidad limitada y e
 
 Captura aportada por el equipo · 2026-09-24 21:09:25 (según el nombre del archivo).
 
-La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
+Captura de la interfaz anterior de cuatro vistas, sin guardado local. La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
 
 ![Centro de decisiones](capturas/01-centro-decisiones.png)
 
@@ -270,7 +302,7 @@ La sesión capturada muestra un indicador de modelo local. La ejecución en Azur
 
 Captura aportada por el equipo · 2026-09-24 21:09:30 (según el nombre del archivo).
 
-La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
+Captura de la interfaz anterior de cuatro vistas, sin guardado local. La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
 
 ![Reserva individual y análisis por lote](capturas/02-reserva-y-lote.png)
 
@@ -289,7 +321,7 @@ La sesión capturada muestra un indicador de modelo local. La ejecución en Azur
 
 Captura aportada por el equipo · 2026-09-24 21:09:35 (según el nombre del archivo).
 
-La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
+Captura de la interfaz anterior de cuatro vistas, sin guardado local. La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
 
 ![Evaluación y evidencia del modelo](capturas/03-evidencia-modelo.png)
 
@@ -308,7 +340,7 @@ La sesión capturada muestra un indicador de modelo local. La ejecución en Azur
 
 Captura aportada por el equipo · 2026-09-24 21:09:41 (según el nombre del archivo).
 
-La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
+Captura de la interfaz anterior de cuatro vistas, sin guardado local. La sesión capturada muestra un indicador de modelo local. La ejecución en Azure se acredita por separado en los registros de evidencia.
 
 ![Arquitectura, equipo y estado mostrado](capturas/04-diseno-azure.png)
 

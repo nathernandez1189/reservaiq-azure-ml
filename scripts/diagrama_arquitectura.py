@@ -6,7 +6,7 @@ from reportlab.graphics import renderSVG, renderPDF
 from reportlab.lib.colors import HexColor
 from reportlab.pdfbase.pdfmetrics import stringWidth
 
-WIDTH, HEIGHT = 1800, 780
+WIDTH, HEIGHT = 1800, 950
 
 
 def architecture(dark=False):
@@ -59,7 +59,7 @@ def architecture(dark=False):
     text(50,40,'AZURE  /  Workspace, almacenamiento y registro del modelo',31,True)
     rect(340,95,1010,350,p['pipeline'],p['border'],16)
     text(370,111,'PIPELINE CLI v2  ·  3 componentes  ·  CPU de 0 a 1 nodo',27,True)
-    rect(20,525,1760,183,p['local'],p['border'],20)
+    rect(20,525,1760,360,p['local'],p['border'],20)
     text(50,542,'ENTORNO LOCAL',27,True)
     text(50,590,'Modelo descargado.',25,color=p['muted'])
     text(50,625,'Sin endpoint permanente.',25,color=p['muted'])
@@ -70,8 +70,13 @@ def architecture(dark=False):
     node(1050,320,260,105,'3. Evaluación',['Prueba reservada'])
     node(1420,170,310,133,'Registro del modelo',['reservaiq:1','Paso posterior al job'])
     node(1090,560,640,126,'Aplicación de reservas',['Formulario / CSV → API → índice del modelo',
-                                               'Lotes, lista K y exportación de resultados'])
+                                               'Análisis, guardado, lista K y exportación'])
     node(455,587,410,95,'Personal del hotel',['Revisión y decisión final'])
+    node(1090,735,640,126,'SQLite local',['Datos, índice, referencia y estado de revisión', '.runtime/reservaiq.sqlite3'])
+    arrow([(1380,686),(1380,735)])
+    arrow([(1420,735),(1420,686)],'guardar / recuperar',(1590,693),p['local'])
+    text(50,766,'Cada computador conserva su propia base.',25,color=p['muted'])
+    text(50,802,'No se reentrena ni se envían reservas a Azure.',25,color=p['muted'])
 
     arrow([(290,222),(380,222)])
     arrow([(640,222),(710,222)],'train + validación',(675,142))
@@ -81,7 +86,7 @@ def architecture(dark=False):
     arrow([(1180,425),(1180,560)],'métricas + predicciones',(1160,491),p['bg'])
     arrow([(1575,303),(1575,560)],'descarga + SHA-256',(1575,491),p['bg'])
     arrow([(1090,628),(865,628)],'lista K / resultados',(978,595),p['local'])
-    text(35,731,'Flechas: datos y artefactos. Registro y descarga son pasos posteriores; no son componentes del pipeline.',25,color=p['muted'])
+    text(35,911,'Flechas: datos y artefactos. Registro y descarga son pasos posteriores; no son componentes del pipeline.',25,color=p['muted'])
     return d
 
 
