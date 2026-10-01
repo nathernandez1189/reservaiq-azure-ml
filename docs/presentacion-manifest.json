@@ -1,0 +1,42 @@
+{
+  "design_id": "DAHWnsZXHPY",
+  "title": "ReservaIQ · Microproyecto 3 · Requerimientos, diseño y demo",
+  "view_url": "https://www.canva.com/d/SSpd7oOuCy3qz1A",
+  "pages": 13,
+  "main_slides": 12,
+  "status": "committed",
+  "verification": "Content read back from Canva after user-approved commit",
+  "diagram_asset_id": "MAHWvGZuD0c",
+  "diagram_sha256": "d092ef89f0e1d59117d07ebba6fc6dff0e9a083ae6e93ed7d6a6ba4e85acff33",
+  "content_readback_sha256": "41e2a419ded4f83d98f915c965c7e27ae2827602e2096a04558ee0d86d86f988",
+  "coverage": {
+    "analysis_20_percent": [
+      1,
+      2,
+      3,
+      4,
+      7,
+      8
+    ],
+    "design_25_percent": [
+      5,
+      6,
+      9
+    ],
+    "demo_30_percent": [
+      9,
+      10,
+      11
+    ],
+    "presentation_25_percent": {
+      "planned_minutes": 15,
+      "rehearsal_timed": false
+    }
+  },
+  "limits": [
+    "Presenter notes were not editable through the available integration; the current team script is maintained separately.",
+    "Anonymous Canva access was not verified.",
+    "New-execution actual cost is pending in the dated Cost Management query."
+  ],
+  "verified_at_utc": "2026-10-01T04:08:32.382230+00:00"
+}

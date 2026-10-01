@@ -4,9 +4,11 @@
 
 Juan Ospina Tenorio · Natalia Hernández Piedrahita · Miguel Ángel Diuza
 
-[Ver el diseño en Canva](https://www.canva.com/d/0RDtRC3Au5C7vEJ)
+[Ver el diseño en Canva](https://www.canva.com/d/SSpd7oOuCy3qz1A)
 
-Contenido documental actualizado el 1 de octubre de 2026 UTC. La actualización correspondiente de Canva está preparada y pendiente de aprobación para guardar. Esta copia permite consultar el contenido sin Canva y no reproduce su maquetación. Las notas internas antiguas de Canva no se actualizan mediante esta integración.
+Contenido documental actualizado el 1 de octubre de 2026 UTC. La actualización de Canva fue aprobada, guardada y comprobada por lectura independiente del contenido. Esta copia permite consultar el contenido sin Canva y no reproduce su maquetación. Las notas internas antiguas de Canva no se actualizan mediante esta integración.
+
+[Registro de guardado y cobertura](presentacion-manifest.json).
 
 ## 1. Priorización de reservas hoteleras
 
