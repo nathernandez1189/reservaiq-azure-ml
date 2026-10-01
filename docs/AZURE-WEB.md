@@ -87,3 +87,7 @@ Referencias oficiales: [Python en App Service](https://learn.microsoft.com/en-us
 ## Comprobación de la publicación
 
 La verificación separa 67 pruebas locales (41 Python y 26 de interfaz/datos), comprobaciones reales por HTTPS y persistencia tras reiniciar App Service. Los resultados están en [web-verification.json](../azure/evidence/microproyecto3/web-verification.json). El [pipeline ejecutado](../azure/evidence/microproyecto3/pipeline.yml) referencia los activos registrados en este workspace; su nombre identifica una ejecución ya realizada y no debe reutilizarse para crear un trabajo distinto.
+
+## Costos registrados y captura de ejecución
+
+La consulta del 1 de octubre a las 03:20 UTC registró US$0,0620879781 antes de impuestos para el grupo original rg-reservaiq. MICROPROYECTO3 todavía no devolvió filas. [Desglose y respuestas fechadas](COSTOS.md). La [captura real del pipeline](CAPTURAS.md#captura-real-de-azure-ml) corresponde a esta nueva ejecución y conserva sus píxeles originales.

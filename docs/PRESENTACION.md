@@ -6,7 +6,7 @@ Juan Ospina Tenorio · Natalia Hernández Piedrahita · Miguel Ángel Diuza
 
 [Ver el diseño en Canva](https://www.canva.com/d/0RDtRC3Au5C7vEJ)
 
-Contenido actualizado el 30/09/2026 para las doce diapositivas principales y la página adicional de agradecimiento. La actualización nativa de Canva quedó guardada tras la aprobación del equipo y su contenido se verificó mediante la integración. Esta copia permite consultar el contenido sin Canva y no reproduce su maquetación.
+Contenido documental actualizado el 1 de octubre de 2026 UTC. La actualización correspondiente de Canva está preparada y pendiente de aprobación para guardar. Esta copia permite consultar el contenido sin Canva y no reproduce su maquetación. Las notas internas antiguas de Canva no se actualizan mediante esta integración.
 
 ## 1. Priorización de reservas hoteleras
 
@@ -19,12 +19,12 @@ Hotel Brisa del Valle es un cliente ficticio de Cali. Su equipo necesita decidir
 | Función | Comportamiento esperado |
 | --- | --- |
 | Capturar y analizar | Fechas o CSV y un índice de cancelación |
-| Guardar y recuperar | Código de reserva y persistencia local |
+| Guardar y recuperar | Código de reserva y persistencia compartida en la web |
 | Revisar y exportar | Lista de tamaño K y estados consultables |
 
 **Aceptación:** las fechas producen entradas válidas, guardar confirma un código y conserva el registro al reiniciar. Los contadores permiten consultar pendientes, revisadas y archivadas. K representa cuántas reservas puede revisar el equipo.
 
-**Restricciones y calidad:** diez variables, CSV de 1–500 filas, anticipación de 0–60 días y estancias de 1–30 noches. Validación en el servidor, modelo trazable y consumo acotado. La copia local no confirma una habitación.
+**Restricciones y calidad:** diez variables, CSV de 1–500 filas, anticipación de 0–60 días y estancias de 1–30 noches. Validación en el servidor, modelo trazable y consumo acotado. La demo pública admite solo datos ficticios y no confirma una habitación.
 
 ## 3. Alternativas y elección
 
@@ -50,15 +50,13 @@ Fuente: Antonio, Almeida y Nunes (2019), distribución TidyTuesday, CC BY 4.0. [
 
 ## 5. Arquitectura de la solución
 
-![Arquitectura: tres etapas del pipeline, registro en Azure y aplicación local](figuras/arquitectura.svg)
+![Arquitectura de MICROPROYECTO3](figuras/arquitectura-azure-web.svg)
 
-Azure ML coordina tres componentes CLI v2: preparación, entrenamiento y evaluación. Preparación proporciona entrenamiento y validación al entrenador, y prueba reservada al evaluador. El entrenador produce el modelo elegido; evaluación recibe ese modelo y produce métricas y predicciones.
+Azure ML prepara los datos, compara modelos y evalúa la prueba reservada. Después del trabajo Completed se registra el modelo seleccionado y se verifica su copia. Evaluación usa también validación para importancia de variables, sin reentrenar.
 
-El registro del modelo sigue perteneciendo a Azure y es un paso posterior al trabajo Completed. Descargamos el modelo y los resultados, comprobamos SHA-256 y usamos esos archivos en la aplicación local. No se mantiene un endpoint de inferencia. La lista por capacidad y los resultados apoyan la revisión humana.
+App Service F1 publica interfaz y API, y carga el modelo descargado. Calendario o CSV pasan por validación e inferencia. Un contenedor Blob privado conserva una instantánea SQLite de las reservas compartidas. La identidad administrada limita el acceso al contenedor y un ETag impide sobrescribir cambios concurrentes.
 
-El calendario y la entrada CSV pasan por validación e inferencia. SQLite conserva fechas, entradas, índice, código y estado. La aplicación permite recuperarlos y presentar la lista de revisión al personal. **Azure conserva tres etapas. Calendario y SQLite amplían la aplicación local. Guardar no reentrena el modelo.**
-
-Las flechas describen datos y artefactos; el registro y la descarga no son componentes adicionales del pipeline. La carpeta de particiones incluye también validación para calcular importancia de variables durante la evaluación, sin volver a ajustar el modelo.
+**Guardar no reentrena el modelo ni modifica las métricas históricas.** La variante local sigue disponible y conserva su SQLite independiente.
 
 ## 6. Evaluación por tiempo
 
@@ -91,18 +89,16 @@ Elegimos Gradient Boosting por su mayor average precision en validación. La ven
 
 ## 8. Azure ejecutado y costo acotado
 
-**Preparación: Completed · Entrenamiento: Completed · Evaluación: Completed.**
+**Preparación, entrenamiento y evaluación: Completed.** Nueva ejecución `microproyecto3-reejecucion-20261001` en `MICROPROYECTO3`, región North Central US. Modelo registrado `reservaiq:1`. Las 7.990 predicciones y el SHA-256 coinciden con la ejecución original. App Service publica la demo y Blob conserva las reservas compartidas. El clúster tiene 0–1 nodos y quedó verificado en cero. Recursos conservados hasta el 5 de octubre inclusive, hora de Colombia.
 
-El pipeline completó preparación, entrenamiento y evaluación en North Central US. Registramos y descargamos `reservaiq:1`. Las 7.990 predicciones coinciden con la ejecución local. Se utilizó un clúster de 0–1 nodos y se eliminaron los recursos temporales después de conservar las salidas.
-
-| Concepto | USD |
+| Alcance | USD |
 | --- | ---: |
-| CPU: 1 hora × US$0,146 | 0,146 |
-| Auxiliares supuestos | 0,500 |
-| Margen | 0,354 |
-| **Total estimado** | **1,000** |
+| Consumo original del 25 de septiembre, antes de impuestos | 0,0620879781 |
+| Consumo de MICROPROYECTO3 | Sin filas todavía |
+| Conservación temporal, estimación | 2 |
+| Límite autorizado | 3 |
 
-Es un escenario aproximado, no la factura final. La consulta de costos del 25/09/2026 aún no mostraba cargos consolidados.
+Consulta de Cost Management: 01/10/2026, 03:20 UTC. La estimación no es factura. El valor original no corresponde a la nueva ejecución. [Desglose y evidencia](COSTOS.md).
 
 ## 9. Flujo de una reserva en la demo
 
@@ -113,7 +109,7 @@ Es un escenario aproximado, no la factura final. La consulta de costos del 25/09
 
 El calendario se puede ocultar sin perder las fechas. La aplicación calcula anticipación, mes y reparto de noches. **Solo analizar no crea un registro.**
 
-SQLite conserva fechas, entradas, resultado y estado en este computador. Guardar permite dar seguimiento, sin confirmar disponibilidad hotelera. Los CSV usan el mismo modelo y permiten revisar el lote antes de guardarlo.
+La web conserva fechas, entradas, resultado y estado en Blob privado con formato SQLite. Se verificó su conservación después de reiniciar App Service. Todos comparten los registros ficticios. Guardar permite dar seguimiento, sin confirmar disponibilidad hotelera. Los CSV usan el mismo modelo y permiten revisar el lote antes de guardarlo.
 
 [Flujo operativo detallado](figuras/flujo-reserva.svg) · [Guía de uso](GUIA-DE-USO.md).
 
@@ -132,14 +128,14 @@ El modelo detecta 1.467 de las 1.831 cancelaciones y omite 364. También genera 
 
 | Evidencia | Qué comprueba |
 | --- | --- |
-| 56 pruebas en cada sistema | 31 de Python + 25 de JavaScript en Windows y Ubuntu. Cubren datos, API, fechas, lotes, persistencia y controles de la interfaz |
+| 67 pruebas en cada sistema | 41 de Python + 26 de JavaScript en Windows y Ubuntu. Cubren datos, API, fechas, lotes, persistencia y controles de la interfaz |
 | 7.990 predicciones coincidentes | El modelo descargado reproduce los resultados guardados de las reservas de prueba |
-| SHA-256 del artefacto | La huella identifica el archivo utilizado; los registros conservan el trabajo completado y el cierre de recursos |
+| SHA-256 del artefacto | La huella identifica el archivo utilizado; los registros distinguen el trabajo original del nuevo trabajo completado |
 | Validación colombiana pendiente | Antes de operar en Colombia hay que validar con datos locales y medir el efecto real de las acciones |
 
-El guardado y el calendario cuentan con pruebas de componentes. Estas no sustituyen una revisión completa en navegador. Los datos históricos no garantizan desempeño en Colombia ni demuestran cancelaciones evitadas.
+Además se realizaron 31 comprobaciones HTTPS y nueve registros persistieron tras reiniciar App Service. Las pruebas de API y componentes no sustituyen una revisión completa en navegador. Los datos históricos no garantizan desempeño en Colombia ni demuestran cancelaciones evitadas.
 
-[Evidencia automática de la versión de aplicación 2b2ac95](https://github.com/nathernandez1189/reservaiq-azure-ml/actions/runs/36797755296) · [Alcance de las verificaciones](EVIDENCIAS.md).
+[Evidencia automática de la versión publicada](https://github.com/nathernandez1189/reservaiq-azure-ml/actions/runs/36809150020) · [Alcance de las verificaciones](EVIDENCIAS.md).
 
 ## 12. Priorización con revisión humana
 

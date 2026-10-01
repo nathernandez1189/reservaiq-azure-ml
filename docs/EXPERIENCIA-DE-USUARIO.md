@@ -2,7 +2,7 @@
 
 ## Necesidad y objetivo
 
-El usuario debe entender que ReservaIQ ayuda a priorizar revisiones y conservar copias locales de reservas. El recorrido principal debe permitir elegir una estancia, revisar los detalles y guardar sin calcular manualmente noches o anticipación.
+El usuario debe entender que ReservaIQ ayuda a priorizar revisiones y conservar reservas ficticias compartidas en la web, o copias independientes en modo local. El recorrido principal debe permitir elegir una estancia, revisar los detalles y guardar sin calcular manualmente noches o anticipación.
 
 Se tomó como referencia la [explicación de experiencia de usuario de IBM](https://www.ibm.com/es-es/think/topics/user-experience): la utilidad, facilidad de uso y percepción dependen de la interacción completa. Las decisiones siguientes son una aplicación al proyecto; no constituyen una certificación ni sustituyen observar a personas usando la demo.
 
@@ -17,7 +17,7 @@ Se tomó como referencia la [explicación de experiencia de usuario de IBM](http
 | Calendario grande después de elegir la estancia | Botón Mostrar/Ocultar y cierre al seleccionar salida | Las fechas y el resumen permanecen; ocultar no vuelve a analizar ni modifica registros |
 | No recordar lo elegido | Resumen de estancia durante el recorrido y revisión de todos los datos | Se muestran llegada, salida, noches y contexto |
 | Confundir analizar con guardar | Acciones y estados explícitos; confirmación con código y acceso a Mis reservas | Solo analizar no crea un registro; guardar confirma una escritura correcta |
-| Confundir copia local con compra | Texto al guardar y en Inicio | Se explica que no se consulta disponibilidad ni se confirma una habitación |
+| Confundir el registro de demo con compra | Texto al guardar y en Inicio | Se explica que no se consulta disponibilidad ni se confirma una habitación |
 | Usar un resultado desactualizado | Retirar el resultado al editar | Debe analizarse de nuevo antes de usar el índice |
 | Confundir datos nuevos y evidencia | Métricas históricas agrupadas aparte; ejemplos identificados | Guardar no modifica entrenamiento ni resultados históricos |
 | No entender un error | Validación junto a fechas y mensajes con una acción de recuperación | Fechas incompletas o fuera de alcance impiden continuar sin perder el resto |

@@ -1,5 +1,27 @@
 # Arquitectura y flujo de ReservaIQ
 
+## Arquitectura publicada en Azure el 1 de octubre de 2026 UTC
+
+![Arquitectura de MICROPROYECTO3 con App Service y almacenamiento privado](figuras/arquitectura-azure-web.svg)
+
+La nueva ejecución `microproyecto3-reejecucion-20261001` completó prepare, train y evaluate en `ml-microproyecto3`. El modelo `reservaiq:1` se descargó y verificó antes del despliegue. [Evidencia](../azure/evidence/microproyecto3/execution.json).
+
+| Componente | Función y flujo |
+| --- | --- |
+| Datos y componentes Azure ML | Conservan versiones de dataset, código y entorno. Preparación fija las particiones; entrenamiento elige modelo y umbral; evaluación mide la prueba reservada sin reentrenar. |
+| Registro del modelo | Versiona el modelo seleccionado después de completar y revisar la evaluación. La aplicación carga una copia con SHA-256 verificado. |
+| Azure App Service F1 | Publica la interfaz y la API HTTPS. Recibe calendario o CSV, valida e infiere con el modelo en memoria. No hay endpoint de inferencia de Azure ML permanente. |
+| Blob privado `reservaiq-demo` | Conserva `reservas.sqlite3` como instantánea. La identidad administrada de la web accede solo a este contenedor. SQLite aplica la transacción y un ETag impide sobrescribir cambios concurrentes. |
+| Revisión humana | Mis reservas muestra los registros compartidos, filtros de estado y prioridades. Guardar no confirma habitaciones ni incorpora nuevos datos al entrenamiento. |
+
+La demo pública admite únicamente datos ficticios y no tiene autenticación por usuario. Todos consultan la misma base. Se verificaron 31 comprobaciones HTTPS y la conservación de nueve registros tras reiniciar App Service. Este esquema acotado de instantáneas sirve al prototipo académico; no sustituye una base de datos productiva para alta concurrencia.
+
+[Acceso y despliegue web](AZURE-WEB.md) · [Costos y conservación hasta el 5 de octubre](COSTOS.md).
+
+## Variante local y antecedentes
+
+El diagrama siguiente documenta la variante que sigue disponible en cada computador. Su SQLite es independiente del guardado compartido de la web. El cierre descrito corresponde únicamente a `rg-reservaiq`, eliminado el 25 de septiembre. `MICROPROYECTO3` permanece como nueva ejecución.
+
 ![Flujo de datos y artefactos: pipeline, registro en Azure y aplicación local](figuras/arquitectura.svg)
 
 El diagrama representa **transferencias de datos y artefactos**. Las flechas no indican que todo se ejecute automáticamente ni constituyen un orden cronológico completo. El pipeline contiene exactamente tres componentes: preparación, entrenamiento y evaluación. El registro y la descarga se realizaron después de comprobar el trabajo terminado.
@@ -45,11 +67,11 @@ El diagrama destaca el uso de la prueba en evaluación. La carpeta `splits` tamb
 5. Iniciar la aplicación local: una reserva o CSV pasa por validación de entradas y por el modelo para obtener índices. Inicio conserva una cohorte histórica ilustrativa de 150 reservas ya puntuadas. Mis reservas ordena las copias locales y marca las K pendientes de mayor índice; no es un sistema hotelero de producción.
 6. Conservar las evidencias y cerrar los recursos temporales de Azure después de verificar las descargas. La demo continúa con sus archivos locales.
 
-La ejecución y el registro en Azure son históricos: el grupo temporal fue eliminado tras conservar los resultados. No se necesita recrearlo para evaluar la demo. La aplicación no está publicada como servicio de producción.
+La ejecución original es histórica porque se eliminó rg-reservaiq. La nueva ejecución y la demo web académica permanecen en MICROPROYECTO3 hasta el plazo autorizado. La variante local puede utilizarse sin servicios de nube y no comparte registros con la web.
 
 ## Fuente y reproducción del diagrama
 
-El informe y las figuras del repositorio utilizan la misma definición vectorial en `scripts/diagrama_arquitectura.py`. La variante oscura mantiene la misma topología para reutilizarla en diapositivas. El flujo operativo amplía el detalle de la aplicación local y conserva los tres componentes del pipeline. Para regenerar las figuras y el informe:
+Las figuras de la variante local utilizan la misma definición vectorial en `scripts/diagrama_arquitectura.py`. La variante oscura mantiene la misma topología para reutilizarla en diapositivas. El flujo operativo amplía el detalle de la aplicación local y conserva los tres componentes del pipeline. Para regenerar las figuras y el informe:
 
 ```bash
 python -m pip install -r requirements-docs.txt

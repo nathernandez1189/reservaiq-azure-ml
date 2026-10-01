@@ -1,6 +1,17 @@
 # Capturas comentadas de ReservaIQ
 
-Las cuatro imágenes fueron aportadas por el equipo y documentan la interfaz anterior de cuatro vistas, sin persistencia de nuevas reservas. La versión actual tiene seis vistas y guardado local; consulta la [guía de uso](GUIA-DE-USO.md). Se conservan completas, con su resolución original y sin modificar los estados mostrados. La fecha y hora proceden del nombre de cada archivo; las huellas SHA256 y dimensiones se registran en [el manifiesto](capturas/manifest.json).
+## Captura real de Azure ML
+
+![MICROPROYECTO3 pipeline completado](capturas/05-azure-pipeline-microproyecto3.png)
+
+Aportada por el equipo el 30 de septiembre, 21:50 hora de Colombia (1 de octubre UTC). Muestra el trabajo de **MICROPROYECTO3** y las etapas prepare, train y evaluate completadas, con salidas trained y report. Es una nueva ejecución, distinta de mango_wire_5f09pdg4m3. Archivo completo, sin modificar píxeles, con [huella y dimensiones](capturas/azure-manifest.json). No prueba por sí sola costos ni persistencia de reservas.
+
+La imagen no muestra ID de suscripción, ID de tenant, correo ni nombre completo de usuario. Si se toma otra captura, recortar u ocultar esos datos antes de publicarla. El nombre de la institución y el del proyecto son visibles en esta imagen.
+
+## Capturas históricas de la variante local
+
+
+Las cuatro imágenes fueron aportadas por el equipo y documentan la interfaz anterior de cuatro vistas, sin persistencia de nuevas reservas. La versión actual tiene seis vistas, guardado compartido en Azure y una variante con guardado local; consulta la [guía de uso](GUIA-DE-USO.md). Se conservan completas, con su resolución original y sin modificar los estados mostrados. La fecha y hora proceden del nombre de cada archivo; las huellas SHA256 y dimensiones se registran en [el manifiesto](capturas/manifest.json).
 
 **Alcance de esta evidencia:** las capturas muestran una sesión identificada como modelo local. La cuarta vista indica “Sin ejecución” y “Por verificar”. Esos estados no acreditan la ejecución de Azure. El pipeline completado, el modelo descargado y el cierre de recursos están documentados en [Evidencias](EVIDENCIAS.md#evidencia-de-azure). No se ha determinado la causa de la diferencia entre la sesión capturada y los registros.
 
@@ -52,4 +63,4 @@ Fecha del nombre original: **2026-09-24 21:09:41**. Resolución: 2940 × 1912 p�
 
 **Por qué importa.** El diseño conecta preparación, comparación y evaluación con la descarga del modelo y la aplicación local. Los estados de esta captura no acreditan la ejecución en Azure ni corresponden al estado documentado en los registros de la entrega.
 
-**Qué verifica y qué limita.** La ejecución Completed, el registro reservaiq:1 y el cierre de recursos se acreditan por separado en azure/evidence/. El escenario de costo es US$1 estimado; la factura no estaba consolidada en la consulta guardada. No se ha determinado la causa de la diferencia con la pantalla.
+**Qué verifica y qué limita.** La ejecución Completed, el registro reservaiq:1 y el cierre de recursos se acreditan por separado en azure/evidence/. En esa fecha se usó un escenario de US$1 y la consulta guardada no tenía cargos. El costo original se actualizó después: consulte [COSTOS.md](COSTOS.md). No se ha determinado la causa de la diferencia con la pantalla.

@@ -1,0 +1,57 @@
+{
+  "resource_group": "rg-reservaiq",
+  "checked_at_utc": "2026-10-01T03:20:03.922881+00:00",
+  "period": {
+    "from": "2026-09-24T00:00:00Z",
+    "to": "2026-10-01T23:59:59Z"
+  },
+  "columns": [
+    {
+      "name": "PreTaxCost",
+      "type": "Number"
+    },
+    {
+      "name": "ServiceName",
+      "type": "String"
+    },
+    {
+      "name": "Currency",
+      "type": "String"
+    }
+  ],
+  "rows": [
+    [
+      0.0032918494,
+      "Container Registry",
+      "USD"
+    ],
+    [
+      8.4e-05,
+      "Key Vault",
+      "USD"
+    ],
+    [
+      0.0,
+      "Load Balancer",
+      "USD"
+    ],
+    [
+      0.00857385,
+      "Storage",
+      "USD"
+    ],
+    [
+      0.046234112,
+      "Virtual Machines",
+      "USD"
+    ],
+    [
+      0.00390416666666667,
+      "Virtual Network",
+      "USD"
+    ]
+  ],
+  "status": "reported_actual_cost",
+  "total": 0.06208797806666667,
+  "tax_basis": "PreTaxCost"
+}

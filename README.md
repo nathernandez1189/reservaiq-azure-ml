@@ -33,7 +33,7 @@ En 7.990 reservas históricas reservadas para prueba, seleccionar el 20 % de may
 | Capacidad del 20 % | 44,1 % | 38,5 % | Priorizar un número limitado de revisiones |
 | Umbral 0,17 elegido en validación | 35,1 % | 80,1 % | Analizar el intercambio entre detección y falsas alertas |
 
-Los datos provienen de dos hoteles de Portugal en 2015–2017. El cliente colombiano es ficticio. La aplicación permite guardar y editar copias locales; no envía mensajes, modifica reservas en un hotel ni efectúa cobros.
+Los datos provienen de dos hoteles de Portugal en 2015–2017. El cliente colombiano es ficticio. La aplicación permite guardar y editar reservas ficticias compartidas en la web, con una alternativa local independiente; no envía mensajes, modifica reservas en un hotel ni efectúa cobros.
 
 ![Concentración de cancelaciones en el 20 % de mayor índice](docs/figuras/priorizacion.svg)
 
@@ -47,7 +47,7 @@ El pipeline **`mango_wire_5f09pdg4m3`** completó preparación, entrenamiento y 
 
 El grupo original `rg-reservaiq` fue eliminado tras verificar y descargar las salidas; es independiente del nuevo grupo `MICROPROYECTO3`. El registro `reservaiq:1` se conserva como evidencia histórica y el archivo está incluido en el repositorio.
 
-La demo se ejecuta localmente con el modelo incluido. No requiere una suscripción de Azure para evaluarla. Reentrenar en la nube crea recursos facturables; el escenario estimado es **US$1** y se documenta en [Costos](docs/COSTOS.md).
+La demo se ejecuta localmente con el modelo incluido. No requiere una suscripción de Azure para evaluarla. El escenario original de US$1 correspondía al cierre inmediato. La conservación de MICROPROYECTO3 se estima en US$2, con límite US$3. El consumo original registrado es US$0,0620879781 antes de impuestos y el nuevo todavía no tiene filas al corte publicado. [Costos y evidencia fechada](docs/COSTOS.md).
 
 ## Ejecutar la aplicación local
 

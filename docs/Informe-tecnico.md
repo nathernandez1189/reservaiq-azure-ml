@@ -26,14 +26,16 @@ Los datos son reales e históricos, de dos hoteles de Portugal. No pertenecen al
 
 ## Estado de la evidencia
 
-Pipeline de Azure ML completado: mango_wire_5f09pdg4m3. Modelo descargado, registrado y verificado en la aplicación; pruebas de datos, API y guardado local verificadas. Las evidencias conservan estados, huellas y comparación entre ejecuciones. El anexo incluye cuatro capturas aportadas por el equipo de una sesión con indicador de modelo local; la ejecución Azure se acredita mediante registros independientes.
+Nueva ejecución MICROPROYECTO3 del 1 de octubre de 2026 UTC: tres etapas Completed, modelo reservaiq:1 y aplicación publicada en Azure App Service. Se verificaron 67 pruebas en Windows y Ubuntu, 31 comprobaciones HTTPS y nueve registros persistentes tras reiniciar App Service. El modelo y las 7.990 predicciones coinciden con los artefactos originales conservados. Las evidencias distinguen la ejecución original del 25 de septiembre de la nueva ejecución.
+
+[Abrir la demo web en Azure](https://reservaiq-microproyecto3-20261001.azurewebsites.net/). Disponible hasta el 5 de octubre inclusive, hora de Colombia. La variante local se conserva en el repositorio. Solo se utilizan reservas ficticias.
 
 
 ---
 
 # 1. Requerimientos y alternativas
 
-La necesidad se traduce en una decisión verificable: qué reservas revisar primero cuando existe una capacidad K. El calendario permite elegir creación, llegada y salida. El guardado conserva una copia local y los contadores permiten consultar su estado. La alerta por umbral complementa esa revisión.
+La necesidad se traduce en una decisión verificable: qué reservas revisar primero cuando existe una capacidad K. El calendario permite elegir creación, llegada y salida. El guardado web conserva registros compartidos en un contenedor privado y los contadores permiten consultar su estado. La alerta por umbral complementa esa revisión.
 
 | ID | Requerimiento | Criterio de aceptación |
 | --- | --- | --- |
@@ -44,7 +46,7 @@ La necesidad se traduce en una decisión verificable: qué reservas revisar prim
 | R5 | Comparar y explicar | Candidatos, métricas, matriz y ejemplos de aciertos y errores. |
 | R6 | Ejecutar en Azure ML | Tres componentes, trabajo Completed y artefactos verificables. |
 | R7 | Limitar consumo | CPU, mínimo cero, máximo un nodo y límites de duración. |
-| R8 | Conservar reservas locales | Guardar, recuperar y editar después de reiniciar; archivo reversible. |
+| R8 | Conservar reservas ficticias | Guardar, recuperar y editar después de reiniciar; archivo reversible. |
 
 ## Alternativas consideradas
 
@@ -126,7 +128,12 @@ Se fijan versiones de Python y librerías. selection.json documenta candidatos, 
 
 # 4. Arquitectura y flujo
 
-![Flujo de datos y artefactos, con Azure y entorno local separados](figuras/arquitectura.svg)
+![Flujo actual con Azure ML, App Service y Blob privado](figuras/arquitectura-azure-web.svg)
+
+
+---
+
+# 4.1. Componentes y relaciones
 
 | Componente | Responsabilidad |
 | --- | --- |
@@ -136,15 +143,15 @@ Se fijan versiones de Python y librerías. selection.json documenta candidatos, 
 | Entrenamiento | Comparar candidatos y fijar modelo y umbral. |
 | Evaluación | Calcular métricas sobre prueba y exportar evidencia. |
 | Registro y descarga | Versionar el modelo y comprobar su huella. |
-| Aplicación local y SQLite | Inferencia, lotes, prioridad y guardado local de reservas. |
+| App Service y Blob privado | Interfaz HTTPS, inferencia, lotes y guardado compartido en instantáneas SQLite. |
 
 Preparación entrega entrenamiento y validación al componente de entrenamiento, y prueba al de evaluación. Entrenamiento produce el modelo; evaluación recibe ese modelo y produce métricas y predicciones. Las flechas representan datos y artefactos. [3]
 
-Registro y descarga son pasos posteriores al trabajo Completed, no componentes adicionales del pipeline. El registro pertenece a Azure; la aplicación usa los archivos descargados en el entorno local.
+Registro y descarga son pasos posteriores al trabajo Completed, no componentes adicionales del pipeline. El registro pertenece a Azure. App Service carga una copia descargada y verificada del modelo. La variante local utiliza sus propios archivos.
 
-Las copias nuevas se guardan en SQLite con resultado y estado de revisión. No se sincronizan entre equipos, no se envían a Azure y no cambian el entrenamiento ni las métricas históricas.
+La web aplica transacciones SQLite en memoria y conserva la instantánea en un Blob privado. Un ETag detecta escrituras concurrentes y la identidad administrada limita el acceso al contenedor. Los usuarios comparten registros ficticios. Guardar no cambia el entrenamiento ni las métricas históricas.
 
-El modelo descargado evita mantener un endpoint de inferencia. artifacts/runtime.json vincula la aplicación con trabajo, estado Completed, versión y SHA256. La etiqueta de origen Azure exige coincidencia con el archivo cargado. El estado histórico del trabajo y el cierre de recursos se documentan por separado.
+App Service sirve el modelo descargado sin mantener un endpoint de inferencia de Azure ML. artifacts/runtime.json vincula la aplicación con trabajo, estado Completed, versión y SHA256. La etiqueta de origen Azure exige coincidencia con el archivo cargado. El estado histórico del trabajo y el cierre de recursos se documentan por separado.
 
 
 ---
@@ -180,7 +187,7 @@ La importancia por permutación utiliza 2.500 reservas de validación y tres rep
 
 # 6. Implementación y comprobación
 
-El servidor local carga el modelo y escucha en 127.0.0.1. Las seis vistas son Inicio, Nueva reserva, Mis reservas, Cómo probarlo, Resultados del modelo y Diseño y Azure. El recorrido distingue analizar, guardar y revisar.
+App Service publica la interfaz y API por HTTPS y carga el modelo en memoria. La variante local escucha en 127.0.0.1. Las seis vistas son Inicio, Nueva reserva, Mis reservas, Cómo probarlo, Resultados del modelo y Diseño y Azure. El recorrido distingue analizar, guardar y revisar.
 
 | Ruta | Comportamiento |
 | --- | --- |
@@ -189,13 +196,15 @@ El servidor local carga el modelo y escucha en 127.0.0.1. Las seis vistas son In
 | GET /api/sample.csv | Ocho reservas listas para cargar. |
 | POST /api/predict | Una reserva validada: inferencia sin guardar. |
 | POST /api/batch | Entre 1 y 500 reservas: inferencia sin guardar. |
-| GET /api/reservations | Consultar las copias locales guardadas. |
+| GET /api/reservations | Consultar las reservas ficticias guardadas. |
 | POST /api/reservations | Analizar y guardar una nueva reserva. |
 | POST /api/reservations/batch | Guardar todo el lote o ninguna fila. |
 | POST /api/reservations/update | Editar y recalcular con control de revisión. |
 | POST /api/reservations/status | Revisar, archivar o restaurar. |
 
-## Iniciar y usar
+## Abrir la demo o iniciar la variante local
+
+La demo se abre en https://reservaiq-microproyecto3-20261001.azurewebsites.net/ sin instalar Python. El nivel F1 puede dormirse y tardar en responder al inicio. Si se utiliza la alternativa local, ejecutar solo la línea del sistema correspondiente:
 
 ```bash
 py -3.12 iniciar.py  # Windows
@@ -209,7 +218,7 @@ El CSV se selecciona en Nueva reserva, se analiza y muestra una vista previa. Gu
 
 ---
 
-# 6.1. Calendario y guardado local
+# 6.1. Calendario y guardado
 
 ## Tres pasos con resumen de estancia
 
@@ -217,7 +226,7 @@ Fechas, Detalles y Revisar y guardar separan las decisiones. El calendario calcu
 
 ## Qué se guarda y por qué
 
-SQLite conserva una copia local con referencia, diez variables, resultado, huella del modelo, fechas de creación/llegada/salida cuando se conocen y estado de revisión. La migración conserva los registros previos. El archivo .runtime/reservaiq.sqlite3 no se publica en GitHub; permite recuperar los registros tras reiniciar sin infraestructura de nube.
+Cada reserva conserva referencia, diez variables, resultado, huella del modelo, fechas de creación/llegada/salida y estado de revisión. En Azure, Blob privado guarda la instantánea SQLite y un ETag controla concurrencia. En la variante local, .runtime/reservaiq.sqlite3 conserva una base independiente que no se publica en GitHub.
 
 Solo analizar no modifica la base. Guardar cambios mantiene el identificador y exige la revisión vigente para evitar sobrescrituras entre ventanas. Los reintentos de una misma creación devuelven el mismo registro. Un fallo en un lote revierte todas sus escrituras. Archivar es reversible.
 
@@ -235,29 +244,31 @@ npm ci
 npm test
 ```
 
-GitHub Actions ejecuta las comprobaciones en Windows y Linux. La evidencia fechada registra el resultado de cada suite. Las capturas del anexo documentan la interfaz anterior de cuatro vistas: no acreditan visualmente el guardado nuevo. La navegación de la nueva versión en un navegador real queda pendiente de comprobación cuando el control de acceso permita abrirlo.
+GitHub Actions verificó 41 pruebas Python y 26 JavaScript en Windows y Ubuntu. Además se realizaron 31 comprobaciones HTTPS y nueve registros conservaron sus datos después de reiniciar App Service. La evidencia fechada registra el resultado de cada suite. Las capturas del anexo documentan la interfaz anterior de cuatro vistas: no acreditan visualmente el guardado nuevo. La navegación de la nueva versión en un navegador real queda pendiente de comprobación cuando el control de acceso permita abrirlo.
 
-Las reservas nuevas no tienen una etiqueta real de cancelación conocida. No alimentan el entrenamiento ni alteran las métricas. Cada computador conserva su propia base. Para trasladarla, se cierra la aplicación y se copia .runtime. La exportación JSON permite consultar los datos, pero esta versión no incluye importación de esas copias.
+Las reservas nuevas no tienen una etiqueta real de cancelación conocida. No alimentan el entrenamiento ni alteran las métricas. Todos los usuarios de la web comparten registros ficticios. En modo local cada computador conserva una base independiente; para trasladarla se cierra la aplicación y se copia .runtime. La exportación JSON permite consultar los datos, pero esta versión no incluye importación de esas copias.
 
 
 ---
 
 # 7. Costos, evidencia y conclusiones
 
-| Concepto | Supuesto | USD |
+| Alcance | Evidencia al 01/10/2026 03:20 UTC | USD |
 | --- | --- | --- |
-| CPU DS2 v2 | 1 hora × 0,146 | 0,146 |
-| Servicios auxiliares | Reserva supuesta de práctica breve | 0,500 |
-| Margen | Imprevistos del escenario | 0,354 |
-| Total presupuestado | Una ejecución acotada | 1,000 |
+| Original rg-reservaiq | Consumo registrado antes de impuestos | 0,0620879781 |
+| Nueva MICROPROYECTO3 | Sin filas de costo todavía | Por verificar |
+| Conservación hasta 5 de octubre | Estimación, no factura | 2,0000 |
+| Límite autorizado | No es un bloqueo automático | 3,0000 |
 
-Referencia Linux North Central US consultada el 25/09/2026 UTC. La reserva auxiliar no es una cotización de todos los servicios y puede ser insuficiente si se conservan durante más tiempo. El total es un escenario, no factura ni bloqueo automático del gasto. La factura puede aparecer con retraso; el detalle fechado se conserva en docs/COSTOS.md. [4, 5]
+El consumo original incluye Virtual Machines 0,046234112; Storage 0,00857385; Virtual Network 0,0039041667; Container Registry 0,0032918494; Key Vault 0,000084 y Load Balancer 0 USD. No se atribuye ese total a la nueva ejecución. Cost Management puede ajustar cargos antes de la factura. El desglose y las consultas fechadas se conservan en docs/COSTOS.md.
+
+La estimación de conservación supone hasta una hora CPU a US$0,146/h, seis días de Container Registry Basic a US$0,1666/día, App Service F1 gratuito y US$0,8544 reservados para almacenamiento, operaciones y margen. El escenario anterior de US$1 correspondía a una práctica breve con cierre inmediato. [4, 5]
 
 ## Controles y evidencia de aceptación
 
-Se usó un clúster de 0 a 1 nodos, con inactividad de 120 segundos y límites por etapa. Se descargaron diez salidas y se verificó la copia del modelo registrado. Después se eliminó el grupo temporal rg-reservaiq; Azure confirmó que ya no existe. Los cargos anteriores pueden consolidarse con retraso.
+El clúster tiene mínimo cero y máximo un nodo, con inactividad de 120 segundos. Se verificó en cero después del trabajo. La nueva ejecución conserva datos, componentes, modelo y documentación en MICROPROYECTO3 hasta el 5 de octubre inclusive, hora de Colombia. Antes del cierre se deben respaldar y verificar las salidas y las reservas. Cero nodos no elimina todos los cargos.
 
-La aceptación en Azure exige trabajo Completed, etapas, entorno resuelto, modelo registrado, salidas descargadas y huella coincidente con la aplicación. El repositorio conserva la configuración, las salidas del trabajo y su procedencia en docs/EVIDENCIAS.md. El cierre de recursos temporales evita mantener servicios de esta práctica después de descargar los resultados.
+La ejecución original terminó con la eliminación de rg-reservaiq el 25 de septiembre. La nueva ejecución es independiente y no sobrescribe artifacts/. El modelo descargado, sus huellas y las pruebas del despliegue permiten revisar la cadena desde Azure ML hasta la demo web.
 
 ## Conclusión
 
@@ -350,3 +361,16 @@ Captura de la interfaz anterior de cuatro vistas, sin guardado local. La sesión
 **Alcance.** La ejecución Completed, el registro reservaiq:1 y el cierre de recursos se acreditan por separado en azure/evidence/. El escenario de costo es US$1 estimado; la factura no estaba consolidada en la consulta guardada. No se ha determinado la causa de la diferencia con la pantalla.
 
 [Abrir la captura original a resolución completa](https://github.com/nathernandez1189/reservaiq-azure-ml/blob/main/docs/capturas/04-diseno-azure.png) · docs/CAPTURAS.md amplía la explicación.
+
+
+---
+
+# Evidencia visual de Azure ML
+
+Captura aportada por el equipo: 30 de septiembre de 2026, 21:50 en Colombia, equivalente al 1 de octubre UTC. Corresponde a la nueva ejecución MICROPROYECTO3, no al trabajo original del 25 de septiembre.
+
+![Pipeline MICROPROYECTO3 Completed](capturas/05-azure-pipeline-microproyecto3.png)
+
+La pantalla muestra el dataset, las etapas prepare, train y evaluate en verde, y las salidas trained y report. El flujo entrega particiones y modelo al evaluador. Las comprobaciones independientes de API y los registros del trabajo complementan esta evidencia visual.
+
+La imagen se conserva completa y sin alterar. No acredita el costo facturado, la conservación tras reiniciar ni la identidad de quien ejecutó cada paso. Esas afirmaciones requieren sus registros específicos.

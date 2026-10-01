@@ -1,5 +1,7 @@
 # Entrega académica de ReservaIQ
 
+**Acceso principal:** [demo web en Azure](https://reservaiq-microproyecto3-20261001.azurewebsites.net/). [Cómo consultar datos, pipeline, modelo y código en Azure](AZURE-WEB.md). Se mantiene disponible hasta el 5 de octubre de 2026 inclusive, hora de Colombia, según el plazo autorizado. La copia del repositorio permite abrir la variante local después.
+
 Microproyecto 3 · Computación en la Nube · Prof. Oscar Mondragón.
 
 **Integrantes:** Juan Ospina Tenorio, Natalia Hernández Piedrahita y Miguel Ángel Diuza.
@@ -11,7 +13,7 @@ La vista **Diseño y Azure** de la aplicación contiene una correspondencia con 
 - [Informe técnico en PDF](ReservaIQ-Informe-tecnico.pdf): análisis, alternativas, diseño, implementación, resultados, costos, fuentes y capturas comentadas.
 - [Presentación ampliada en Canva](https://www.canva.com/d/0RDtRC3Au5C7vEJ): 12 diapositivas de contenido y una página de agradecimiento, para una exposición de 15 minutos.
 - [Contenido de las 12 diapositivas](PRESENTACION.md): copia de consulta dentro del repositorio, disponible sin una cuenta de Canva.
-- [Guía de uso y guardado local](GUIA-DE-USO.md) y [pruebas guiadas](PRUEBAS-GUIADAS.md).
+- [Guía de uso y guardado](GUIA-DE-USO.md) y [pruebas guiadas](PRUEBAS-GUIADAS.md).
 - [Instrucciones para ejecutar la demo](../README.md#ejecutar-la-aplicación) y [CSV listo para cargar](../ejemplos-csv/reservas-listas.csv).
 - [Evidencias de ejecución y verificación](EVIDENCIAS.md), [capturas comentadas](CAPTURAS.md) y [ejecución en Azure](../azure/evidence/run.json).
 
@@ -23,9 +25,9 @@ Esta tabla se basa en las instrucciones del microproyecto facilitadas por el cur
 
 | Criterio | Peso | Qué se pide | Cómo lo desarrolla ReservaIQ | Dónde revisarlo |
 | --- | ---: | --- | --- | --- |
-| Análisis de requerimientos | 20 % | Empresa, necesidades, requerimientos y restricciones; alternativas; pipeline, componentes o algoritmos; costos aproximados | Hotel ficticio Brisa del Valle; priorización por capacidad K; contrato de diez variables; comparación de reglas, clasificación y AutoML; evaluación de cuatro candidatos; escenario de US$1 con supuestos | [Informe](Informe-tecnico.md), [modelo y datos](MODELO.md), [costos](COSTOS.md); diapositivas 2–4 y 6–8 |
-| Propuesta de diseño | 25 % | Diagrama, relación y flujo entre componentes, descripción | Datos y Blob, tres componentes Azure ML, modelo versionado y aplicación local con calendario, SQLite y revisión humana | [Arquitectura](ARQUITECTURA.md), [flujo operativo](figuras/flujo-reserva.svg), [pipeline](../azure/pipeline.yml), [preparación](../azure/prepare.yml), [entrenamiento](../azure/train.yml) y [evaluación](../azure/evaluate.yml); diapositivas 5, 8 y 9 |
-| Implementación del demo | 30 % | Implementar la solución diseñada | Inferencia individual, guardado local, estados de revisión, priorización por K, procesamiento de CSV y exportación; modelo entrenado en Azure, descargado y comprobado; demostración de aciertos y errores | [Aplicación e instrucciones](../README.md), [modelo](../artifacts/), [pruebas](../tests/), [registros Azure](../azure/evidence/); diapositivas 9–11 |
+| Análisis de requerimientos | 20 % | Empresa, necesidades, requerimientos y restricciones; alternativas; pipeline, componentes o algoritmos; costos aproximados | Hotel ficticio Brisa del Valle; priorización por capacidad K; contrato de diez variables; comparación de reglas, clasificación y AutoML; evaluación de cuatro candidatos; escenario actual de US$2, límite US$3 y costo registrado de la ejecución original separado | [Informe](Informe-tecnico.md), [modelo y datos](MODELO.md), [costos](COSTOS.md); diapositivas 2–4 y 6–8 |
+| Propuesta de diseño | 25 % | Diagrama, relación y flujo entre componentes, descripción | Datos y Blob, tres componentes Azure ML, modelo versionado, App Service con calendario, Blob privado con SQLite y revisión humana; variante local disponible | [Arquitectura](ARQUITECTURA.md), [flujo operativo](figuras/flujo-reserva.svg), [pipeline](../azure/pipeline.yml), [preparación](../azure/prepare.yml), [entrenamiento](../azure/train.yml) y [evaluación](../azure/evaluate.yml); diapositivas 5, 8 y 9 |
+| Implementación del demo | 30 % | Implementar la solución diseñada | Inferencia individual, guardado compartido en la web, estados de revisión, priorización por K, procesamiento de CSV y exportación; modelo entrenado en Azure, descargado y comprobado; demostración de aciertos y errores | [Aplicación e instrucciones](../README.md), [modelo](../artifacts/), [pruebas](../tests/), [registros Azure](../azure/evidence/); diapositivas 9–11 |
 | Presentación de la solución | 25 % | Exposición de 15 minutos que explique requerimientos, diseño y demo | Doce diapositivas principales y un cierre adicional; distribución objetivo de cinco minutos por integrante, con demo dentro del último bloque | [Canva](https://www.canva.com/d/0RDtRC3Au5C7vEJ) y [contenido consultable](PRESENTACION.md) |
 
 El material cubre los temas solicitados. El criterio de presentación también requiere realizar la exposición y mostrar la demo: disponer del archivo no demuestra que esa actividad ya se haya cumplido.
@@ -33,9 +35,9 @@ El material cubre los temas solicitados. El criterio de presentación también r
 ## Alcance de la evidencia
 
 - El pipeline y sus tres componentes terminaron en **Completed**. Se descargó el modelo registrado `reservaiq:1` y se comprobó la coincidencia de 7.990 predicciones con los resultados locales.
-- Las capturas documentan una sesión local. Los registros de Azure acreditan por separado la ejecución en la nube.
-- **US$1 es un escenario estimado**, no una factura. La consulta de facturación del 25/09/2026 no tenía cargos consolidados. La rúbrica solicita costos aproximados.
-- El cierre de los recursos temporales quedó verificado. La aplicación se evalúa con el modelo descargado; abrirla no requiere reconstruir Azure.
+- Las cuatro capturas iniciales documentan una sesión local histórica. La quinta captura muestra el pipeline MICROPROYECTO3 y sus tres etapas Completed en Azure ML Studio. Los registros de Azure y las pruebas HTTPS aportan evidencia adicional.
+- El costo registrado de la ejecución original es **US$0,0620879781** antes de impuestos, consultado el 1 de octubre a las 03:20 UTC. MICROPROYECTO3 todavía no tiene filas de costo. **US$2 es la estimación** actual, dentro del límite autorizado US$3. La rúbrica solicita costos aproximados.
+- El cierre de rg-reservaiq quedó verificado. La nueva ejecución MICROPROYECTO3 y la demo web se conservan hasta el 5 de octubre inclusive. Abrir la demo no vuelve a entrenar el modelo.
 - Los resultados son retrospectivos sobre datos de Portugal. No prueban cancelaciones evitadas, ingresos recuperados ni validez operativa en Colombia.
 
 ## Repositorio, ZIP y formato de entrega

@@ -1,5 +1,13 @@
 # Pruebas guiadas de ReservaIQ
 
+## Entorno de la demostración
+
+Realiza el recorrido en [la demo web](https://reservaiq-microproyecto3-20261001.azurewebsites.net/) con datos ficticios. Los registros son compartidos. La alternativa `127.0.0.1:8765` requiere iniciar la app y utiliza una base independiente.
+
+La prueba de reinicio del servicio web ya se documentó en [web-verification.json](../azure/evidence/microproyecto3/web-verification.json): nueve registros conservaron sus datos. Durante la exposición basta guardar, recargar y volver a abrir el registro; recargar una página no demuestra por sí solo un reinicio del servidor. No reinicies ni reentrenes Azure como parte del recorrido normal.
+
+Suite actual: 41 pruebas Python y 26 JavaScript, ejecutadas en Windows y Ubuntu. Además hubo 31 comprobaciones reales HTTPS. El ensayo completo con navegador y cronómetro se realiza aparte.
+
 Estas acciones permiten comprobar el funcionamiento de la aplicación. Los resultados esperados se distinguen de las comprobaciones automáticas; esta tabla no afirma que el lector ya las haya realizado.
 
 Usa datos de ejemplo. Las reservas que guardes permanecerán en tu computador. Puedes archivarlas al terminar.

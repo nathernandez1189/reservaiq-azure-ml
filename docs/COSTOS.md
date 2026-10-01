@@ -1,38 +1,54 @@
 # Costos y control de consumo
 
-Se utilizó un clúster CPU **Standard_DS2_v2** con mínimo 0, máximo 1 nodo y liberación después de 120 segundos inactivo. El tamaño permite ejecutar este experimento tabular con CPU. La aplicación usa el modelo descargado y no mantiene un endpoint en línea.
+Consulta de Cost Management del **1 de octubre de 2026, 03:20 UTC** (30 de septiembre, 22:20 en Colombia). Período consultado: 24 de septiembre al 1 de octubre. Cada ejecución se informa por separado.
 
-## Escenario mínimo de una ejecución
+## Consumo registrado y estimación
 
-| Concepto | Supuesto | USD |
+| Ejecución | Grupo | Consumo registrado antes de impuestos | Situación |
+| --- | --- | ---: | --- |
+| Original del 25 de septiembre UTC | `rg-reservaiq` | **US$0,0620879781** | Consumo reportado; grupo eliminado |
+| Nueva del 1 de octubre UTC | `MICROPROYECTO3` | **Sin datos todavía** | La consulta devolvió cero filas, no costo cero |
+
+El primer valor equivale aproximadamente a **6,21 centavos de dólar**. Es consumo registrado antes de impuestos, no una factura final ni un pago en efectivo: los créditos educativos pueden cubrir el consumo. La ausencia de filas de la segunda ejecución no permite informar un total real todavía.
+
+## Desglose real de la ejecución original
+
+| Servicio | USD antes de impuestos |
+| --- | ---: |
+| Virtual Machines | 0,0462341120 |
+| Storage | 0,0085738500 |
+| Virtual Network | 0,0039041667 |
+| Container Registry | 0,0032918494 |
+| Key Vault | 0,0000840000 |
+| Load Balancer | 0,0000000000 |
+| **Total** | **0,0620879781** |
+
+Respuestas fechadas, sin identificadores de cuenta: [original](../azure/evidence/microproyecto3/cost-original-20261001.json) y [MICROPROYECTO3](../azure/evidence/microproyecto3/cost-microproyecto3-20261001.json). La consulta antigua de [billing.json](../azure/evidence/billing.json) conserva el estado sin cargos observado el 25 de septiembre y no se sobrescribe.
+
+## Presupuesto de conservación de MICROPROYECTO3
+
+Disponibilidad autorizada hasta el **5 de octubre de 2026 inclusive, hora de Colombia**, con límite autorizado de **US$3**. El escenario orientativo actual es **US$2**, separado del consumo real todavía no reportado.
+
+| Concepto | Supuesto del escenario | USD aproximados |
 | --- | --- | ---: |
-| CPU DS2 v2 | 1 hora × 0,146 | 0,146 |
-| Recursos auxiliares | Reserva supuesta para una práctica breve | 0,500 |
-| Margen | Imprevistos dentro del escenario | 0,354 |
-| **Total presupuestado** | **Escenario de 1 hora CPU** | **1,000** |
+| CPU Standard_DS2_v2 | Hasta 1 hora a US$0,146 por hora de nodo | 0,1460 |
+| Container Registry Basic | 6 días a US$0,1666 por día | 0,9996 |
+| App Service F1 | Nivel gratuito, sujeto a sus cuotas | 0,0000 |
+| Storage, operaciones, Key Vault y margen | Reserva presupuestaria, no cotización ni medición | 0,8544 |
+| **Total estimado** | **Conservación temporal del proyecto** | **2,0000** |
 
-Tarifa pública consultada el 25/09/2026 UTC: Linux, North Central US, consumo bajo demanda, 0,146 USD/h. La respuesta de la API se conserva en `artifacts/azure-price-reference.json`. El total es una estimación, no una factura ni un tope automático. La región, cuota y tarifa efectiva deben verificarse antes de crear cómputo.
+Las tarifas públicas consultadas son para North Central US. El cargo efectivo depende de duración, uso y contrato. El clúster tiene mínimo 0, máximo 1 nodo y liberación tras 120 segundos de inactividad. Se verificaron cero nodos tras la ejecución. La aplicación sirve el modelo desde App Service y no requiere un endpoint de inferencia de Azure ML. Cero nodos no elimina los cargos de los servicios conservados.
 
-La reserva auxiliar de 0,50 USD es un supuesto, no una cotización desglosada de Storage, Key Vault, Container Registry o Application Insights. Mantener esos recursos durante más tiempo puede superar el escenario. El clúster en cero nodos no elimina todos los cargos.
+El escenario original de US$1 contemplaba una práctica breve y cierre inmediato: CPU 0,146 + auxiliares supuestos 0,500 + margen 0,354. Se conserva como antecedente, no como presupuesto de varios días.
 
-## Controles
+## Control y comprobación
 
-- Un solo nodo CPU; sin GPU ni endpoint permanente.
-- Límites por etapa: 15 minutos para preparación, 30 para entrenamiento y 15 para evaluación. El máximo de las etapas no incluye toda la espera, creación de imagen ni aprovisionamiento.
-- Descargar y verificar resultados antes de liberar infraestructura.
-- Comprobar el número de nodos después del trabajo y consultar Cost Management con fecha.
-- Las alertas de presupuesto avisan; no bloquean automáticamente el gasto.
+- Consultar Cost Management con ámbito de suscripción, período personalizado y filtro de grupo exacto. Agrupar por nombre de servicio.
+- Conservar el presupuesto US$3. Las alertas y la revisión programada no son un bloqueo automático de cargos.
+- Mantener el plan F1 y el clúster en cero nodos mientras no se entrena. No volver a ejecutar el pipeline para abrir la demo.
+- Antes del cierre, respaldar modelo, informes y reservas ficticias, comprobar sus huellas y eliminar solo el grupo del proyecto después del plazo autorizado.
+- F1 puede dormirse, comparte recursos y no ofrece SLA. No se ha contratado capacidad de producción.
 
-## Estado de facturación
+Azure incorpora cargos con retraso; no es posible forzar su aparición. Los costos pueden ajustarse antes de cerrar la factura. [Actualización de costos y uso de Microsoft](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/understand-cost-mgt-data#cost-and-usage-data-updates-and-retention).
 
-El pipeline `mango_wire_5f09pdg4m3` y sus tres etapas terminaron en estado Completed. La imagen se construyó en el mismo clúster. Se conservaron diez salidas y se verificó la versión registrada antes de solicitar el cierre del grupo temporal.
-
-El límite operativo autorizado fue **US$3**. El presupuesto de **US$1** de la tabla es un escenario conservador para una práctica breve; no es una factura. La consulta de Cost Management del 25/09/2026 UTC no devolvió filas para `rg-reservaiq`. Esto significa que no había cargos consolidados en esa consulta, no que la ejecución fuera gratuita. El resultado fechado está en `azure/evidence/billing.json`.
-
-El cierre y la comprobación del grupo se conservan en `azure/evidence/closure.json`. Los estados y el modelo son evidencia histórica; para otro entrenamiento se deben recrear los recursos y revisar tarifa, cuota y presupuesto.
-
-Fuentes: [tarifas de Azure ML](https://azure.microsoft.com/en-us/pricing/details/machine-learning/), [API de precios](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices), [gestión de costos](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-optimize-cost?view=azureml-api-2).
-
-## Cierre verificado
-
-El 25/09/2026 UTC se confirmó `az group exists --name rg-reservaiq` → `false`. Se eliminaron el workspace, el clúster y sus recursos asociados después de conservar modelo, resultados y registros. No queda un endpoint ni un clúster de esta práctica en ejecución. Las copias incluidas permiten evaluar la demo sin Azure; la factura puede reflejar cargos anteriores con retraso.
+Fuentes: [precios de Azure ML](https://azure.microsoft.com/en-us/pricing/details/machine-learning/), [API de precios](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices), [control de costos](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-optimize-cost?view=azureml-api-2).

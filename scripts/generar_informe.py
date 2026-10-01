@@ -1,6 +1,8 @@
 """Informe técnico generado desde los artefactos verificados."""
 from pathlib import Path
 import json,html,re,hashlib,datetime,sys
+from io import BytesIO
+import xml.etree.ElementTree as ET
 from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate,Paragraph,Spacer,Table,TableStyle,PageBreak,Flowable,Image
 from reportlab.lib import colors
@@ -9,7 +11,7 @@ from reportlab.lib.enums import TA_LEFT
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.graphics import renderPDF
-from diagrama_arquitectura import architecture, WIDTH, HEIGHT
+from svglib.svglib import svg2rlg
 
 ROOT=Path(__file__).resolve().parents[1];PROJ=ROOT;OUT=ROOT/'docs';OUT.mkdir(parents=True,exist_ok=True)
 S=json.loads((PROJ/'artifacts/summary.json').read_text(encoding='utf-8'));M=S['test'];D=S['data'];V=S['selection']
@@ -51,12 +53,33 @@ def num(v):return f'{v:,}'.replace(',','.')
 def code(t):
  p(html.escape(t).replace('\n','<br/>'),'code');md[-1]='```bash\n'+t+'\n```\n'
 
+def report_architecture():
+ # svglib no dibuja los marcadores SVG. Convertirlos en polígonos explícitos
+ # conserva las puntas y el sentido de las flechas del diagrama publicado.
+ ET.register_namespace('', 'http://www.w3.org/2000/svg')
+ root=ET.fromstring((OUT/'figuras/arquitectura-azure-web.svg').read_text(encoding='utf-8'))
+ ns='{http://www.w3.org/2000/svg}'
+ for path in list(root.iter(ns+'path')):
+  if 'marker-end' not in path.attrib: continue
+  tokens=re.findall(r'[A-Za-z]|-?\d+(?:\.\d+)?',path.attrib['d']);points=[];i=0;x=y=0
+  while i<len(tokens):
+   command=tokens[i];i+=1
+   if command in ('M','L'): x,y=map(float,tokens[i:i+2]);i+=2
+   elif command=='H': x=float(tokens[i]);i+=1
+   elif command=='V': y=float(tokens[i]);i+=1
+   else: raise ValueError('Actualizar conversión de flechas SVG: '+command)
+   points.append((x,y))
+  px,py=points[-2];dx,dy=x-px,y-py;length=(dx*dx+dy*dy)**.5;dx/=length;dy/=length
+  coords=[(x,y),(x-14*dx+6*dy,y-14*dy-6*dx),(x-14*dx-6*dy,y-14*dy+6*dx)]
+  ET.SubElement(root,ns+'polygon',{'points':' '.join(f'{a},{b}' for a,b in coords),'fill':path.attrib['stroke']})
+ return svg2rlg(BytesIO(ET.tostring(root)))
+
 class Architecture(Flowable):
  def __init__(self):
-  Flowable.__init__(self);self.width=480;self.height=HEIGHT*480/WIDTH
+  Flowable.__init__(self);self.diagram=report_architecture();self.width=480;self.height=self.diagram.height*480/self.diagram.width
  def draw(self):
-  diagram=architecture();diagram.scale(480/WIDTH,480/WIDTH)
-  renderPDF.draw(diagram,self.canv,0,0)
+  factor=480/self.diagram.width;self.diagram.scale(factor,factor)
+  renderPDF.draw(self.diagram,self.canv,0,0)
 
 
 title('ReservaIQ')
@@ -69,11 +92,12 @@ p('Hotel Brisa del Valle es un cliente ficticio de Cali. Su equipo de reservas d
 table([['Resultado retrospectivo','Valor'],['Reservas de prueba',num(M['n'])],['Precisión del 20 % prioritario',pct(M['top20']['precision'])],['Cancelaciones capturadas en ese 20 %',pct(M['top20']['recall'])],['Concentración frente a selección aleatoria esperada',f"{M['top20']['lift']:.2f} veces"]],[365,115])
 p('Los datos son reales e históricos, de dos hoteles de Portugal. No pertenecen al cliente ficticio. Estas métricas no prueban ahorros, cancelaciones evitadas ni generalización a Colombia.','small')
 h('Estado de la evidencia')
-p(f"Pipeline de Azure ML completado: {R['job_name']}. Modelo descargado, registrado y verificado en la aplicación; pruebas de datos, API y guardado local verificadas. Las evidencias conservan estados, huellas y comparación entre ejecuciones. El anexo incluye cuatro capturas aportadas por el equipo de una sesión con indicador de modelo local; la ejecución Azure se acredita mediante registros independientes." if AZURE else 'Entrenamiento, evaluación, inferencia y pruebas verificados localmente. Componentes de Azure ML configurados; ejecución remota por verificar.','small')
+p('Nueva ejecución MICROPROYECTO3 del 1 de octubre de 2026 UTC: tres etapas Completed, modelo reservaiq:1 y aplicación publicada en Azure App Service. Se verificaron 67 pruebas en Windows y Ubuntu, 31 comprobaciones HTTPS y nueve registros persistentes tras reiniciar App Service. El modelo y las 7.990 predicciones coinciden con los artefactos originales conservados. Las evidencias distinguen la ejecución original del 25 de septiembre de la nueva ejecución.','small')
+p('<link href="https://reservaiq-microproyecto3-20261001.azurewebsites.net/" color="#087e80">Abrir la demo web en Azure</link>. Disponible hasta el 5 de octubre inclusive, hora de Colombia. La variante local se conserva en el repositorio. Solo se utilizan reservas ficticias.','small')
 
 page();title('1. Requerimientos y alternativas')
-p('La necesidad se traduce en una decisión verificable: qué reservas revisar primero cuando existe una capacidad K. El calendario permite elegir creación, llegada y salida. El guardado conserva una copia local y los contadores permiten consultar su estado. La alerta por umbral complementa esa revisión.')
-table([['ID','Requerimiento','Criterio de aceptación'],['R1','Analizar una reserva','Validar diez variables y devolver índice, decisión y versión.'],['R2','Priorizar revisión','Seleccionar exactamente K registros y exportar la lista.'],['R3','Analizar un lote','CSV con 1-500 filas, máximo 150 KB y el mismo contrato.'],['R4','Evaluar sin usar el futuro','Particiones temporales disjuntas y madurez de etiquetas.'],['R5','Comparar y explicar','Candidatos, métricas, matriz y ejemplos de aciertos y errores.'],['R6','Ejecutar en Azure ML','Tres componentes, trabajo Completed y artefactos verificables.'],['R7','Limitar consumo','CPU, mínimo cero, máximo un nodo y límites de duración.'],['R8','Conservar reservas locales','Guardar, recuperar y editar después de reiniciar; archivo reversible.']],[35,145,300])
+p('La necesidad se traduce en una decisión verificable: qué reservas revisar primero cuando existe una capacidad K. El calendario permite elegir creación, llegada y salida. El guardado web conserva registros compartidos en un contenedor privado y los contadores permiten consultar su estado. La alerta por umbral complementa esa revisión.')
+table([['ID','Requerimiento','Criterio de aceptación'],['R1','Analizar una reserva','Validar diez variables y devolver índice, decisión y versión.'],['R2','Priorizar revisión','Seleccionar exactamente K registros y exportar la lista.'],['R3','Analizar un lote','CSV con 1-500 filas, máximo 150 KB y el mismo contrato.'],['R4','Evaluar sin usar el futuro','Particiones temporales disjuntas y madurez de etiquetas.'],['R5','Comparar y explicar','Candidatos, métricas, matriz y ejemplos de aciertos y errores.'],['R6','Ejecutar en Azure ML','Tres componentes, trabajo Completed y artefactos verificables.'],['R7','Limitar consumo','CPU, mínimo cero, máximo un nodo y límites de duración.'],['R8','Conservar reservas ficticias','Guardar, recuperar y editar después de reiniciar; archivo reversible.']],[35,145,300])
 h('Alternativas consideradas')
 table([['Alternativa','Ventaja','Limitación'],['Reglas manuales','Simplicidad y explicación','Umbrales rígidos y mantenimiento manual.'],['Clasificador y lista','Comparación y prioridad medible','Necesita datos y seguimiento de errores.'],['AutoML','Exploración automatizada','Más ensayos y consumo variable.']],[130,160,190])
 p('Se elige clasificación supervisada con revisión humana. No hay integración con un sistema hotelero productivo, envío de mensajes, modificación de reservas ni cobros automáticos.','small')
@@ -101,12 +125,13 @@ p('Se fijan versiones de Python y librerías. selection.json documenta candidato
 
 page();title('4. Arquitectura y flujo')
 story.append(Architecture());story.append(Spacer(1,8))
-md.append('![Flujo de datos y artefactos, con Azure y entorno local separados](figuras/arquitectura.svg)\n')
-table([['Componente','Responsabilidad'],['Workspace y Blob','Organizar trabajos, conservar entradas y artefactos.'],['Clúster CPU DS2 v2','Ejecutar con mínimo 0, máximo 1 nodo e inactividad de 120 s.'],['Preparación','Aplicar alcance, deduplicación, fechas y particiones.'],['Entrenamiento','Comparar candidatos y fijar modelo y umbral.'],['Evaluación','Calcular métricas sobre prueba y exportar evidencia.'],['Registro y descarga','Versionar el modelo y comprobar su huella.'],['Aplicación local y SQLite','Inferencia, lotes, prioridad y guardado local de reservas.']],[155,325])
+md.append('![Flujo actual con Azure ML, App Service y Blob privado](figuras/arquitectura-azure-web.svg)\n')
+page();title('4.1. Componentes y relaciones')
+table([['Componente','Responsabilidad'],['Workspace y Blob','Organizar trabajos, conservar entradas y artefactos.'],['Clúster CPU DS2 v2','Ejecutar con mínimo 0, máximo 1 nodo e inactividad de 120 s.'],['Preparación','Aplicar alcance, deduplicación, fechas y particiones.'],['Entrenamiento','Comparar candidatos y fijar modelo y umbral.'],['Evaluación','Calcular métricas sobre prueba y exportar evidencia.'],['Registro y descarga','Versionar el modelo y comprobar su huella.'],['App Service y Blob privado','Interfaz HTTPS, inferencia, lotes y guardado compartido en instantáneas SQLite.']],[155,325])
 p('Preparación entrega entrenamiento y validación al componente de entrenamiento, y prueba al de evaluación. Entrenamiento produce el modelo; evaluación recibe ese modelo y produce métricas y predicciones. Las flechas representan datos y artefactos. [3]','small')
-p('Registro y descarga son pasos posteriores al trabajo Completed, no componentes adicionales del pipeline. El registro pertenece a Azure; la aplicación usa los archivos descargados en el entorno local.','small')
-p('Las copias nuevas se guardan en SQLite con resultado y estado de revisión. No se sincronizan entre equipos, no se envían a Azure y no cambian el entrenamiento ni las métricas históricas.','small')
-p('El modelo descargado evita mantener un endpoint de inferencia. artifacts/runtime.json vincula la aplicación con trabajo, estado Completed, versión y SHA256. La etiqueta de origen Azure exige coincidencia con el archivo cargado. El estado histórico del trabajo y el cierre de recursos se documentan por separado.','small')
+p('Registro y descarga son pasos posteriores al trabajo Completed, no componentes adicionales del pipeline. El registro pertenece a Azure. App Service carga una copia descargada y verificada del modelo. La variante local utiliza sus propios archivos.','small')
+p('La web aplica transacciones SQLite en memoria y conserva la instantánea en un Blob privado. Un ETag detecta escrituras concurrentes y la identidad administrada limita el acceso al contenedor. Los usuarios comparten registros ficticios. Guardar no cambia el entrenamiento ni las métricas históricas.','small')
+p('App Service sirve el modelo descargado sin mantener un endpoint de inferencia de Azure ML. artifacts/runtime.json vincula la aplicación con trabajo, estado Completed, versión y SHA256. La etiqueta de origen Azure exige coincidencia con el archivo cargado. El estado histórico del trabajo y el cierre de recursos se documentan por separado.','small')
 
 page();title('5. Resultados y decisión')
 table([['Métrica de prueba','Resultado'],['Average precision',f"{M['average_precision']:.4f}"],['ROC AUC',f"{M['roc_auc']:.4f}"],[f"Detección al umbral {S['threshold']:.2f}",pct(M['recall'])],[f"Precisión al umbral {S['threshold']:.2f}",pct(M['precision'])],['F1',f"{M['f1']:.4f}"],['Brier del índice sin calibrar',f"{M['brier']:.4f}"]],[340,140])
@@ -118,33 +143,35 @@ h('Explicación y límites')
 p('La importancia por permutación utiliza 2.500 reservas de validación y tres repeticiones. Describe sensibilidad global, no causalidad individual. El intervalo Wilson de detección es aproximado y no corrige dependencia entre reservas. Los índices no son probabilidades calibradas.','small')
 
 page();title('6. Implementación y comprobación')
-p('El servidor local carga el modelo y escucha en 127.0.0.1. Las seis vistas son Inicio, Nueva reserva, Mis reservas, Cómo probarlo, Resultados del modelo y Diseño y Azure. El recorrido distingue analizar, guardar y revisar.')
-table([['Ruta','Comportamiento'],['GET /api/summary','Métricas, ejemplos y procedencia comprobada.'],['GET /api/health','Estado del servicio, modelo y huella.'],['GET /api/sample.csv','Ocho reservas listas para cargar.'],['POST /api/predict','Una reserva validada: inferencia sin guardar.'],['POST /api/batch','Entre 1 y 500 reservas: inferencia sin guardar.'],['GET /api/reservations','Consultar las copias locales guardadas.'],['POST /api/reservations','Analizar y guardar una nueva reserva.'],['POST /api/reservations/batch','Guardar todo el lote o ninguna fila.'],['POST /api/reservations/update','Editar y recalcular con control de revisión.'],['POST /api/reservations/status','Revisar, archivar o restaurar.']],[195,285])
-h('Iniciar y usar')
+p('App Service publica la interfaz y API por HTTPS y carga el modelo en memoria. La variante local escucha en 127.0.0.1. Las seis vistas son Inicio, Nueva reserva, Mis reservas, Cómo probarlo, Resultados del modelo y Diseño y Azure. El recorrido distingue analizar, guardar y revisar.')
+table([['Ruta','Comportamiento'],['GET /api/summary','Métricas, ejemplos y procedencia comprobada.'],['GET /api/health','Estado del servicio, modelo y huella.'],['GET /api/sample.csv','Ocho reservas listas para cargar.'],['POST /api/predict','Una reserva validada: inferencia sin guardar.'],['POST /api/batch','Entre 1 y 500 reservas: inferencia sin guardar.'],['GET /api/reservations','Consultar las reservas ficticias guardadas.'],['POST /api/reservations','Analizar y guardar una nueva reserva.'],['POST /api/reservations/batch','Guardar todo el lote o ninguna fila.'],['POST /api/reservations/update','Editar y recalcular con control de revisión.'],['POST /api/reservations/status','Revisar, archivar o restaurar.']],[195,285])
+h('Abrir la demo o iniciar la variante local')
+p('La demo se abre en https://reservaiq-microproyecto3-20261001.azurewebsites.net/ sin instalar Python. El nivel F1 puede dormirse y tardar en responder al inicio. Si se utiliza la alternativa local, ejecutar solo la línea del sistema correspondiente:','small')
 code('py -3.12 iniciar.py  # Windows\npython3.12 iniciar.py  # macOS / Linux')
 p('Ejecutar únicamente la línea del sistema utilizado. El lanzador prepara el entorno y las dependencias. Abrir http://127.0.0.1:8765 y mantener la terminal abierta. En Nueva reserva, elegir llegada y salida en el calendario, completar Detalles y pasar a Revisar y guardar. Las noches y la anticipación se calculan automáticamente. Mis reservas permite recuperar el registro.','small')
 p('El CSV se selecciona en Nueva reserva, se analiza y muestra una vista previa. Guardar lote conserva todas las filas; Descargar resultados genera el JSON. La guía y las pruebas paso a paso están en docs/GUIA-DE-USO.md y docs/PRUEBAS-GUIADAS.md.','small')
 
-page();title('6.1. Calendario y guardado local')
+page();title('6.1. Calendario y guardado')
 h('Tres pasos con resumen de estancia')
 p('Fechas, Detalles y Revisar y guardar separan las decisiones. El calendario calcula cuatro variables del modelo: anticipación, mes de llegada y noches entre semana/de fin de semana. La salida no cuenta como noche. El servidor valida la misma regla: 0 a 60 días de anticipación y 1 a 30 noches. Los ejemplos históricos sin fechas completas conservan sus variables originales.','small')
 h('Qué se guarda y por qué')
-p('SQLite conserva una copia local con referencia, diez variables, resultado, huella del modelo, fechas de creación/llegada/salida cuando se conocen y estado de revisión. La migración conserva los registros previos. El archivo .runtime/reservaiq.sqlite3 no se publica en GitHub; permite recuperar los registros tras reiniciar sin infraestructura de nube.')
+p('Cada reserva conserva referencia, diez variables, resultado, huella del modelo, fechas de creación/llegada/salida y estado de revisión. En Azure, Blob privado guarda la instantánea SQLite y un ETag controla concurrencia. En la variante local, .runtime/reservaiq.sqlite3 conserva una base independiente que no se publica en GitHub.')
 p('Solo analizar no modifica la base. Guardar cambios mantiene el identificador y exige la revisión vigente para evitar sobrescrituras entre ventanas. Los reintentos de una misma creación devuelven el mismo registro. Un fallo en un lote revierte todas sus escrituras. Archivar es reversible.')
 h('Comprobar el recorrido')
 p('Con creación 01/10/2026, llegada 02/10 y salida 05/10 se obtienen 3 noches: 1 entre semana y 2 de fin de semana; anticipación de 1 día. Analizar y guardar conserva el registro con código RI-. Mis reservas permite recuperarlo, editarlo y organizarlo. Sus tarjetas Guardadas, Pendientes, Revisadas y Archivadas filtran los registros al pulsarlas. La guía incluye además el caso histórico 12301, el CSV y errores esperados.','small')
 h('Comprobaciones automáticas y límites')
 p('Las pruebas Python cubren integridad del dataset y modelo, separación temporal, métricas, las 7.990 predicciones, UTF-8 en Windows, API y persistencia real. Incluyen reiniciar el servidor, reintentos concurrentes sin duplicación, conflictos de edición y transacciones de lote. También se prueban fechas, cambio de año, año bisiesto y migración de la base. JavaScript verifica calendario, tarjetas de estado y recorrido guiado con una API simulada.')
 code('python -m unittest discover -s tests -v\nnpm ci\nnpm test')
-p('GitHub Actions ejecuta las comprobaciones en Windows y Linux. La evidencia fechada registra el resultado de cada suite. Las capturas del anexo documentan la interfaz anterior de cuatro vistas: no acreditan visualmente el guardado nuevo. La navegación de la nueva versión en un navegador real queda pendiente de comprobación cuando el control de acceso permita abrirlo.','small')
-p('Las reservas nuevas no tienen una etiqueta real de cancelación conocida. No alimentan el entrenamiento ni alteran las métricas. Cada computador conserva su propia base. Para trasladarla, se cierra la aplicación y se copia .runtime. La exportación JSON permite consultar los datos, pero esta versión no incluye importación de esas copias.','small')
+p('GitHub Actions verificó 41 pruebas Python y 26 JavaScript en Windows y Ubuntu. Además se realizaron 31 comprobaciones HTTPS y nueve registros conservaron sus datos después de reiniciar App Service. La evidencia fechada registra el resultado de cada suite. Las capturas del anexo documentan la interfaz anterior de cuatro vistas: no acreditan visualmente el guardado nuevo. La navegación de la nueva versión en un navegador real queda pendiente de comprobación cuando el control de acceso permita abrirlo.','small')
+p('Las reservas nuevas no tienen una etiqueta real de cancelación conocida. No alimentan el entrenamiento ni alteran las métricas. Todos los usuarios de la web comparten registros ficticios. En modo local cada computador conserva una base independiente; para trasladarla se cierra la aplicación y se copia .runtime. La exportación JSON permite consultar los datos, pero esta versión no incluye importación de esas copias.','small')
 
 page();title('7. Costos, evidencia y conclusiones')
-table([['Concepto','Supuesto','USD'],['CPU DS2 v2','1 hora × 0,146','0,146'],['Servicios auxiliares','Reserva supuesta de práctica breve','0,500'],['Margen','Imprevistos del escenario','0,354'],['Total presupuestado','Una ejecución acotada','1,000']],[145,255,80])
-p('Referencia Linux North Central US consultada el 25/09/2026 UTC. La reserva auxiliar no es una cotización de todos los servicios y puede ser insuficiente si se conservan durante más tiempo. El total es un escenario, no factura ni bloqueo automático del gasto. La factura puede aparecer con retraso; el detalle fechado se conserva en docs/COSTOS.md. [4, 5]','small')
+table([['Alcance','Evidencia al 01/10/2026 03:20 UTC','USD'],['Original rg-reservaiq','Consumo registrado antes de impuestos','0,0620879781'],['Nueva MICROPROYECTO3','Sin filas de costo todavía','Por verificar'],['Conservación hasta 5 de octubre','Estimación, no factura','2,0000'],['Límite autorizado','No es un bloqueo automático','3,0000']],[130,255,95])
+p('El consumo original incluye Virtual Machines 0,046234112; Storage 0,00857385; Virtual Network 0,0039041667; Container Registry 0,0032918494; Key Vault 0,000084 y Load Balancer 0 USD. No se atribuye ese total a la nueva ejecución. Cost Management puede ajustar cargos antes de la factura. El desglose y las consultas fechadas se conservan en docs/COSTOS.md.','small')
+p('La estimación de conservación supone hasta una hora CPU a US$0,146/h, seis días de Container Registry Basic a US$0,1666/día, App Service F1 gratuito y US$0,8544 reservados para almacenamiento, operaciones y margen. El escenario anterior de US$1 correspondía a una práctica breve con cierre inmediato. [4, 5]','small')
 h('Controles y evidencia de aceptación')
-p('Se usó un clúster de 0 a 1 nodos, con inactividad de 120 segundos y límites por etapa. Se descargaron diez salidas y se verificó la copia del modelo registrado. Después se eliminó el grupo temporal rg-reservaiq; Azure confirmó que ya no existe. Los cargos anteriores pueden consolidarse con retraso.')
-p('La aceptación en Azure exige trabajo Completed, etapas, entorno resuelto, modelo registrado, salidas descargadas y huella coincidente con la aplicación. El repositorio conserva la configuración, las salidas del trabajo y su procedencia en docs/EVIDENCIAS.md. El cierre de recursos temporales evita mantener servicios de esta práctica después de descargar los resultados.')
+p('El clúster tiene mínimo cero y máximo un nodo, con inactividad de 120 segundos. Se verificó en cero después del trabajo. La nueva ejecución conserva datos, componentes, modelo y documentación en MICROPROYECTO3 hasta el 5 de octubre inclusive, hora de Colombia. Antes del cierre se deben respaldar y verificar las salidas y las reservas. Cero nodos no elimina todos los cargos.')
+p('La ejecución original terminó con la eliminación de rg-reservaiq el 25 de septiembre. La nueva ejecución es independiente y no sobrescribe artifacts/. El modelo descargado, sus huellas y las pruebas del despliegue permiten revisar la cadena desde Azure ML hasta la demo web.','small')
 h('Conclusión')
 p('El experimento demuestra una priorización histórica con capacidad limitada y expone sus errores. Para utilizarlo en el hotel se requieren datos locales, auditoría de disponibilidad temporal de las variables y un experimento que mida el efecto de las acciones. La evidencia disponible no demuestra beneficios financieros.')
 h('Fuentes')
@@ -169,6 +196,16 @@ for item in captures['images']:
  p('<b>Alcance.</b> '+html.escape(item['scope']),'small')
  url='https://github.com/nathernandez1189/reservaiq-azure-ml/blob/main/docs/capturas/'+item['file']
  p('<link href="'+url+'" color="#087e80">Abrir la captura original a resolución completa</link> · docs/CAPTURAS.md amplía la explicación.','small')
+
+page();title('Evidencia visual de Azure ML')
+p('Captura aportada por el equipo: 30 de septiembre de 2026, 21:50 en Colombia, equivalente al 1 de octubre UTC. Corresponde a la nueva ejecución MICROPROYECTO3, no al trabajo original del 25 de septiembre.','small')
+azcap=json.loads((OUT/'capturas/azure-manifest.json').read_text(encoding='utf-8'))
+azpath=OUT/'capturas'/azcap['file']
+if hashlib.sha256(azpath.read_bytes()).hexdigest()!=azcap['sha256']: raise ValueError('La captura Azure no coincide con su manifiesto')
+story.append(Image(str(azpath),width=480,height=480*azcap['height']/azcap['width']))
+md.append('![Pipeline MICROPROYECTO3 Completed](capturas/'+azcap['file']+')\n')
+p('La pantalla muestra el dataset, las etapas prepare, train y evaluate en verde, y las salidas trained y report. El flujo entrega particiones y modelo al evaluador. Las comprobaciones independientes de API y los registros del trabajo complementan esta evidencia visual.','small')
+p('La imagen se conserva completa y sin alterar. No acredita el costo facturado, la conservación tras reiniciar ni la identidad de quien ejecutó cada paso. Esas afirmaciones requieren sus registros específicos.','small')
 
 def footer(c,doc):
  c.saveState();w,height=doc.pagesize;c.setFont('ArialBold',9);c.setFillColor(teal);c.drawString(56,height-33,'RESERVAIQ')

@@ -1,5 +1,21 @@
 # Evidencias del microproyecto
 
+## Versión publicada en MICROPROYECTO3
+
+Corte: 1 de octubre de 2026 UTC. Nueva ejecución `microproyecto3-reejecucion-20261001`, tres etapas Completed, modelo `reservaiq:1` y demo web en App Service F1. Es una nueva ejecución del mismo proyecto, separada del trabajo original `mango_wire_5f09pdg4m3`.
+
+- [Estados y activos Azure](../azure/evidence/microproyecto3/execution.json), [procedencia del modelo](../azure/evidence/microproyecto3/runtime.json) y [pipeline ejecutado](../azure/evidence/microproyecto3/pipeline.yml).
+- **67 pruebas**: 41 Python y 26 JavaScript en cada sistema de CI, Windows y Ubuntu. [Ejecución verificada](https://github.com/nathernandez1189/reservaiq-azure-ml/actions/runs/36809150020).
+- **31 comprobaciones HTTPS**, incluyendo predicción, guardado, lote CSV, validación y conflictos. Nueve reservas ficticias conservaron sus datos después de reiniciar App Service. [Resultados](../azure/evidence/microproyecto3/web-verification.json).
+- Misma huella SHA-256 del modelo y 7.990 predicciones coincidentes con los artefactos originales conservados. Esta equivalencia no transforma las dos ejecuciones en un mismo trabajo.
+- [Costos fechados](COSTOS.md): original US$0,0620879781 antes de impuestos; MICROPROYECTO3 todavía sin filas de costo. Estimación de conservación US$2 y límite US$3.
+
+Las comprobaciones de API y componentes no equivalen a un recorrido visual completo del sitio alojado. La revisión visual automatizada del navegador quedó bloqueada por la política de acceso. Tampoco se ha medido el ensayo de 15 minutos.
+
+## Registro histórico de comprobaciones anteriores
+
+Los conteos y estados siguientes corresponden a las versiones y fechas indicadas. Se conservan como antecedentes y no sustituyen el corte actual.
+
 Las métricas y el modelo entregados corresponden al pipeline de Azure ML `mango_wire_5f09pdg4m3`, con sus tres etapas en estado Completed. La aplicación utiliza la copia descargada del modelo registrado `reservaiq:1`. La verificación local posterior comprueba las 7.990 predicciones guardadas y la identidad del archivo.
 
 | Evidencia | Archivo | Qué demuestra |

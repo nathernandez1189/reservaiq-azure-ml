@@ -1,5 +1,18 @@
 # Usar ReservaIQ paso a paso
 
+## Abrir la demo web
+
+Accede a **https://reservaiq-microproyecto3-20261001.azurewebsites.net/**. No necesitas instalar Python ni volver a ejecutar Azure ML. La primera apertura del plan gratuito puede tardar. Esta demo pública comparte los registros del equipo: utiliza solo reservas ficticias.
+
+1. Abre **Nueva reserva** y elige creación, llegada y salida.
+2. Completa **Detalles**, revisa el resumen y pulsa **Analizar y guardar**.
+3. Conserva el código de confirmación y consulta **Mis reservas**. Abre, revisa o archiva el registro según necesites.
+4. Los contadores Guardadas, Pendientes, Revisadas y Archivadas filtran la lista. **Solo analizar** no guarda.
+
+La web guarda en Blob privado con formato SQLite y se verificó su conservación tras reiniciar App Service. La versión local explicada abajo guarda en cada computador y no se sincroniza con la web. La conservación de Azure está autorizada hasta el 5 de octubre inclusive, hora de Colombia.
+
+## Variante local
+
 ReservaIQ ayuda a decidir qué reservas revisar primero. Puedes **analizar, guardar, volver a abrir y organizar copias locales**. Guardar aquí no confirma una habitación ni envía datos a un hotel.
 
 ## 1. Actualizar e iniciar
@@ -119,7 +132,7 @@ Entra en **Cómo probarlo** para seguir el recorrido del calendario, comparar co
 | No me deja continuar después de elegir fechas | Elige una salida posterior a la llegada, hasta 30 noches. Verifica que la llegada esté dentro de los 60 días desde la creación. |
 | Solo veo campos numéricos de noches | Abriste un ejemplo histórico, un CSV o una reserva antigua sin fechas. Puedes conservar sus variables o elegir fechas explícitas. |
 | No se pudo guardar | Comprueba espacio y permisos de la carpeta. Conserva la base existente. |
-| No veo reservas de un compañero | El almacenamiento es local a cada computador; el repositorio no contiene bases personales. |
+| No veo reservas de un compañero | En la web se comparten registros: comprueba que ambos abren el enlace azurewebsites.net y los mismos filtros. En 127.0.0.1 cada computador tiene su propia base; no se sincroniza con Azure. |
 | Veo cifras históricas en Inicio | Corresponden a la prueba del modelo, no a las reservas recién ingresadas. |
 
 Abrir y usar la demo local no requiere encender recursos de Azure.

@@ -1,0 +1,26 @@
+{
+  "resource_group": "MICROPROYECTO3",
+  "checked_at_utc": "2026-10-01T03:20:03.922881+00:00",
+  "period": {
+    "from": "2026-09-24T00:00:00Z",
+    "to": "2026-10-01T23:59:59Z"
+  },
+  "columns": [
+    {
+      "name": "PreTaxCost",
+      "type": "Number"
+    },
+    {
+      "name": "ServiceName",
+      "type": "String"
+    },
+    {
+      "name": "Currency",
+      "type": "String"
+    }
+  ],
+  "rows": [],
+  "status": "not_yet_reported",
+  "total": null,
+  "tax_basis": "PreTaxCost"
+}
