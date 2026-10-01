@@ -53,11 +53,11 @@ def num(v):return f'{v:,}'.replace(',','.')
 def code(t):
  p(html.escape(t).replace('\n','<br/>'),'code');md[-1]='```bash\n'+t+'\n```\n'
 
-def report_architecture():
+def report_architecture(filename='arquitectura-azure-web.svg'):
  # svglib no dibuja los marcadores SVG. Convertirlos en polígonos explícitos
  # conserva las puntas y el sentido de las flechas del diagrama publicado.
  ET.register_namespace('', 'http://www.w3.org/2000/svg')
- root=ET.fromstring((OUT/'figuras/arquitectura-azure-web.svg').read_text(encoding='utf-8'))
+ root=ET.fromstring((OUT/'figuras'/filename).read_text(encoding='utf-8'))
  ns='{http://www.w3.org/2000/svg}'
  for path in list(root.iter(ns+'path')):
   if 'marker-end' not in path.attrib: continue
@@ -75,8 +75,8 @@ def report_architecture():
  return svg2rlg(BytesIO(ET.tostring(root)))
 
 class Architecture(Flowable):
- def __init__(self):
-  Flowable.__init__(self);self.diagram=report_architecture();self.width=480;self.height=self.diagram.height*480/self.diagram.width
+ def __init__(self,filename='arquitectura-azure-web.svg'):
+  Flowable.__init__(self);self.diagram=report_architecture(filename);self.width=480;self.height=self.diagram.height*480/self.diagram.width
  def draw(self):
   factor=480/self.diagram.width;self.diagram.scale(factor,factor)
   renderPDF.draw(self.diagram,self.canv,0,0)
@@ -97,10 +97,10 @@ p('<link href="https://reservaiq-microproyecto3-20261001.azurewebsites.net/" col
 
 page();title('1. Requerimientos y alternativas')
 p('La necesidad se traduce en una decisión verificable: qué reservas revisar primero cuando existe una capacidad K. El calendario permite elegir creación, llegada y salida. El guardado web conserva registros compartidos en un contenedor privado y los contadores permiten consultar su estado. La alerta por umbral complementa esa revisión.')
-table([['ID','Requerimiento','Criterio de aceptación'],['R1','Analizar una reserva','Validar diez variables y devolver índice, decisión y versión.'],['R2','Priorizar revisión','Seleccionar exactamente K registros y exportar la lista.'],['R3','Analizar un lote','CSV con 1-500 filas, máximo 150 KB y el mismo contrato.'],['R4','Evaluar sin usar el futuro','Particiones temporales disjuntas y madurez de etiquetas.'],['R5','Comparar y explicar','Candidatos, métricas, matriz y ejemplos de aciertos y errores.'],['R6','Ejecutar en Azure ML','Tres componentes, trabajo Completed y artefactos verificables.'],['R7','Limitar consumo','CPU, mínimo cero, máximo un nodo y límites de duración.'],['R8','Conservar reservas ficticias','Guardar, recuperar y editar después de reiniciar; archivo reversible.']],[35,145,300])
+table([['ID','Requerimiento','Criterio de aceptación'],['R1','Analizar una reserva','Validar diez variables y devolver índice, decisión y versión.'],['R2','Priorizar revisión','Priorizar hasta K pendientes según disponibilidad; exportar.'],['R3','Analizar un lote','CSV con 1-500 filas, máximo 150 KB y el mismo contrato.'],['R4','Evaluar sin usar el futuro','Particiones temporales disjuntas y madurez de etiquetas.'],['R5','Comparar y explicar','Candidatos, métricas, matriz y ejemplos de aciertos y errores.'],['R6','Ejecutar en Azure ML','Tres componentes, trabajo Completed y artefactos verificables.'],['R7','Limitar consumo','CPU, mínimo cero, máximo un nodo y límites de duración.'],['R8','Conservar reservas ficticias','Guardar, recuperar y editar después de reiniciar; archivo reversible.']],[35,145,300])
 h('Alternativas consideradas')
 table([['Alternativa','Ventaja','Limitación'],['Reglas manuales','Simplicidad y explicación','Umbrales rígidos y mantenimiento manual.'],['Clasificador y lista','Comparación y prioridad medible','Necesita datos y seguimiento de errores.'],['AutoML','Exploración automatizada','Más ensayos y consumo variable.']],[130,160,190])
-p('Se elige clasificación supervisada con revisión humana. No hay integración con un sistema hotelero productivo, envío de mensajes, modificación de reservas ni cobros automáticos.','small')
+p('Reglas y AutoML se compararon conceptualmente, sin ejecutarlos. Se eligió clasificación supervisada por su evaluación controlada. Se entrenaron logística, Random Forest y Gradient Boosting frente a una base constante. No hay integración hotelera, mensajes ni cobros automáticos.','small')
 
 page();title('2. Datos, alcance y variables')
 p('Antonio, Almeida y Nunes publicaron 119.390 reservas de dos hoteles portugueses con llegadas en 2015-2017. Se conserva la distribución de TidyTuesday y su huella SHA256. Licencia de los datos originales: CC BY 4.0. [1, 2]')
@@ -126,12 +126,15 @@ p('Se fijan versiones de Python y librerías. selection.json documenta candidato
 page();title('4. Arquitectura y flujo')
 story.append(Architecture());story.append(Spacer(1,8))
 md.append('![Flujo actual con Azure ML, App Service y Blob privado](figuras/arquitectura-azure-web.svg)\n')
+h('De la captura al seguimiento')
+story.append(Architecture('flujo-reserva.svg'))
+md.append('![Flujo de una reserva: fechas o CSV, análisis, guardado y revisión](figuras/flujo-reserva.svg)\n')
 page();title('4.1. Componentes y relaciones')
 table([['Componente','Responsabilidad'],['Workspace y Blob','Organizar trabajos, conservar entradas y artefactos.'],['Clúster CPU DS2 v2','Ejecutar con mínimo 0, máximo 1 nodo e inactividad de 120 s.'],['Preparación','Aplicar alcance, deduplicación, fechas y particiones.'],['Entrenamiento','Comparar candidatos y fijar modelo y umbral.'],['Evaluación','Calcular métricas sobre prueba y exportar evidencia.'],['Registro y descarga','Versionar el modelo y comprobar su huella.'],['App Service y Blob privado','Interfaz HTTPS, inferencia, lotes y guardado compartido en instantáneas SQLite.']],[155,325])
 p('Preparación entrega entrenamiento y validación al componente de entrenamiento, y prueba al de evaluación. Entrenamiento produce el modelo; evaluación recibe ese modelo y produce métricas y predicciones. Las flechas representan datos y artefactos. [3]','small')
 p('Registro y descarga son pasos posteriores al trabajo Completed, no componentes adicionales del pipeline. El registro pertenece a Azure. App Service carga una copia descargada y verificada del modelo. La variante local utiliza sus propios archivos.','small')
 p('La web aplica transacciones SQLite en memoria y conserva la instantánea en un Blob privado. Un ETag detecta escrituras concurrentes y la identidad administrada limita el acceso al contenedor. Los usuarios comparten registros ficticios. Guardar no cambia el entrenamiento ni las métricas históricas.','small')
-p('App Service sirve el modelo descargado sin mantener un endpoint de inferencia de Azure ML. artifacts/runtime.json vincula la aplicación con trabajo, estado Completed, versión y SHA256. La etiqueta de origen Azure exige coincidencia con el archivo cargado. El estado histórico del trabajo y el cierre de recursos se documentan por separado.','small')
+p('App Service sirve el modelo descargado sin mantener un endpoint de inferencia de Azure ML. runtime.json del directorio de artefactos cargado (cloud-artifacts en la web; artifacts en local) vincula la aplicación con trabajo, estado Completed, versión y SHA256. La etiqueta de origen Azure exige coincidencia con el archivo cargado. El estado histórico del trabajo y el cierre de recursos se documentan por separado.','small')
 
 page();title('5. Resultados y decisión')
 table([['Métrica de prueba','Resultado'],['Average precision',f"{M['average_precision']:.4f}"],['ROC AUC',f"{M['roc_auc']:.4f}"],[f"Detección al umbral {S['threshold']:.2f}",pct(M['recall'])],[f"Precisión al umbral {S['threshold']:.2f}",pct(M['precision'])],['F1',f"{M['f1']:.4f}"],['Brier del índice sin calibrar',f"{M['brier']:.4f}"]],[340,140])

@@ -4,7 +4,7 @@
 
 Hotel Brisa del Valle de Cali es el cliente ficticio. Su necesidad es distribuir una capacidad limitada de revisión entre reservas. La salida principal es una lista ordenada de tamaño K. La aplicación no realiza contactos, cancelaciones ni cobros. Esto mantiene el alcance demostrable y evita confundir predicción con una intervención que aún no se ha medido.
 
-Se compararon reglas manuales, clasificación supervisada y AutoML. Se eligió clasificación con cuatro candidatos porque permite contrastar rendimiento, explicar cada etapa y controlar la cantidad de ensayos y el costo.
+Se compararon conceptualmente reglas manuales, clasificación supervisada y AutoML. Reglas y AutoML no se ejecutaron como experimentos. Se eligió clasificación con cuatro candidatos porque permite contrastar rendimiento, explicar cada etapa y controlar la cantidad de ensayos y el costo.
 
 ## 2. Datos y contrato de entrada
 
@@ -40,7 +40,7 @@ La lista por capacidad ordena los índices y selecciona exactamente K. Es distin
 
 ## 6. Aplicación e inferencia
 
-`app.py` carga un artefacto confiable y expone las rutas individuales y por lote. El servidor escucha en 127.0.0.1. Rechaza peticiones de otro origen, solicitudes JSON mayores de 1 MB (el lector de CSV limita el archivo a 150 KB), lotes vacíos y más de 500 filas. `core.py` aplica el mismo contrato en ambos casos.
+`app.py` carga un artefacto confiable y expone las rutas individuales y por lote. En modo local escucha en 127.0.0.1; la web usa Gunicorn en App Service F1 con HTTPS. Rechaza peticiones de otro origen, solicitudes JSON mayores de 1 MB (el lector de CSV limita el archivo a 150 KB), lotes vacíos y más de 500 filas. `core.py` aplica el mismo contrato en ambos casos.
 
 `web/` implementa seis vistas: Inicio, Nueva reserva, Mis reservas, Cómo probarlo, Resultados del modelo y Diseño y Azure. Los datos editados invalidan el resultado anterior. La lista completa y las predicciones se exportan en JSON; el CSV de `ejemplos-csv/` permite reproducir el lote sin preparar datos adicionales.
 
@@ -63,7 +63,7 @@ Los commits agrupan cambios reales por responsabilidad: contrato de datos; entre
 - [Componentes de comandos de Azure ML](https://learn.microsoft.com/en-us/azure/machine-learning/reference-yaml-component-command?view=azureml-api-2).
 - [Control de costos de Azure ML](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-optimize-cost?view=azureml-api-2).
 
-## 9. Decisiones de operación en Azure
+## 9. Antecedente: primera ejecución en Azure
 
 La suscripción de la práctica limita las regiones disponibles. Se eligió **North Central US**, con cuota CPU verificada y una referencia pública de 0,146 USD por hora para DS2 v2 Linux. El grupo `rg-reservaiq` separa los recursos de esta entrega de otras prácticas.
 
@@ -100,3 +100,11 @@ SQLite pasa al esquema 2 con una columna opcional `stay` (creación, llegada, sa
 
 
 Tras observar una captura aportada por el equipo, se añadió el control Mostrar/Ocultar calendario y el cierre después de seleccionar la salida. La visibilidad es estado de interfaz: no cambia fechas, resultados ni persistencia. Diseño y Azure reúne ahora la correspondencia de la rúbrica y una explicación del flujo, manteniendo los requisitos académicos separados de la operación cotidiana.
+
+## 12. Nueva ejecución y despliegue compartido
+
+El 1 de octubre UTC (30 de septiembre en Colombia) se ejecutó de nuevo el pipeline en MICROPROYECTO3. Se conservaron los artefactos originales y se verificó que el nuevo modelo y sus 7.990 predicciones coinciden. App Service carga la copia de la nueva ejecución desde `cloud-artifacts/`; esta carpeta de despliegue está excluida del repositorio.
+
+`cloud_wsgi.py` adapta la API para Gunicorn. `cloud_storage.py` procesa una instantánea SQLite en memoria y la guarda en Blob privado con ETag. La identidad administrada accede solo al contenedor autorizado. Así se conserva el trabajo entre reinicios sin montar SQLite sobre una carpeta de red. La demo pública comparte registros ficticios; no tiene autenticación individual.
+
+La arquitectura actual y el flujo de reservas se regeneran desde `scripts/diagrama_arquitectura.py`. Las variantes local y web se identifican expresamente. La revisión cruza las flechas con las entradas y salidas del pipeline y con los caminos de guardado del código. [Arquitectura](ARQUITECTURA.md), [despliegue](AZURE-WEB.md) y [evidencias](EVIDENCIAS.md).

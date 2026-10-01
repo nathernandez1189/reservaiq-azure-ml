@@ -34,7 +34,7 @@ Hotel Brisa del Valle es un cliente ficticio de Cali. Su equipo necesita decidir
 | Clasificador + lista | Prioridad medible | Exige evaluación |
 | AutoML | Explora alternativas | Más ensayos y consumo variable |
 
-Elegimos clasificación supervisada porque permite aprender de reservas históricas, comparar modelos y medir errores. La lista priorizada convierte el resultado en una decisión operativa, manteniendo control sobre los ensayos y el consumo de cómputo.
+Reglas y AutoML se compararon como alternativas de diseño; no se ejecutaron. Elegimos clasificación supervisada para controlar el costo y medir la prioridad. Entrenamos regresión logística, Random Forest y Gradient Boosting frente a una base constante; seleccionamos por average precision en validación.
 
 ## 4. Datos y alcance
 
@@ -95,7 +95,11 @@ Elegimos Gradient Boosting por su mayor average precision en validación. La ven
 | --- | ---: |
 | Consumo original del 25 de septiembre, antes de impuestos | 0,0620879781 |
 | Consumo de MICROPROYECTO3 | Sin filas todavía |
-| Conservación temporal, estimación | 2 |
+| CPU, supuesto de 1 h × 0,146 USD/h | 0,1460 |
+| Registro Basic, 6 días × 0,1666 USD/día | 0,9996 |
+| Almacenamiento, operaciones y margen | 0,8544 |
+| App Service F1 | 0 |
+| Total estimado de ejecución y conservación | 2 |
 | Límite autorizado | 3 |
 
 Consulta de Cost Management: 01/10/2026, 03:20 UTC. La estimación no es factura. El valor original no corresponde a la nueva ejecución. [Desglose y evidencia](COSTOS.md).
@@ -110,6 +114,8 @@ Consulta de Cost Management: 01/10/2026, 03:20 UTC. La estimación no es factura
 El calendario se puede ocultar sin perder las fechas. La aplicación calcula anticipación, mes y reparto de noches. **Solo analizar no crea un registro.**
 
 La web conserva fechas, entradas, resultado y estado en Blob privado con formato SQLite. Se verificó su conservación después de reiniciar App Service. Todos comparten los registros ficticios. Guardar permite dar seguimiento, sin confirmar disponibilidad hotelera. Los CSV usan el mismo modelo y permiten revisar el lote antes de guardarlo.
+
+**CSV:** 1–500 filas; analizar → vista previa → guardar lote. **Caso histórico:** reserva 12301, índice aproximado 39,8, cancelación conocida. **Error de entrada:** 61 días de anticipación o cero noches deben rechazarse sin guardado.
 
 [Flujo operativo detallado](figuras/flujo-reserva.svg) · [Guía de uso](GUIA-DE-USO.md).
 
@@ -135,7 +141,7 @@ El modelo detecta 1.467 de las 1.831 cancelaciones y omite 364. También genera 
 
 Además se realizaron 31 comprobaciones HTTPS y nueve registros persistieron tras reiniciar App Service. Las pruebas de API y componentes no sustituyen una revisión completa en navegador. Los datos históricos no garantizan desempeño en Colombia ni demuestran cancelaciones evitadas.
 
-[Evidencia automática de la versión publicada](https://github.com/nathernandez1189/reservaiq-azure-ml/actions/runs/36809150020) · [Alcance de las verificaciones](EVIDENCIAS.md).
+[Evidencia automática de la versión publicada](https://github.com/nathernandez1189/reservaiq-azure-ml/actions) · [Alcance de las verificaciones](EVIDENCIAS.md).
 
 ## 12. Priorización con revisión humana
 

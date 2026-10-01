@@ -15,7 +15,7 @@ La vista **Diseño y Azure** de la aplicación contiene una correspondencia con 
 - [Contenido de las 12 diapositivas](PRESENTACION.md): copia de consulta dentro del repositorio, disponible sin una cuenta de Canva.
 - [Guía de uso y guardado](GUIA-DE-USO.md) y [pruebas guiadas](PRUEBAS-GUIADAS.md).
 - [Instrucciones para ejecutar la demo](../README.md#ejecutar-la-aplicación) y [CSV listo para cargar](../ejemplos-csv/reservas-listas.csv).
-- [Evidencias de ejecución y verificación](EVIDENCIAS.md), [capturas comentadas](CAPTURAS.md) y [ejecución en Azure](../azure/evidence/run.json).
+- [Evidencias de ejecución y verificación](EVIDENCIAS.md), [capturas comentadas](CAPTURAS.md) y [nueva ejecución en Azure](../azure/evidence/microproyecto3/execution.json).
 
 El enlace de Canva proporcionado por la integración solicitó iniciar sesión en la comprobación del 29/09/2026. No se ha confirmado acceso anónimo al diseño. La copia de contenido permite revisar la presentación desde GitHub; conserva la información, tablas y flujo, pero no reproduce la maquetación gráfica de Canva.
 
@@ -25,12 +25,12 @@ Esta tabla se basa en las instrucciones del microproyecto facilitadas por el cur
 
 | Criterio | Peso | Qué se pide | Cómo lo desarrolla ReservaIQ | Dónde revisarlo |
 | --- | ---: | --- | --- | --- |
-| Análisis de requerimientos | 20 % | Empresa, necesidades, requerimientos y restricciones; alternativas; pipeline, componentes o algoritmos; costos aproximados | Hotel ficticio Brisa del Valle; priorización por capacidad K; contrato de diez variables; comparación de reglas, clasificación y AutoML; evaluación de cuatro candidatos; escenario actual de US$2, límite US$3 y costo registrado de la ejecución original separado | [Informe](Informe-tecnico.md), [modelo y datos](MODELO.md), [costos](COSTOS.md); diapositivas 2–4 y 6–8 |
+| Análisis de requerimientos | 20 % | Empresa, necesidades, requerimientos y restricciones; alternativas; pipeline, componentes o algoritmos; costos aproximados | Hotel ficticio Brisa del Valle; priorización por capacidad K; contrato de diez variables; comparación conceptual de reglas, clasificación y AutoML; evaluación ejecutada de tres algoritmos y una base constante; escenario actual de US$2, límite US$3 y costo registrado de la ejecución original separado | [Informe](Informe-tecnico.md), [modelo y datos](MODELO.md), [costos](COSTOS.md); diapositivas 2–4 y 6–8 |
 | Propuesta de diseño | 25 % | Diagrama, relación y flujo entre componentes, descripción | Datos y Blob, tres componentes Azure ML, modelo versionado, App Service con calendario, Blob privado con SQLite y revisión humana; variante local disponible | [Arquitectura](ARQUITECTURA.md), [flujo operativo](figuras/flujo-reserva.svg), [pipeline](../azure/pipeline.yml), [preparación](../azure/prepare.yml), [entrenamiento](../azure/train.yml) y [evaluación](../azure/evaluate.yml); diapositivas 5, 8 y 9 |
 | Implementación del demo | 30 % | Implementar la solución diseñada | Inferencia individual, guardado compartido en la web, estados de revisión, priorización por K, procesamiento de CSV y exportación; modelo entrenado en Azure, descargado y comprobado; demostración de aciertos y errores | [Aplicación e instrucciones](../README.md), [modelo](../artifacts/), [pruebas](../tests/), [registros Azure](../azure/evidence/); diapositivas 9–11 |
 | Presentación de la solución | 25 % | Exposición de 15 minutos que explique requerimientos, diseño y demo | Doce diapositivas principales y un cierre adicional; distribución objetivo de cinco minutos por integrante, con demo dentro del último bloque | [Canva](https://www.canva.com/d/0RDtRC3Au5C7vEJ) y [contenido consultable](PRESENTACION.md) |
 
-El material cubre los temas solicitados. El criterio de presentación también requiere realizar la exposición y mostrar la demo: disponer del archivo no demuestra que esa actividad ya se haya cumplido.
+[Matriz detallada de requisitos, aceptación y evidencia](#requisitos-y-comprobaciones). El material cubre los temas solicitados. El criterio de presentación también requiere realizar la exposición y mostrar la demo: disponer del archivo no demuestra que esa actividad ya se haya cumplido.
 
 ## Alcance de la evidencia
 
@@ -57,3 +57,18 @@ El repositorio centraliza el informe, la referencia a Canva, la copia consultabl
 Para entregar, utiliza el repositorio como punto de entrada si la actividad admite enlaces. Si exige un archivo, adjunta el ZIP de esa misma revisión y agrega el enlace cuando el formulario lo permita. No es necesario adjuntar duplicados salvo que el campus o el profesor los solicite.
 
 La publicación en GitHub, la disponibilidad del ZIP y la edición de Canva **no equivalen a una entrega formal en el campus**.
+
+## Requisitos y comprobaciones
+
+| Requisito | Cómo se demuestra | Evidencia y presentación |
+| --- | --- | --- |
+| R1. Analizar individualmente | Elegir creación, llegada y salida; revisar seis categorías y analizar sin guardar | [Contrato de diez variables](../ejemplos-csv/LEEME.md), `tests/test_dates.py` y `tests/test_reservaiq.py`; láminas 2, 4 y 9 |
+| R2. Priorizar por capacidad | Cambiar K; consultar hasta K pendientes por índice, separados de la cohorte histórica | [Guía](GUIA-DE-USO.md), `tests/test_ui.cjs`; láminas 2, 9 y 12 |
+| R3. CSV de hasta 500 | Analizar el ejemplo, revisar vista previa y confirmar Guardar lote; rechazar entradas inválidas sin guardar parcialmente | [CSV listo](../ejemplos-csv/reservas-listas.csv), `tests/test_storage.py` y `tests/test_cloud.py`; láminas 2 y 9 |
+| R4. Evaluación por tiempo | Mostrar train/validación/prueba; el modelo se selecciona antes de la prueba | [Manifiesto](../artifacts/splits/data_manifest.json), [pipeline ejecutado](../azure/evidence/microproyecto3/pipeline.yml); láminas 4–7 |
+| R5. Comparación y errores | Tres algoritmos frente a una base; matriz y un acierto, falsa alerta y omisión | [Resultados](../artifacts/summary.json), [modelo](MODELO.md); láminas 7 y 10 |
+| R6. Pipeline Azure ML | Tres componentes Completed, datos y entorno versionados, modelo registrado y descarga verificada | [Captura real](CAPTURAS.md#captura-real-de-azure-ml), [ejecución](../azure/evidence/microproyecto3/execution.json); láminas 5 y 8 |
+| R7. Consumo acotado | CPU 0–1 nodos, F1, estimación con supuestos; costo original separado del nuevo | [Costos](COSTOS.md); lámina 8. Una estimación no garantiza el consumo final |
+| R8. Persistencia y seguimiento | Guardar, abrir, editar, marcar revisada, archivar y recuperar; datos compartidos en web | [Verificación HTTPS y reinicio](../azure/evidence/microproyecto3/web-verification.json), [flujo](figuras/flujo-reserva.svg); láminas 9 y 11 |
+
+Las restricciones de 0–60 días y 1–30 noches se validan en el servidor; las fechas no añaden nuevas variables al modelo. Las pruebas automatizadas no certifican toda la accesibilidad ni sustituyen el ensayo de 15 minutos. Las alternativas manuales y AutoML son una comparación de diseño, no resultados experimentales.

@@ -10,7 +10,7 @@ Suite actual: 41 pruebas Python y 26 JavaScript, ejecutadas en Windows y Ubuntu.
 
 Estas acciones permiten comprobar el funcionamiento de la aplicación. Los resultados esperados se distinguen de las comprobaciones automáticas; esta tabla no afirma que el lector ya las haya realizado.
 
-Usa datos de ejemplo. Las reservas que guardes permanecerán en tu computador. Puedes archivarlas al terminar.
+Usa datos de ejemplo. En la web, los registros quedan compartidos en Azure; en modo local, permanecen en el computador que ejecuta el servidor. Puedes archivarlos al terminar.
 
 | Paso | Acción | Resultado esperado |
 | --- | --- | --- |
@@ -18,7 +18,7 @@ Usa datos de ejemplo. Las reservas que guardes permanecerán en tu computador. P
 | 2 | Cargar ejemplo de prueba | Registro histórico 12301, anticipación 28 días, estancia de 3 noches; estado Sin guardar. |
 | 3 | Pulsar Solo analizar | Índice aproximado 39,8 y sugerencia Priorizar revisión. No aparece en Mis reservas. |
 | 4 | Pulsar Analizar y guardar | Código RI-…, mensaje de guardado y registro en Mis reservas. |
-| 5 | Recargar la página, cerrar el servidor y volver a iniciarlo | La misma referencia y código siguen disponibles. |
+| 5 | En la web: recargar y abrir desde otra ventana; en local: cerrar y reiniciar el servidor | La misma referencia y código siguen disponibles. |
 | 6 | Abrir la reserva, ir a Fechas y cambiar anticipación de 28 a 7; volver a Revisar y guardar → Solo analizar | Índice aproximado 13,6 y seguimiento habitual. La copia guardada todavía conserva el dato anterior. El desenlace del escenario editado es desconocido. |
 | 7 | Pulsar Guardar cambios y volver a abrir | Mismo código, nuevos datos y resultado, estado pendiente. No crea una segunda reserva. |
 | 8 | Marcar revisada; archivar; filtrar Archivadas y restaurar | Cambios reversibles de estado, sin borrar la reserva ni contactar huéspedes. |
@@ -42,7 +42,7 @@ Usa datos de ejemplo. Las reservas que guardes permanecerán en tu computador. P
 | C4 | Continuar con los detalles; referencia `Prueba calendario`; revisar los seis campos | Ayudas junto a cada opción; el resumen muestra el contexto de la estancia. |
 | C5 | Revisar mi reserva → Solo analizar | Índice y recomendación reales del modelo para ese escenario; no hay registro guardado todavía. No se presupone una puntuación ni cancelación. |
 | C6 | Analizar y guardar; ir a Mis reservas | Código RI-… y tarjeta con las fechas de llegada y salida. |
-| C7 | Reiniciar y abrir Prueba calendario | Mismo código, mismas fechas y mismo resultado. |
+| C7 | Recargar y abrir Prueba calendario; reiniciar el servidor solo en modo local | Mismo código, mismas fechas y mismo resultado. |
 | C8 | Volver al paso Fechas; cambiar salida al 06/10; revisar y guardar cambios | 4 noches (2 entre semana, 2 de fin de semana); mismo código, resultado recalculado. |
 | C9 | Elegir una salida anterior a la llegada o superior a 30 noches | Mensaje comprensible; no se guarda una entrada inválida. Los días fuera de alcance están deshabilitados en el calendario. |
 | C10 | Navegar usando Tab, flechas y Enter; probar una pantalla pequeña y zoom al 200 % | Controles visibles, foco perceptible y recorrido completo. Es una comprobación manual pendiente, no un resultado certificado. |

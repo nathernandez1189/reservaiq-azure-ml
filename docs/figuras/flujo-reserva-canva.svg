@@ -11,7 +11,7 @@
 	<g id="group" transform="scale(1,-1) translate(0,-950)" style="clip-path: url(#clip)">
 		<g transform="">
 			<rect x="0" y="0" width="1800" height="950" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(7%,13%,17%); fill-rule: evenodd;"/>
-			<text x="40" y="894" style="font-family: Helvetica-Bold; font-size: 34px;fill: rgb(92%,96%,96%); stroke:none;" transform="translate(0,1788) scale(1,-1)">FLUJO DE UNA RESERVA EN LA APLICACIÓN LOCAL</text>
+			<text x="40" y="894" style="font-family: Helvetica-Bold; font-size: 34px;fill: rgb(92%,96%,96%); stroke:none;" transform="translate(0,1788) scale(1,-1)">FLUJO DE RESERVAS: CALENDARIO, CSV Y SEGUIMIENTO</text>
 			<rect x="40" y="645" width="500" height="195" rx="14" ry="0" style="stroke: rgb(40%,87%,81%); stroke-linecap: butt; stroke-width: 2; fill: rgb(12%,23%,28%); fill-rule: evenodd;"/>
 			<text x="64" y="792" style="font-family: Helvetica-Bold; font-size: 30px;fill: rgb(92%,96%,96%); stroke:none;" transform="translate(0,1584) scale(1,-1)">1. Fechas y detalles</text>
 			<text x="64" y="746" style="font-family: Helvetica; font-size: 26px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,1492) scale(1,-1)">Creación, llegada y salida visibles</text>
@@ -31,6 +31,10 @@
 			<polygon points="630 743, 617 737, 617 749" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(40%,87%,81%); fill-rule: evenodd;"/>
 			<polyline points="1120 743, 1210 743" style="stroke: rgb(40%,87%,81%); stroke-linecap: butt; stroke-width: 3; fill: None; fill-rule: evenodd;"/>
 			<polygon points="1210 743, 1197 737, 1197 749" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(40%,87%,81%); fill-rule: evenodd;"/>
+			<rect x="40" y="552" width="500" height="72" rx="14" ry="0" style="stroke: rgb(40%,87%,81%); stroke-linecap: butt; stroke-width: 2; fill: rgb(12%,23%,28%); fill-rule: evenodd;"/>
+			<text x="64" y="576" style="font-family: Helvetica-Bold; font-size: 30px;fill: rgb(92%,96%,96%); stroke:none;" transform="translate(0,1152) scale(1,-1)">Alternativa: CSV (1–500 filas)</text>
+			<polyline points="540 588, 590 588, 590 690, 630 690" style="stroke: rgb(40%,87%,81%); stroke-linecap: butt; stroke-width: 3; fill: None; fill-rule: evenodd;"/>
+			<polygon points="630 690, 617 684, 617 696" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(40%,87%,81%); fill-rule: evenodd;"/>
 			<rect x="1210" y="400" width="550" height="130" rx="14" ry="0" style="stroke: rgb(40%,87%,81%); stroke-linecap: butt; stroke-width: 2; fill: rgb(12%,23%,28%); fill-rule: evenodd;"/>
 			<text x="1234" y="482" style="font-family: Helvetica-Bold; font-size: 30px;fill: rgb(92%,96%,96%); stroke:none;" transform="translate(0,964) scale(1,-1)">Solo analizar</text>
 			<text x="1234" y="436" style="font-family: Helvetica; font-size: 26px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,872) scale(1,-1)">Muestra el resultado, sin guardar</text>
@@ -39,8 +43,8 @@
 			<rect x="630" y="335" width="490" height="195" rx="14" ry="0" style="stroke: rgb(40%,87%,81%); stroke-linecap: butt; stroke-width: 2; fill: rgb(12%,23%,28%); fill-rule: evenodd;"/>
 			<text x="654" y="482" style="font-family: Helvetica-Bold; font-size: 30px;fill: rgb(92%,96%,96%); stroke:none;" transform="translate(0,964) scale(1,-1)">Analizar y guardar</text>
 			<text x="654" y="436" style="font-family: Helvetica; font-size: 26px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,872) scale(1,-1)">Confirma escritura con código RI</text>
-			<text x="654" y="401" style="font-family: Helvetica; font-size: 26px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,802) scale(1,-1)">SQLite conserva copia y fechas</text>
-			<text x="654" y="366" style="font-family: Helvetica; font-size: 26px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,732) scale(1,-1)">Recuperable al reiniciar</text>
+			<text x="654" y="401" style="font-family: Helvetica; font-size: 26px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,802) scale(1,-1)">Web: instantánea SQLite en Blob</text>
+			<text x="654" y="366" style="font-family: Helvetica; font-size: 26px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,732) scale(1,-1)">Local: archivo SQLite propio</text>
 			<polyline points="1280 645, 1280 595, 875 595, 875 530" style="stroke: rgb(40%,87%,81%); stroke-linecap: butt; stroke-width: 3; fill: None; fill-rule: evenodd;"/>
 			<polygon points="875 530, 869 543, 881 543" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(40%,87%,81%); fill-rule: evenodd;"/>
 			<rect x="40" y="335" width="500" height="195" rx="14" ry="0" style="stroke: rgb(40%,87%,81%); stroke-linecap: butt; stroke-width: 2; fill: rgb(12%,23%,28%); fill-rule: evenodd;"/>
@@ -55,10 +59,10 @@
 			<text x="64" y="146" style="font-family: Helvetica; font-size: 26px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,292) scale(1,-1)">Decidir la acción y exportar o descargar respaldo</text>
 			<polyline points="290 335, 290 240" style="stroke: rgb(40%,87%,81%); stroke-linecap: butt; stroke-width: 3; fill: None; fill-rule: evenodd;"/>
 			<polygon points="290 240, 284 253, 296 253" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(40%,87%,81%); fill-rule: evenodd;"/>
-			<text x="925" y="263" style="font-family: Helvetica-Bold; font-size: 27px;fill: rgb(92%,96%,96%); stroke:none;" transform="translate(0,526) scale(1,-1)">Entrada alternativa: CSV de hasta 500 filas</text>
+			<text x="925" y="263" style="font-family: Helvetica-Bold; font-size: 27px;fill: rgb(92%,96%,96%); stroke:none;" transform="translate(0,526) scale(1,-1)">CSV: analizar antes de guardar el lote</text>
 			<text x="925" y="214" style="font-family: Helvetica; font-size: 25px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,428) scale(1,-1)">Se valida y analiza con las mismas diez variables.</text>
 			<text x="925" y="173" style="font-family: Helvetica; font-size: 25px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,346) scale(1,-1)">Vista previa y guardado del lote por acción explícita.</text>
-			<text x="40" y="44" style="font-family: Helvetica; font-size: 27px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,88) scale(1,-1)">Cada computador mantiene su base. Guardar no confirma una habitación ni reentrena el modelo.</text>
+			<text x="40" y="44" style="font-family: Helvetica; font-size: 27px;fill: rgb(72%,81%,83%); stroke:none;" transform="translate(0,88) scale(1,-1)">Web: reservas ficticias compartidas. Guardar no confirma habitaciones ni reentrena el modelo.</text>
 		</g>
 	</g>
 </svg>

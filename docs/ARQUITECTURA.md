@@ -1,77 +1,76 @@
 # Arquitectura y flujo de ReservaIQ
 
-## Arquitectura publicada en Azure el 1 de octubre de 2026 UTC
+## Versión actual: MICROPROYECTO3 y demo web
 
-![Arquitectura de MICROPROYECTO3 con App Service y almacenamiento privado](figuras/arquitectura-azure-web.svg)
+![Azure ML, modelo registrado, App Service y reservas compartidas](figuras/arquitectura-azure-web.svg)
 
-La nueva ejecución `microproyecto3-reejecucion-20261001` completó prepare, train y evaluate en `ml-microproyecto3`. El modelo `reservaiq:1` se descargó y verificó antes del despliegue. [Evidencia](../azure/evidence/microproyecto3/execution.json).
+La ejecución `microproyecto3-reejecucion-20261001` completó las etapas `prepare`, `train` y `evaluate` en `ml-microproyecto3`. La demo pública carga una copia verificada de `reservaiq:1` y conserva reservas ficticias compartidas. [Ejecución](../azure/evidence/microproyecto3/execution.json) · [Captura real](CAPTURAS.md#captura-real-de-azure-ml) · [Abrir la demo](https://reservaiq-microproyecto3-20261001.azurewebsites.net/).
 
-| Componente | Función y flujo |
-| --- | --- |
-| Datos y componentes Azure ML | Conservan versiones de dataset, código y entorno. Preparación fija las particiones; entrenamiento elige modelo y umbral; evaluación mide la prueba reservada sin reentrenar. |
-| Registro del modelo | Versiona el modelo seleccionado después de completar y revisar la evaluación. La aplicación carga una copia con SHA-256 verificado. |
-| Azure App Service F1 | Publica la interfaz y la API HTTPS. Recibe calendario o CSV, valida e infiere con el modelo en memoria. No hay endpoint de inferencia de Azure ML permanente. |
-| Blob privado `reservaiq-demo` | Conserva `reservas.sqlite3` como instantánea. La identidad administrada de la web accede solo a este contenedor. SQLite aplica la transacción y un ETag impide sobrescribir cambios concurrentes. |
-| Revisión humana | Mis reservas muestra los registros compartidos, filtros de estado y prioridades. Guardar no confirma habitaciones ni incorpora nuevos datos al entrenamiento. |
-
-La demo pública admite únicamente datos ficticios y no tiene autenticación por usuario. Todos consultan la misma base. Se verificaron 31 comprobaciones HTTPS y la conservación de nueve registros tras reiniciar App Service. Este esquema acotado de instantáneas sirve al prototipo académico; no sustituye una base de datos productiva para alta concurrencia.
-
-[Acceso y despliegue web](AZURE-WEB.md) · [Costos y conservación hasta el 5 de octubre](COSTOS.md).
-
-## Variante local y antecedentes
-
-El diagrama siguiente documenta la variante que sigue disponible en cada computador. Su SQLite es independiente del guardado compartido de la web. El cierre descrito corresponde únicamente a `rg-reservaiq`, eliminado el 25 de septiembre. `MICROPROYECTO3` permanece como nueva ejecución.
-
-![Flujo de datos y artefactos: pipeline, registro en Azure y aplicación local](figuras/arquitectura.svg)
-
-El diagrama representa **transferencias de datos y artefactos**. Las flechas no indican que todo se ejecute automáticamente ni constituyen un orden cronológico completo. El pipeline contiene exactamente tres componentes: preparación, entrenamiento y evaluación. El registro y la descarga se realizaron después de comprobar el trabajo terminado.
-
-## Entrenamiento y evaluación en Azure
-
-| Origen → destino | Qué se transfiere | Relación con la implementación |
-| --- | --- | --- |
-| CSV / Blob → preparación | Archivo original `hotels.csv` | Entrada `raw` de `azure/pipeline.yml` |
-| Preparación → entrenamiento | Entrenamiento y validación | El componente recibe la carpeta `splits`; `train()` lee `train.csv` y `validation.csv` |
-| Preparación → evaluación | Prueba reservada | El componente recibe `splits`; `evaluate()` lee `test.csv` para las métricas finales |
-| Entrenamiento → evaluación | Modelo y selección fijada | Entrada `trained`: `model.joblib` y `selection.json` |
-| Entrenamiento → registro | Artefacto `model.joblib` | Se registra como `reservaiq:1` desde la salida `trained` del trabajo completado |
-| Evaluación → aplicación local | Métricas, ejemplos y predicciones descargadas | Salida `report`; `summary.json` alimenta las vistas de evidencia y la cohorte ilustrativa |
-| Registro → aplicación local | Copia verificada del modelo | Descarga, SHA-256 y `artifacts/runtime.json` vinculan el modelo con su procedencia |
-| Aplicación ↔ SQLite local | Copia de la reserva, resultado, referencia, estado y revisión | `storage.py` conserva los registros en `.runtime/reservaiq.sqlite3`; no modifica los artefactos históricos |
-| Aplicación → personal del hotel | Índice, lista de tamaño K y exportaciones | La decisión sobre cualquier intervención sigue siendo humana |
-
-El diagrama destaca el uso de la prueba en evaluación. La carpeta `splits` también contiene validación y el manifiesto: evaluación lee validación para la importancia por permutación, sin reajustar el modelo ni el umbral. Las salidas se conservan en Blob; las flechas entre etapas resumen esos archivos almacenados y no son conexiones de red directas entre servicios.
+**Las flechas representan datos y artefactos transferidos.** El modelo procede de entrenamiento; evaluación produce el informe. Registrar, descargar y publicar son pasos posteriores a revisar el trabajo Completed, no tres etapas adicionales del pipeline ni tareas automáticas desencadenadas por cada reserva.
 
 ## Componentes y responsabilidades
 
-| Componente | Responsabilidad | Por qué se utiliza |
+| Componente | Qué hace | Motivo de la elección |
 | --- | --- | --- |
-| Workspace Azure ML | Organizar trabajos, entornos y versiones registradas del modelo | Trazabilidad |
-| Blob Storage asociado | Conservar las entradas y salidas de las etapas | Separar archivos del cómputo |
-| Clúster CPU, 0–1 nodos | Ejecutar los tres componentes | Limitar capacidad ociosa y concurrencia |
-| Preparación | Contrato de datos, deduplicación, fechas y particiones | Reducir contaminación temporal |
-| Entrenamiento | Ajustar transformaciones, comparar candidatos y fijar el umbral con validación | Selección controlada, sin utilizar la prueba |
-| Evaluación | Aplicar el modelo fijo a la prueba y producir métricas y predicciones | Medir generalización retrospectiva |
-| Registro en Azure ML | Identificar el modelo como `reservaiq:1` | Conservar la procedencia y la versión |
-| Descarga y verificación local | Comprobar archivo, huella y resultados | Vincular la demo con la ejecución documentada |
-| Servidor e interfaz local | Validar entradas, inferir, analizar lotes, mostrar prioridad y exportar | Demostrar el uso sin endpoint permanente |
-| SQLite local | Persistir copias, edición y estados de revisión mediante transacciones | Recuperar registros después de reiniciar, sin un servicio de nube adicional |
-| Personal del hotel | Interpretar resultados y decidir las acciones | Mantener supervisión humana |
+| Workspace Azure ML | Organiza datos, componentes, entorno, trabajos y registro del modelo | Procedencia y versiones consultables |
+| Blob asociado a Azure ML | Conserva CSV, particiones y salidas de las etapas | Archivos separados del cómputo |
+| Clúster `microproyecto3-cpu` | Ejecuta el pipeline con `Standard_DS2_v2`, mínimo 0, máximo 1 nodo e inactividad de 120 s | CPU suficiente y capacidad acotada |
+| `prepare` | Valida alcance, deduplica, deriva fechas y fija particiones temporales | Reducir contaminación entre entrenamiento y prueba |
+| `train` | Ajusta transformaciones y candidatos con entrenamiento; selecciona modelo y umbral con validación | Comparación controlada sin utilizar la prueba |
+| `evaluate` | Aplica el modelo fijo a prueba; calcula métricas, ejemplos y predicciones | Medir desempeño retrospectivo sin reentrenar |
+| Registro del modelo | Versiona el archivo de entrenamiento como `reservaiq:1` | Identificar el artefacto elegido |
+| Descarga y verificación | Conserva modelo, selección, informe y huella; compara las 7.990 predicciones | Vincular ejecución y aplicación |
+| App Service Linux F1 | Sirve interfaz y API HTTPS; valida, infiere y gestiona reservas | Acceso web sin instalar Python y sin endpoint permanente de Azure ML |
+| Blob privado `reservaiq-demo` | Conserva `reservas.sqlite3`, una instantánea SQLite procesada en memoria | Persistencia compartida del prototipo entre reinicios |
+| Navegador y personal del hotel | Eligen fechas, consultan señales, priorizan hasta K pendientes y revisan estados | Mantener la decisión en manos de una persona |
 
-## Secuencia de ejecución y operación
+## Transferencias del pipeline y publicación
 
-1. Subir la entrada y ejecutar el pipeline definido en [`azure/pipeline.yml`](../azure/pipeline.yml).
-2. Esperar las tres etapas completadas y revisar las salidas. **Evaluación no crea ni reentrena el modelo.**
-3. Registrar el archivo de la salida de entrenamiento; descargar modelo y resultados. Estos pasos están documentados por separado en [`azure/README.md`](../azure/README.md).
-4. Verificar SHA-256, procedencia y coincidencia de las 7.990 predicciones antes de utilizar el modelo en la aplicación.
-5. Iniciar la aplicación local: una reserva o CSV pasa por validación de entradas y por el modelo para obtener índices. Inicio conserva una cohorte histórica ilustrativa de 150 reservas ya puntuadas. Mis reservas ordena las copias locales y marca las K pendientes de mayor índice; no es un sistema hotelero de producción.
-6. Conservar las evidencias y cerrar los recursos temporales de Azure después de verificar las descargas. La demo continúa con sus archivos locales.
+| Origen → destino | Archivo o contenido | Correspondencia con la implementación |
+| --- | --- | --- |
+| Datos / Blob → prepare | `hotels.csv`, activo `reservaiq-hotels:1` | Entrada `raw` del [pipeline ejecutado](../azure/evidence/microproyecto3/pipeline.yml) |
+| prepare → train | Carpeta `splits`; lee `train.csv` y `validation.csv` | `pipeline.py: train()` |
+| prepare → evaluate | Carpeta `splits`; lee `test.csv` y validación para importancia global | `pipeline.py: evaluate()`; validación no reajusta modelo ni umbral |
+| train → evaluate | `model.joblib` y `selection.json` | Entrada `trained`; modelo y decisión ya fijados |
+| train → registro | Archivo de modelo de la salida `trained` | Se registra después de comprobar el trabajo; no sale de evaluación |
+| evaluate → paquete web | Informe, métricas, ejemplos y predicciones descargados | Salida `report`; alimenta las vistas de resultados y la cohorte histórica |
+| registro → paquete web | Copia descargada de `reservaiq:1` | SHA-256 y `runtime.json` verifican la procedencia |
+| paquete web → App Service | Código y `cloud-artifacts/` de la nueva ejecución | `scripts/pack_azure_web.py`; el original `artifacts/` permanece intacto |
 
-La ejecución original es histórica porque se eliminó rg-reservaiq. La nueva ejecución y la demo web académica permanecen en MICROPROYECTO3 hasta el plazo autorizado. La variante local puede utilizarse sin servicios de nube y no comparte registros con la web.
+Las tres etapas intercambian archivos almacenados en Blob; las líneas no son conexiones de red directas entre procesos. La preparación produce una carpeta común, pero cada función lee solamente los archivos descritos. La prueba se reserva para la evaluación final. [Método y límites](MODELO.md).
 
-## Fuente y reproducción del diagrama
+## Flujo operativo: fechas o CSV hasta revisión
 
-Las figuras de la variante local utilizan la misma definición vectorial en `scripts/diagrama_arquitectura.py`. La variante oscura mantiene la misma topología para reutilizarla en diapositivas. El flujo operativo amplía el detalle de la aplicación local y conserva los tres componentes del pipeline. Para regenerar las figuras y el informe:
+![Flujo actual de análisis, guardado y revisión](figuras/flujo-reserva.svg)
+
+1. **Capturar:** la persona elige creación, llegada y salida y revisa seis categorías. El calendario puede ocultarse sin perder la selección. Como alternativa, importa un CSV con diez columnas y 1–500 filas.
+2. **Derivar y validar:** las fechas producen anticipación, mes de llegada y noches entre semana y de fin de semana. El servidor comprueba nuevamente las diez variables y, si existen fechas completas, su consistencia. Se admiten 0–60 días de anticipación y 1–30 noches; la salida no añade una noche.
+3. **Inferir:** se aplica el modelo fijo y se devuelve índice, alerta por umbral y versión. **Solo analizar no escribe reservas.** El índice no es una probabilidad calibrada.
+4. **Guardar expresamente:** Analizar y guardar confirma un código RI. Para CSV, Analizar lote genera vista previa y Guardar lote confirma el conjunto completo. Una entrada inválida rechaza el lote sin guardado parcial.
+5. **Recuperar y seguir:** Mis reservas permite buscar, pulsar contadores de estado, abrir, editar, priorizar hasta K pendientes, marcar revisada, archivar y restaurar. Editar recalcula el resultado y exige la revisión vigente.
+6. **Decidir y exportar:** una persona interpreta la señal y decide una acción. Guardar no confirma habitaciones, contacta huéspedes, cobra ni demuestra que se evitó una cancelación.
+
+Los CSV y ejemplos históricos sin fechas completas conservan sus diez variables; no se inventan fechas. Las nuevas reservas no contienen etiquetas reales conocidas de cancelación, no entran al entrenamiento y no alteran las métricas ni la cohorte histórica de Inicio. [Pruebas paso a paso](PRUEBAS-GUIADAS.md).
+
+## Guardado web y consistencia
+
+La aplicación lee la instantánea de Blob y su ETag, realiza la transacción SQLite en memoria y publica la nueva instantánea condicionada a que el ETag siga vigente. Si otro cliente guardó primero, rechaza el conflicto en vez de sobrescribirlo. La revisión de cada registro evita ediciones antiguas y la clave del intento evita duplicar una misma solicitud repetida. El éxito se confirma después de escribir.
+
+La identidad administrada de App Service accede únicamente al contenedor privado autorizado. El navegador nunca recibe claves de almacenamiento. No se monta SQLite sobre un sistema de archivos de red. La instantánea completa está limitada a 16 MiB; es un diseño acotado de demostración, no una base de datos productiva para alta concurrencia.
+
+**La demo es pública y compartida, sin autenticación por usuario:** se usan exclusivamente reservas ficticias. Se verificaron 31 comprobaciones HTTPS y la conservación de nueve registros tras reiniciar App Service. El detalle y el alcance de la evidencia están en [web-verification.json](../azure/evidence/microproyecto3/web-verification.json). Recargar una página durante la exposición no equivale a reiniciar el servidor.
+
+## Variante local e historia de las ejecuciones
+
+![Variante local: modelo descargado y SQLite independiente](figuras/arquitectura.svg)
+
+`python iniciar.py` abre la aplicación en cada computador. Usa `artifacts/` y `.runtime/reservaiq.sqlite3`, independientes de la web. GitHub no sincroniza reservas. El mismo calendario, contrato y estados están disponibles; la diferencia es dónde se ejecuta la aplicación y se conserva la base.
+
+El grupo original `rg-reservaiq` se eliminó el 25 de septiembre. La ejecución nueva MICROPROYECTO3 y su demo se conservan hasta el 5 de octubre inclusive, hora de Colombia, según el plazo autorizado. Esa eliminación histórica no describe el estado del nuevo grupo. Los costos de ambas ejecuciones se documentan separados en [Costos](COSTOS.md).
+
+## Fuente de los diagramas y alcance de la revisión
+
+`scripts/diagrama_arquitectura.py` genera la arquitectura actual, la variante local y el flujo operativo en SVG. Las variantes oscuras conservan la misma topología para las diapositivas. El informe y el README utilizan `arquitectura-azure-web.svg`; el modo local de la aplicación utiliza `arquitectura-canva.svg`.
 
 ```bash
 python -m pip install -r requirements-docs.txt
@@ -79,31 +78,4 @@ python scripts/diagrama_arquitectura.py
 python scripts/generar_informe.py
 ```
 
-El diagrama muestra los componentes pertinentes a los criterios del microproyecto; los recursos auxiliares y supuestos de consumo están descritos en [Costos](COSTOS.md). La imagen de ejecución, las dependencias, los datos y los artefactos se identifican en las [evidencias](EVIDENCIAS.md).
-
-## Guardado local y consistencia
-
-El servidor valida las diez variables y calcula el resultado antes de escribir. SQLite conserva entradas y resultado juntos, con identificador, fecha, huella del modelo y número de revisión. Cada solicitud nueva lleva una clave de reintento: repetirla devuelve el mismo registro. Un lote se confirma completo o se revierte completo.
-
-Editar exige la revisión que vio el usuario: si otra ventana cambió el registro, se devuelve un conflicto en lugar de sobrescribirlo. Archivar y restaurar son cambios reversibles de estado. La base no contiene etiquetas reales nuevas de cancelación y no alimenta el pipeline.
-
-El almacenamiento vive en el computador que ejecuta el servidor; no hay sincronización entre integrantes ni nueva ejecución de Azure. La biblioteca [sqlite3 de Python](https://docs.python.org/3.12/library/sqlite3.html) permite gestionar archivos SQLite sin un servidor de base de datos separado. Se utilizan parámetros SQL y transacciones para las escrituras.
-
-
-### Fechas dentro de la aplicación local
-
-El calendario recibe creación, llegada y salida; calcula anticipación, mes de llegada y noches entre semana/de fin de semana. El servidor repite la validación antes de inferir o guardar. Son las mismas diez variables del modelo: las fechas completas se conservan como metadatos opcionales en SQLite, sin añadirse al entrenamiento. El día de salida se excluye de las noches. La migración al esquema 2 conserva las reservas previas con fechas desconocidas (`stay: null`). El flujo Azure y las métricas históricas permanecen iguales.
-
-![Flujo operativo desde las fechas hasta el guardado y la revisión humana](figuras/flujo-reserva.svg)
-
-Las tres fechas permanecen visibles y se pueden elegir con el mismo calendario. Ocultarlo conserva la selección. **Solo analizar** devuelve el índice sin escribir una reserva. **Analizar y guardar** valida, calcula y conserva entradas y resultado, y confirma con un código RI. **Mis reservas** recupera los registros y permite consultar las categorías desde sus contadores, editar, revisar, archivar y restaurar.
-
-La vía CSV utiliza el mismo contrato de diez variables. Después del análisis muestra una vista previa y requiere una acción explícita para guardar el lote. Los CSV y registros históricos sin fechas completas mantienen sus variables originales, sin inventar fechas de creación o estancia.
-
-| Cambio de experiencia de usuario | Consecuencia en el diseño |
-| --- | --- |
-| Tres fechas visibles y calendario plegable | Captura y cálculo de variables en la interfaz, comprobados de nuevo por el servidor |
-| Guardado, edición y recuperación | Base SQLite local con transacciones y control de revisiones |
-| Contadores pulsables | Filtros de consulta sobre los registros locales |
-| Lista de pendientes por capacidad K | Priorización operativa de las copias locales |
-| Nuevas reservas y estados | No alteran el modelo, las particiones ni las métricas históricas |
+La revisión compara cada transferencia con `pipeline.py`, el YAML del trabajo ejecutado, `app.py`, `storage.py` y `cloud_storage.py`. Los recursos auxiliares, como Container Registry y Key Vault, están descritos en [Costos](COSTOS.md): no son etapas adicionales del pipeline. La figura explica el flujo funcional solicitado por el microproyecto; no representa una topología productiva de redes.

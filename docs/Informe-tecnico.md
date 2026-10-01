@@ -40,7 +40,7 @@ La necesidad se traduce en una decisión verificable: qué reservas revisar prim
 | ID | Requerimiento | Criterio de aceptación |
 | --- | --- | --- |
 | R1 | Analizar una reserva | Validar diez variables y devolver índice, decisión y versión. |
-| R2 | Priorizar revisión | Seleccionar exactamente K registros y exportar la lista. |
+| R2 | Priorizar revisión | Priorizar hasta K pendientes según disponibilidad; exportar. |
 | R3 | Analizar un lote | CSV con 1-500 filas, máximo 150 KB y el mismo contrato. |
 | R4 | Evaluar sin usar el futuro | Particiones temporales disjuntas y madurez de etiquetas. |
 | R5 | Comparar y explicar | Candidatos, métricas, matriz y ejemplos de aciertos y errores. |
@@ -56,7 +56,7 @@ La necesidad se traduce en una decisión verificable: qué reservas revisar prim
 | Clasificador y lista | Comparación y prioridad medible | Necesita datos y seguimiento de errores. |
 | AutoML | Exploración automatizada | Más ensayos y consumo variable. |
 
-Se elige clasificación supervisada con revisión humana. No hay integración con un sistema hotelero productivo, envío de mensajes, modificación de reservas ni cobros automáticos.
+Reglas y AutoML se compararon conceptualmente, sin ejecutarlos. Se eligió clasificación supervisada por su evaluación controlada. Se entrenaron logística, Random Forest y Gradient Boosting frente a una base constante. No hay integración hotelera, mensajes ni cobros automáticos.
 
 
 ---
@@ -130,6 +130,10 @@ Se fijan versiones de Python y librerías. selection.json documenta candidatos, 
 
 ![Flujo actual con Azure ML, App Service y Blob privado](figuras/arquitectura-azure-web.svg)
 
+## De la captura al seguimiento
+
+![Flujo de una reserva: fechas o CSV, análisis, guardado y revisión](figuras/flujo-reserva.svg)
+
 
 ---
 
@@ -151,7 +155,7 @@ Registro y descarga son pasos posteriores al trabajo Completed, no componentes a
 
 La web aplica transacciones SQLite en memoria y conserva la instantánea en un Blob privado. Un ETag detecta escrituras concurrentes y la identidad administrada limita el acceso al contenedor. Los usuarios comparten registros ficticios. Guardar no cambia el entrenamiento ni las métricas históricas.
 
-App Service sirve el modelo descargado sin mantener un endpoint de inferencia de Azure ML. artifacts/runtime.json vincula la aplicación con trabajo, estado Completed, versión y SHA256. La etiqueta de origen Azure exige coincidencia con el archivo cargado. El estado histórico del trabajo y el cierre de recursos se documentan por separado.
+App Service sirve el modelo descargado sin mantener un endpoint de inferencia de Azure ML. runtime.json del directorio de artefactos cargado (cloud-artifacts en la web; artifacts en local) vincula la aplicación con trabajo, estado Completed, versión y SHA256. La etiqueta de origen Azure exige coincidencia con el archivo cargado. El estado histórico del trabajo y el cierre de recursos se documentan por separado.
 
 
 ---

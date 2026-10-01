@@ -108,17 +108,17 @@ Las reservas nuevas no cambian el entrenamiento ni las métricas históricas. El
 
 ## Informe técnico
 
-[Leer el informe técnico en PDF](docs/ReservaIQ-Informe-tecnico.pdf). Incluye requerimientos, alternativas, diseño, implementación, resultados, costos, fuentes y un anexo con las cuatro capturas comentadas.
+[Leer el informe técnico en PDF](docs/ReservaIQ-Informe-tecnico.pdf). Incluye requerimientos, alternativas, diseño, implementación, resultados, costos, fuentes y un anexo con cuatro capturas históricas de la aplicación y una captura real del pipeline de Azure.
 
-[Ver las capturas de las cuatro vistas](docs/CAPTURAS.md). Las imágenes originales corresponden a la interfaz anterior, con cuatro vistas y sin guardado local. Muestran una sesión con indicador de modelo local; la ejecución de Azure se acredita mediante los registros enlazados arriba.
+[Ver las capturas comentadas y el pipeline de Azure](docs/CAPTURAS.md). Las imágenes originales corresponden a la interfaz anterior, con cuatro vistas y sin guardado local. Muestran una sesión con indicador de modelo local; la ejecución de Azure se acredita mediante los registros enlazados arriba.
 
 ## Diseño y reproducibilidad
 
 [Cómo y por qué se construyó](docs/DESARROLLO.md) · [Arquitectura y componentes](docs/ARQUITECTURA.md) · [Datos y límites del modelo](docs/MODELO.md) · [Azure ML](azure/README.md) · [Evidencias](docs/EVIDENCIAS.md) · [Costos](docs/COSTOS.md).
 
-![Arquitectura y flujo de datos entre Azure y la aplicación local](docs/figuras/arquitectura.svg)
+![Arquitectura actual: Azure ML, App Service y reservas compartidas en Blob](docs/figuras/arquitectura-azure-web.svg)
 
-La evaluación recibe datos de prueba y el modelo entrenado; genera métricas y predicciones. El registro del modelo pertenece a Azure y se realiza después del trabajo. La descarga y verificación conectan ese resultado con la aplicación local. [Detalle de cada transferencia y componente](docs/ARQUITECTURA.md).
+El entrenamiento produce el modelo; la evaluación recibe por separado ese modelo y la prueba reservada, y genera métricas y predicciones. El modelo se registra después de verificar el trabajo. Modelo e informe se descargan y verifican para App Service. La demo conserva reservas ficticias compartidas en Blob privado mediante instantáneas SQLite. Guardar no reentrena ni cambia las métricas. [Detalle de cada transferencia y componente](docs/ARQUITECTURA.md).
 
 Para reproducir el experimento completo y comprobar el proyecto:
 

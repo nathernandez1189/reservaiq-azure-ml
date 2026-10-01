@@ -90,8 +90,66 @@ def architecture(dark=False):
     return d
 
 
+def cloud_architecture():
+    """Transferencias reales: train produce el modelo; evaluate produce el informe."""
+    d = Drawing(1800, 950)
+    bg, ink, muted, line, card = '#14232d', '#edf7f7', '#b9d0d5', '#66dfcf', '#203d49'
+    def text(x,y,s,size=24,bold=False,color=None):
+        d.add(String(x,950-y-size,s,fontName='Helvetica-Bold' if bold else 'Helvetica',
+                     fontSize=size,fillColor=HexColor(color or ink)))
+    def rect(x,y,w,h,fill,stroke=None):
+        d.add(Rect(x,950-y-h,w,h,rx=14,fillColor=HexColor(fill),
+                   strokeColor=HexColor(stroke) if stroke else None,strokeWidth=2))
+    def box(x,y,w,h,title,lines):
+        rect(x,y,w,h,card,'#45616c')
+        text(x+20,y+15,title,28,True)
+        for i,s in enumerate(lines): text(x+20,y+58+29*i,s,23,color=muted)
+    def arrow(points,label=None,at=None):
+        xy=[(x,950-y) for x,y in points]
+        d.add(PolyLine([v for p in xy for v in p],strokeColor=HexColor(line),strokeWidth=3,fillColor=None))
+        a,b=xy[-2:];ang=math.atan2(b[1]-a[1],b[0]-a[0]);x,y=b
+        d.add(Polygon([x,y,x-13*math.cos(ang)+6*math.sin(ang),y-13*math.sin(ang)-6*math.cos(ang),
+                       x-13*math.cos(ang)-6*math.sin(ang),y-13*math.sin(ang)+6*math.cos(ang)],fillColor=HexColor(line),strokeColor=None))
+        if label:
+            lx,ly=at;w=stringWidth(label,'Helvetica',23)+16
+            rect(lx-w/2,ly-2,w,30,bg);text(lx-w/2+8,ly,label,23,color=line)
+    rect(0,0,1800,950,bg)
+    rect(20,20,1760,490,'#10212b','#45616c')
+    text(50,35,'MICROPROYECTO3  /  Azure ML: datos, pipeline y registro',31,True)
+    text(50,80,'ml-microproyecto3  ·  Entorno versionado  ·  CPU Standard_DS2_v2: 0–1 nodos',24,color=muted)
+    box(50,155,245,125,'Datos / Blob',['reservaiq-hotels:1','hotels.csv versionado'])
+    box(380,155,270,125,'1. prepare',['Alcance y duplicados','Partición temporal'])
+    box(730,155,270,125,'2. train',['Compara modelos','Fija modelo y umbral'])
+    box(1050,342,280,125,'3. evaluate',['Prueba reservada','Métricas y predicciones'])
+    box(1400,155,340,125,'Registro del modelo',['reservaiq:1','Tras verificar el job'])
+    arrow([(295,218),(380,218)])
+    arrow([(650,218),(730,218)],'train + validación',(700,120))
+    arrow([(515,280),(515,405),(1050,405)],'prueba reservada',(775,366))
+    text(563,427,'+ validación: importancia global',21,color=muted)
+    arrow([(865,280),(865,316),(1190,316),(1190,342)],'modelo + umbral',(1080,285))
+    arrow([(1000,218),(1400,218)],'model.joblib',(1200,181))
+    text(50,477,'Registro y publicación: después de revisar el trabajo.',23,color=muted)
+    rect(20,557,1760,333,'#192f3b','#45616c')
+    box(60,604,490,123,'Navegador / equipo del hotel',['Calendario o CSV, hasta 500 filas','Mis reservas, prioridad K y estados'])
+    box(1000,580,740,133,'Azure App Service F1',['Interfaz + API: validar e inferir con la copia del modelo','Modelo y resultados en cloud-artifacts; huella verificada'])
+    arrow([(1190,467),(1190,580)],'reporte descargado',(1180,522))
+    arrow([(1570,280),(1570,580)],'modelo + SHA-256',(1580,522))
+    arrow([(550,644),(1000,644)],'HTTPS: analizar / guardar',(770,600))
+    arrow([(1000,692),(550,692)],'índice / código / registros',(770,702))
+    box(1000,772,740,98,'Blob privado: reservaiq-demo / reservas.sqlite3',[
+        'SQLite en memoria; identidad administrada y escritura con ETag'])
+    arrow([(1180,713),(1180,772)])
+    arrow([(1250,772),(1250,713)])
+    text(1310,731,'guardar / recuperar',23,color=line)
+    text(60,762,'Uso compartido con reservas ficticias.',25,True)
+    text(60,801,'Sin autenticación individual; alcance académico.',23,color=muted)
+    text(60,839,'La variante local mantiene su SQLite independiente.',23,color=muted)
+    text(40,909,'Entrenar y operar son ciclos separados. Guardar no reentrena ni modifica las métricas históricas.',26,color=muted)
+    return d
+
+
 def reservation_flow(dark=False):
-    """Flujo operativo: analizar no escribe, guardar sí persiste la copia local."""
+    """Flujo operativo común; persistencia compartida en web e independiente en local."""
     d = Drawing(1800, 950)
     bg, ink, muted, line, card = (('#14232d','#edf7f7','#b9d0d5','#66dfcf','#203d49')
                                 if dark else ('#ffffff','#142e3c','#42616d','#087f80','#eff6fa'))
@@ -109,23 +167,25 @@ def reservation_flow(dark=False):
         d.add(Polygon([x,y,x-13*math.cos(ang)+6*math.sin(ang),y-13*math.sin(ang)-6*math.cos(ang),
                        x-13*math.cos(ang)-6*math.sin(ang),y-13*math.sin(ang)+6*math.cos(ang)],fillColor=HexColor(line),strokeColor=None))
     d.add(Rect(0,0,1800,950,fillColor=HexColor(bg),strokeColor=None))
-    label(40,22,'FLUJO DE UNA RESERVA EN LA APLICACIÓN LOCAL',34,True)
+    label(40,22,'FLUJO DE RESERVAS: CALENDARIO, CSV Y SEGUIMIENTO',34,True)
     box(40,110,500,195,'1. Fechas y detalles',['Creación, llegada y salida visibles','Calendario que se puede ocultar','Seis categorías de la reserva'])
     box(630,110,490,195,'2. Validación',['Cuatro variables desde las fechas','Diez entradas para el modelo','Servidor comprueba consistencia'])
     box(1210,110,550,195,'3. Índice del modelo',['Modelo descargado de Azure ML','Índice / 100 y alerta por umbral','El resultado orienta una revisión'])
     arrow([(540,207),(630,207)]);arrow([(1120,207),(1210,207)])
+    box(40,326,500,72,'Alternativa: CSV (1–500 filas)',[])
+    arrow([(540,362),(590,362),(590,260),(630,260)])
     box(1210,420,550,130,'Solo analizar',['Muestra el resultado, sin guardar'])
     arrow([(1485,305),(1485,420)])
-    box(630,420,490,195,'Analizar y guardar',['Confirma escritura con código RI','SQLite conserva copia y fechas','Recuperable al reiniciar'])
+    box(630,420,490,195,'Analizar y guardar',['Confirma escritura con código RI','Web: instantánea SQLite en Blob','Local: archivo SQLite propio'])
     arrow([(1280,305),(1280,355),(875,355),(875,420)])
     box(40,420,500,195,'4. Mis reservas',['Filtrar por contadores de estado','Priorizar las K pendientes','Editar, revisar o archivar'])
     arrow([(630,505),(540,505)])
     box(40,710,800,125,'5. Revisión humana',['Decidir la acción y exportar o descargar respaldo'])
     arrow([(290,615),(290,710)])
-    label(925,660,'Entrada alternativa: CSV de hasta 500 filas',27,True)
+    label(925,660,'CSV: analizar antes de guardar el lote',27,True)
     label(925,711,'Se valida y analiza con las mismas diez variables.',25,color=muted)
     label(925,752,'Vista previa y guardado del lote por acción explícita.',25,color=muted)
-    label(40,879,'Cada computador mantiene su base. Guardar no confirma una habitación ni reentrena el modelo.',27,color=muted)
+    label(40,879,'Web: reservas ficticias compartidas. Guardar no confirma habitaciones ni reentrena el modelo.',27,color=muted)
     return d
 
 
@@ -148,4 +208,8 @@ if __name__ == '__main__':
         renderSVG.drawToFile(diagram,str(folder/f'{suffix}.svg'))
         if args.preview_dir:
             renderPDF.drawToFile(diagram,str(args.preview_dir/f'{suffix}.pdf'))
+    diagram=cloud_architecture()
+    renderSVG.drawToFile(diagram,str(folder/'arquitectura-azure-web.svg'))
+    if args.preview_dir:
+        renderPDF.drawToFile(diagram,str(args.preview_dir/'arquitectura-azure-web.pdf'))
     print('Diagramas SVG generados desde una fuente común.')
