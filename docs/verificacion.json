@@ -34,5 +34,21 @@
     "live_browser_blocker": "Browser policy check unavailable; no access granted",
     "updated_report_pages_reviewed": 13,
     "cloud_resources_started": false
+  },
+  "calendar_ux_verification": {
+    "checked_at_utc": "2026-10-01T00:32:42.518678+00:00",
+    "python_tests_passed": 31,
+    "javascript_tests_passed": 22,
+    "total_tests_passed": 53,
+    "server_calendar_metadata_consistency_verified": true,
+    "calendar_dates_persist_after_server_restart": true,
+    "v1_to_v2_migration_preserves_existing_fields": true,
+    "date_boundaries_leap_year_and_timezone_tests": true,
+    "clickable_reservation_status_counts_verified": "component test with simulated API; includes zero counts, search reset and pagination",
+    "client_component_tests": "jsdom with simulated API; not browser E2E",
+    "live_browser_e2e_verified": false,
+    "live_browser_blocker": "Browser security check unavailable; admin-enforced policy could not be verified",
+    "updated_report_pages_reviewed": 13,
+    "cloud_resources_started": false
   }
 }

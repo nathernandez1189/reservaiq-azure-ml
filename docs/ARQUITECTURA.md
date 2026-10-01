@@ -66,3 +66,8 @@ El servidor valida las diez variables y calcula el resultado antes de escribir. 
 Editar exige la revisión que vio el usuario: si otra ventana cambió el registro, se devuelve un conflicto en lugar de sobrescribirlo. Archivar y restaurar son cambios reversibles de estado. La base no contiene etiquetas reales nuevas de cancelación y no alimenta el pipeline.
 
 El almacenamiento vive en el computador que ejecuta el servidor; no hay sincronización entre integrantes ni nueva ejecución de Azure. La biblioteca [sqlite3 de Python](https://docs.python.org/3.12/library/sqlite3.html) permite gestionar archivos SQLite sin un servidor de base de datos separado. Se utilizan parámetros SQL y transacciones para las escrituras.
+
+
+### Fechas dentro de la aplicación local
+
+El calendario recibe creación, llegada y salida; calcula anticipación, mes de llegada y noches entre semana/de fin de semana. El servidor repite la validación antes de inferir o guardar. Son las mismas diez variables del modelo: las fechas completas se conservan como metadatos opcionales en SQLite, sin añadirse al entrenamiento. El día de salida se excluye de las noches. La migración al esquema 2 conserva las reservas previas con fechas desconocidas (`stay: null`). El flujo Azure y las métricas históricas permanecen iguales.

@@ -85,3 +85,17 @@ Se añadieron persistencia SQLite y las vistas Mis reservas y Cómo probarlo. La
 **Límite de esta revisión:** el navegador rechazó el acceso porque no pudo verificar su política administrativa. No se eludió ese control. Por ello la nueva navegación, la apariencia responsive y las descargas en un navegador real quedan pendientes de comprobación visual. Las pruebas del servidor y los componentes sí se ejecutaron. La [prueba guiada](PRUEBAS-GUIADAS.md) permite realizar el recorrido al abrir la aplicación.
 
 No se inició cómputo ni se crearon recursos en Azure. Las bases locales y datos de prueba no forman parte del repositorio ni del ZIP de entrega.
+
+
+## Calendario, pasos y tarjetas de estado — 30/09/2026 (hora Colombia)
+
+Se añadió el calendario de llegada/salida, la derivación de variables temporales, la revisión en tres pasos y las tarjetas pulsables de Guardadas, Pendientes, Revisadas y Archivadas. No se modificaron el modelo, el dataset ni sus métricas.
+
+- **31 pruebas Python aprobadas:** las anteriores más aritmética de fechas, límites, años bisiestos, cambio de año, migración de SQLite sin alterar campos previos, rechazo de una versión futura, consistencia de fechas/variables en la API y recuperación de fechas tras reiniciar el servidor.
+- **22 pruebas JavaScript aprobadas:** CSV, aritmética independiente de zona horaria, calendario y teclado, recorrido completo hasta guardar/editar, fechas inválidas sin interrupción, conservación del modo histórico y filtros pulsables con búsqueda y paginación. Los componentes usan jsdom y una API simulada.
+- Total local: **53 pruebas** con `python -X utf8=0 -m unittest discover -s tests -v` y `npm test`. La verificación remota de cada revisión se consulta en Actions; no se confunde con la ejecución local.
+- Informe de **13 páginas** regenerado y revisado visualmente; guía y protocolo actualizados para el calendario y los contadores.
+
+El acceso a la aplicación en el navegador volvió a ser rechazado por una comprobación de seguridad administrativa indisponible. No se eludió ese control. La apariencia en tamaños de pantalla, la navegación en navegador real y la usabilidad con personas no están certificadas por estas pruebas; quedan descritas en [Experiencia de usuario](EXPERIENCIA-DE-USUARIO.md) y [Pruebas guiadas](PRUEBAS-GUIADAS.md). No se publicaron capturas que aparenten demostrar esa nueva revisión visual. Las capturas anteriores mantienen sus fechas y alcance.
+
+Las pruebas se ejecutaron con bases aisladas. No se iniciaron máquinas ni recursos de Azure, y no se publicaron reservas personales.

@@ -150,3 +150,6 @@ Para revisar el respaldo de cada afirmación: [informe técnico](Informe-tecnico
 La demo se amplió después de preparar estas doce diapositivas. En la aplicación actual, Centro de decisiones se llama Inicio y Explorar una reserva se llama Nueva reserva. Se añadieron Mis reservas y Cómo probarlo. Analizar y guardar conserva una copia local; Solo analizar no la guarda. La importación CSV ahora muestra una vista previa antes de guardar o descargar.
 
 El diagrama del repositorio y el informe incluyen SQLite local. Esta actualización del código no edita automáticamente el diseño alojado en Canva. El método de modelado, los resultados y la evidencia histórica de Azure conservan sus valores. La [guía de uso actual](GUIA-DE-USO.md) y las [pruebas guiadas](PRUEBAS-GUIADAS.md) describen las nuevas acciones.
+
+
+La versión actual también incorpora un calendario y tres pasos: **Fechas → Detalles → Revisar y guardar**. Calcula automáticamente las cuatro variables temporales y conserva las fechas al guardar. Los ejemplos históricos siguen disponibles con sus variables originales. Este cambio está en la aplicación y en el informe del repositorio; no implica una modificación automática de las diapositivas nativas de Canva.

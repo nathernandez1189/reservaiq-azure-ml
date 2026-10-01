@@ -67,14 +67,16 @@ Carga únicamente el modelo incluido o artefactos propios de confianza. `joblib`
 
 ## Primer uso: analizar, guardar y recuperar
 
-1. Entra en **Nueva reserva**, completa los diez datos o pulsa **Cargar ejemplo de prueba**.
-2. Pulsa **Analizar y guardar** y espera el mensaje de confirmación con código `RI-…`.
-3. Abre **Mis reservas**: puedes recuperar, editar, marcar revisada, archivar o restaurar cada registro.
-4. En **Cómo probarlo** tienes seis pasos guiados y resultados esperados para comprobar el funcionamiento.
+1. **Fechas:** entra en Nueva reserva, elige llegada y salida en el calendario. Las noches y la anticipación se calculan automáticamente.
+2. **Detalles:** revisa las seis opciones explicadas y añade una referencia si quieres.
+3. **Revisar y guardar:** comprueba el resumen, pulsa Analizar y guardar y espera la confirmación con código `RI-…`.
+4. Abre **Mis reservas** para recuperar, editar, marcar revisada, archivar o restaurar. **Cómo probarlo** incluye un recorrido de calendario y otro con resultados históricos conocidos.
+
+El calendario no consulta disponibilidad del hotel. Admite 0–60 días de anticipación y 1–30 noches; el día de salida no añade una noche. Los ejemplos históricos, los CSV y las reservas antiguas conservan sus variables cuando no se conocen fechas completas.
 
 **Solo analizar** no guarda. Los registros confirmados permanecen después de cerrar la aplicación, en `.runtime/reservaiq.sqlite3`. Cada computador tiene su propia base: no se comparte por GitHub ni se sincroniza con Azure. No elimines `.runtime` si quieres conservar tus reservas.
 
-[Guía completa de uso y solución de errores](docs/GUIA-DE-USO.md) · [Pruebas guiadas](docs/PRUEBAS-GUIADAS.md).
+[Guía completa de uso y solución de errores](docs/GUIA-DE-USO.md) · [Pruebas guiadas](docs/PRUEBAS-GUIADAS.md) · [Decisiones de experiencia de usuario](docs/EXPERIENCIA-DE-USUARIO.md).
 
 ## Analizar y guardar un CSV
 
@@ -88,7 +90,7 @@ El [diccionario del CSV](ejemplos-csv/LEEME.md) detalla las diez columnas y sus 
 ## Qué incluye la aplicación
 
 - **Inicio:** recorrido de uso, métricas históricas y ejemplo de lista por capacidad K.
-- **Nueva reserva:** campos explicados, inferencia real, guardado, edición y carga de CSV con vista previa.
+- **Nueva reserva:** calendario de llegada/salida, tres pasos, resumen de estancia, campos explicados, guardado y CSV con vista previa.
 - **Mis reservas:** búsqueda, filtros, prioridades, estados de revisión y copia descargable.
 - **Cómo probarlo:** pasos, resultados esperados, comprobación de conexión y soluciones a errores comunes.
 - **Resultados del modelo:** particiones, candidatos, matriz de confusión e importancia global.

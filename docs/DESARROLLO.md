@@ -90,3 +90,10 @@ Las escrituras por lote son atómicas y las claves de reintento evitan duplicaci
 La interfaz añade ayudas por campo, estado visible del guardado, total de noches, resultados con siguiente paso, búsqueda y estados de revisión. La importación de CSV muestra primero una vista previa y permite guardar o descargar después. La prueba guiada conecta cada acción con un resultado esperado; la guía de uso explica persistencia, límites y recuperación.
 
 El lanzador `iniciar.py` prepara un entorno Python 3.12 y utiliza el mismo intérprete para instalar dependencias y ejecutar la aplicación. Así se evita el fallo de dependencia ausente cuando un integrante usa un Python distinto del entorno instalado. El modelo y la ejecución histórica de Azure no se modificaron.
+
+
+## Calendario y recorrido de reserva
+
+El formulario numérico exigía calcular noches y anticipación. Se reemplazó el recorrido manual por Fechas → Detalles → Revisar y guardar. `web/dates.js` convierte fechas civiles a cuatro variables existentes; `web/booking.js` coordina el calendario y los pasos; `booking_dates.py` valida el mismo contrato en el servidor. No se modificó ni reentrenó el modelo.
+
+SQLite pasa al esquema 2 con una columna opcional `stay` (creación, llegada, salida). La migración conserva las filas y las revisiones previas. El servidor exige que esas fechas coincidan con las cuatro variables derivadas, evitando guardar metadatos contradictorios. El CSV mantiene sus diez columnas y el modo histórico conserva sus variables originales cuando faltan fechas completas. [Decisiones y límites de UX](EXPERIENCIA-DE-USUARIO.md).

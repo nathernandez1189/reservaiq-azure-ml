@@ -202,33 +202,32 @@ py -3.12 iniciar.py  # Windows
 python3.12 iniciar.py  # macOS / Linux
 ```
 
-Ejecutar únicamente la línea del sistema utilizado. El lanzador prepara el entorno y las dependencias. Abrir http://127.0.0.1:8765 y mantener la terminal abierta. En Nueva reserva, completar los diez campos y pulsar Analizar y guardar. Mis reservas permite recuperarla.
+Ejecutar únicamente la línea del sistema utilizado. El lanzador prepara el entorno y las dependencias. Abrir http://127.0.0.1:8765 y mantener la terminal abierta. En Nueva reserva, elegir llegada y salida en el calendario, completar Detalles y pasar a Revisar y guardar. Las noches y la anticipación se calculan automáticamente. Mis reservas permite recuperar el registro.
 
 El CSV se selecciona en Nueva reserva, se analiza y muestra una vista previa. Guardar lote conserva todas las filas; Descargar resultados genera el JSON. La guía y las pruebas paso a paso están en docs/GUIA-DE-USO.md y docs/PRUEBAS-GUIADAS.md.
 
 
 ---
 
-# 6.1. Persistencia y uso verificable
+# 6.1. Calendario y guardado local
+
+## Tres pasos con resumen de estancia
+
+Fechas, Detalles y Revisar y guardar separan las decisiones. El calendario calcula cuatro variables del modelo: anticipación, mes de llegada y noches entre semana/de fin de semana. La salida no cuenta como noche. El servidor valida la misma regla: 0 a 60 días de anticipación y 1 a 30 noches. Los ejemplos históricos sin fechas completas conservan sus variables originales.
 
 ## Qué se guarda y por qué
 
-SQLite conserva una copia local con referencia, diez variables, resultado, huella del modelo, fechas y estado de revisión. El archivo vive en .runtime/reservaiq.sqlite3 y no se publica en GitHub. Permite recuperar las reservas después de cerrar la página o reiniciar el servidor, sin agregar infraestructura de nube.
+SQLite conserva una copia local con referencia, diez variables, resultado, huella del modelo, fechas de creación/llegada/salida cuando se conocen y estado de revisión. La migración conserva los registros previos. El archivo .runtime/reservaiq.sqlite3 no se publica en GitHub; permite recuperar los registros tras reiniciar sin infraestructura de nube.
 
 Solo analizar no modifica la base. Guardar cambios mantiene el identificador y exige la revisión vigente para evitar sobrescrituras entre ventanas. Los reintentos de una misma creación devuelven el mismo registro. Un fallo en un lote revierte todas sus escrituras. Archivar es reversible.
 
-## Prueba guiada dentro de la aplicación
+## Comprobar el recorrido
 
-1. Cargar el ejemplo histórico 12301: 28 días de anticipación y 3 noches.
-2. Analizar y guardar: índice aproximado 39,8 y código local.
-3. Abrir Mis reservas y recargar: el registro permanece.
-4. Cambiar a 7 días, analizar y guardar cambios: índice aproximado 13,6.
-5. Marcar revisada, archivar y restaurar.
-6. Analizar el CSV de 8 filas y guardarlo; comprobar errores con 61 días o 0 noches.
+Con creación 01/10/2026, llegada 02/10 y salida 05/10 se obtienen 3 noches: 1 entre semana y 2 de fin de semana; anticipación de 1 día. Analizar y guardar conserva el registro con código RI-. Mis reservas permite recuperarlo, editarlo y organizarlo. Sus tarjetas Guardadas, Pendientes, Revisadas y Archivadas filtran los registros al pulsarlas. La guía incluye además el caso histórico 12301, el CSV y errores esperados.
 
 ## Comprobaciones automáticas y límites
 
-Las pruebas Python cubren integridad del dataset y modelo, separación temporal, métricas, las 7.990 predicciones, UTF-8 en Windows, API y persistencia real. Incluyen reiniciar el servidor, reintentos concurrentes sin duplicación, conflictos de edición y transacciones de lote. Las pruebas JavaScript comprueban el lector de CSV y los estados del cliente con un servidor simulado.
+Las pruebas Python cubren integridad del dataset y modelo, separación temporal, métricas, las 7.990 predicciones, UTF-8 en Windows, API y persistencia real. Incluyen reiniciar el servidor, reintentos concurrentes sin duplicación, conflictos de edición y transacciones de lote. También se prueban fechas, cambio de año, año bisiesto y migración de la base. JavaScript verifica calendario, tarjetas de estado y recorrido guiado con una API simulada.
 
 ```bash
 python -m unittest discover -s tests -v

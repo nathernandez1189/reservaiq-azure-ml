@@ -30,12 +30,23 @@ Abre **http://127.0.0.1:8765**. Mantén la terminal abierta. No abras `web/index
 
 ## 2. Crear tu primera reserva
 
-1. Entra en **Nueva reserva**.
-2. Escribe una referencia opcional, por ejemplo `Prueba del grupo`. No necesitas datos personales.
-3. Ajusta los diez campos a tu caso. Cada uno incluye una explicación. La anticipación va de 0 a 60 días y las noches deben sumar de 1 a 30.
-4. Pulsa **Analizar y guardar**.
-5. Comprueba el índice, la sugerencia y el mensaje **Guardada en este computador**, con un código `RI-…`.
-6. Entra en **Mis reservas**. Tu registro ya debe aparecer.
+1. En **Inicio**, pulsa **Elegir fechas y crear una reserva**; también puedes entrar en **Nueva reserva** desde el menú.
+2. **Paso 1 · Fechas.** Elige primero la llegada y luego la salida en el calendario. Puedes usar también los campos de fecha. El rango seleccionado marca las noches; el día de salida no añade otra noche.
+3. Revisa el resumen: noches totales, noches entre semana y fin de semana, y anticipación. Se calculan automáticamente. La fecha de creación empieza en hoy; si estás registrando una reserva creada antes, abre **¿La reserva se creó otro día?** y corrígela.
+4. Pulsa **Continuar con los detalles**. **Paso 2 · Detalles.** Añade una referencia opcional, por ejemplo `Prueba del grupo`, y revisa las seis opciones explicadas. No hacen falta nombres de huéspedes ni datos de pago.
+5. Pulsa **Revisar mi reserva**. **Paso 3 · Revisar y guardar.** Comprueba fechas y datos. Puedes volver a cualquier paso para corregirlos.
+6. Pulsa **Analizar y guardar**. Comprueba el índice, la sugerencia y el mensaje **Guardada en este computador**, con un código `RI-…`.
+7. Pulsa **Ver en Mis reservas** o entra por el menú. La tarjeta muestra las fechas; **Abrir** recupera el mismo registro.
+
+**Alcance:** llegada entre 0 y 60 días después de crear la reserva; estancia de 1 a 30 noches. El fin de semana cuenta las noches de sábado y domingo. No se comprueba disponibilidad de habitaciones. Guardar es conservar una copia para analizar, no confirmar una reserva con un hotel.
+
+**Con teclado:** Tab entra al calendario; las flechas recorren días y semanas; Inicio/Fin recorren la semana y RePág/AvPág cambian de mes. Enter o espacio selecciona. También puedes escribir las fechas en sus campos.
+
+### Ejemplos históricos y reservas anteriores
+
+**Cargar ejemplo de prueba** abre un registro histórico en el paso de revisión. Esos ejemplos solo incluyen las diez variables del modelo, no las fechas completas originales. El paso **Fechas** conserva para ellos los campos numéricos: no se inventa una llegada ni salida. Lo mismo ocurre con el CSV y las reservas antiguas sin fechas.
+
+Para cambiar esos registros a fechas explícitas, abre **Fechas → Elegir fechas en el calendario** y elige ambas fechas. Se convierte en un escenario editado; su desenlace real es desconocido. La actualización de la base añade el espacio de fechas y conserva los registros existentes.
 
 **Solo analizar** calcula el resultado sin guardar ni modificar la copia existente. Descargar un resultado crea un archivo para consultarlo; tampoco sustituye al botón de guardado.
 
@@ -51,14 +62,16 @@ No se envían mensajes ni se realizan cobros o cancelaciones. Los estados de rev
 ## 4. Volver a abrir y editar
 
 1. Busca la referencia en **Mis reservas** y pulsa **Abrir**.
-2. Cambia un dato. Verás **Cambios sin guardar** y el resultado anterior se retirará para no confundirlo con el nuevo.
-3. Puedes pulsar **Solo analizar** para comparar sin modificar la copia guardada.
+2. Selecciona **Fechas** o **Detalles** para cambiar un dato. Verás **Cambios sin guardar** y el resultado anterior se retirará para no confundirlo con el nuevo.
+3. Regresa a **Revisar y guardar**. Puedes pulsar **Solo analizar** para comparar sin modificar la copia guardada.
 4. Pulsa **Guardar cambios** para conservar la edición. Se mantiene el código, se recalcula el resultado y vuelve a quedar pendiente de revisión.
 5. Si otra ventana modificó la reserva, actualiza la lista y vuelve a abrirla: no se sobrescriben silenciosamente cambios ajenos.
 
 Recargar la página conserva lo que ya se guardó. Los campos que todavía no hayas guardado no son una reserva persistida.
 
 ## 5. Organizar tus reservas
+
+Las cuatro tarjetas superiores son botones. Pulsa **Guardadas** para ver todos los registros (incluidos los archivados), **Pendientes**, **Revisadas** o **Archivadas** para ver esa categoría. La tarjeta seleccionada queda resaltada, el filtro se sincroniza y la lista empieza en su primera página. Al pulsar una tarjeta se limpia la búsqueda anterior; si el contador es cero, aparece una explicación y puedes elegir otra categoría.
 
 **Mis reservas** permite buscar por referencia o código y filtrar por activas, pendientes, revisadas o archivadas. Se ordenan por índice y se muestran hasta 20 por página.
 
@@ -91,7 +104,7 @@ Los datos guardados son independientes del dataset histórico, el modelo y sus m
 
 ## 8. Probar y solucionar problemas
 
-Entra en **Cómo probarlo** para seguir seis pasos con resultados esperados y comprobar la conexión. La [matriz de pruebas guiadas](PRUEBAS-GUIADAS.md) permite registrar qué comprobaste.
+Entra en **Cómo probarlo** para seguir el recorrido del calendario, comparar con un caso histórico y comprobar la conexión. La [matriz de pruebas guiadas](PRUEBAS-GUIADAS.md) permite registrar qué comprobaste.
 
 | Mensaje o situación | Qué hacer |
 | --- | --- |
@@ -99,6 +112,8 @@ Entra en **Cómo probarlo** para seguir seis pasos con resultados esperados y co
 | No module named joblib | Ejecuta `iniciar.py` con Python 3.12 para instalar las dependencias en el entorno correcto. |
 | UnicodeDecodeError: charmap | Actualiza el repositorio y reinicia; esta versión lee los archivos explícitamente como UTF-8. |
 | La reserva cambió en otra ventana | Actualiza Mis reservas y abre de nuevo el registro antes de editarlo. |
+| No me deja continuar después de elegir fechas | Elige una salida posterior a la llegada, hasta 30 noches. Verifica que la llegada esté dentro de los 60 días desde la creación. |
+| Solo veo campos numéricos de noches | Abriste un ejemplo histórico, un CSV o una reserva antigua sin fechas. Puedes conservar sus variables o elegir fechas explícitas. |
 | No se pudo guardar | Comprueba espacio y permisos de la carpeta. Conserva la base existente. |
 | No veo reservas de un compañero | El almacenamiento es local a cada computador; el repositorio no contiene bases personales. |
 | Veo cifras históricas en Inicio | Corresponden a la prueba del modelo, no a las reservas recién ingresadas. |
